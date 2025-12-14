@@ -1,0 +1,31 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'eclipse'
+}
+
+group = 'io.combiphar-used-goods'
+version = '1.0-SNAPSHOT'
+
+repositories { mavenCentral() }
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+dependencies {
+    implementation 'io.javalin:javalin:6.7.0'
+    implementation 'io.javalin:javalin-rendering:6.7.0'
+
+    // Pebble "old coordinates" yang masih punya package com.mitchellbosecke.pebble.*
+    implementation 'com.mitchellbosecke:pebble:2.4.0'  // :contentReference[oaicite:1]{index=1}
+
+    runtimeOnly 'org.slf4j:slf4j-simple:2.0.16'
+}
+
+
+
+application {
+    mainClass = 'Main'
+}

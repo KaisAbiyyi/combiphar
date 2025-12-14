@@ -1,0 +1,38 @@
+# --- Java / JVM ---
+*.class
+*.log
+hs_err_pid*
+replay_pid*
+
+# --- Gradle ---
+.gradle/
+build/
+
+# --- IntelliJ IDEA ---
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# --- Eclipse ---
+.classpath
+.project
+.settings/
+
+# --- VS Code ---
+.vscode/
+
+# --- OS / Editor ---
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.swp
+*~
+
+# --- Local env / secrets (optional) ---
+.env
+.env.*
+
+# --- Common generated folders in this repo ---
+/bin/
