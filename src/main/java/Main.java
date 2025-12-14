@@ -6,32 +6,73 @@ import com.mitchellbosecke.pebble.loader.ClasspathLoader;
 import io.javalin.Javalin;
 import io.javalin.rendering.template.JavalinPebble;
 
+/**
+ * Application entry point for Combiphar Used Goods system.
+ * Configures Javalin server with Pebble templating and static file serving.
+ */
 public class Main {
+    
+    private static final int PORT = 7070;
+    
     public static void main(String[] args) {
-
-        // Pastikan loader nyari ke: /templates/...
+        PebbleEngine engine = createPebbleEngine();
+        Javalin app = createApp(engine);
+        registerRoutes(app);
+        app.start(PORT);
+    }
+    
+    /**
+     * Creates configured Pebble template engine.
+     */
+    private static PebbleEngine createPebbleEngine() {
         ClasspathLoader loader = new ClasspathLoader();
-        loader.setPrefix("templates");     // <= folder di resources
-        loader.setSuffix(".pebble");       // <= ekstensi
-
-        PebbleEngine engine = new PebbleEngine.Builder()
+        loader.setPrefix("templates");
+        loader.setSuffix(".pebble");
+        
+        return new PebbleEngine.Builder()
                 .loader(loader)
                 .build();
-
-        Javalin app = Javalin.create(config -> {
+    }
+    
+    /**
+     * Creates Javalin app with static files and template renderer.
+     */
+    private static Javalin createApp(PebbleEngine engine) {
+        return Javalin.create(config -> {
             config.fileRenderer(new JavalinPebble(engine));
+            config.staticFiles.add("/static");
         });
-
+    }
+    
+    /**
+     * Registers all application routes.
+     */
+    private static void registerRoutes(Javalin app) {
+        // Home / Catalog page
         app.get("/", ctx -> {
             Map<String, Object> model = Map.of(
-                    "title", "Hello from Javalin + Pebble",
-                    "name", "Your Majesty"
+                "title", "Katalog - Combiphar Used Goods",
+                "activePage", "catalog"
             );
-
-            // Karena suffix sudah ".pebble", cukup pakai nama tanpa ekstensi:
-            ctx.render("home", model);
+            ctx.render("customer/catalog", model);
         });
-
-        app.start(7070);
+        
+        app.get("/catalog", ctx -> {
+            Map<String, Object> model = Map.of(
+                "title", "Katalog - Combiphar Used Goods",
+                "activePage", "catalog"
+            );
+            ctx.render("customer/catalog", model);
+        });
+        
+        // Product detail page (dummy for now)
+        app.get("/product/{id}", ctx -> {
+            String productId = ctx.pathParam("id");
+            Map<String, Object> model = Map.of(
+                "title", "Set Meja Rapat Glasium - Combiphar Used Goods",
+                "productId", productId
+            );
+            ctx.render("customer/product-detail", model);
+        });
     }
 }

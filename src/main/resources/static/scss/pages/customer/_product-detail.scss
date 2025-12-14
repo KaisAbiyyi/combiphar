@@ -1,0 +1,310 @@
+// ==========================================================================
+// PRODUCT DETAIL PAGE - Single product view styles
+// ==========================================================================
+
+@use '../../abstracts/variables' as *;
+@use '../../abstracts/mixins' as *;
+
+// -----------------------------------------------------------------------------
+// Product detail hero
+// -----------------------------------------------------------------------------
+.product-hero {
+  background: $gradient-hero;
+  padding: $spacing-12 0;
+}
+
+.product-hero__container {
+  @include container;
+  display: grid;
+  gap: $spacing-8;
+  align-items: start;
+  
+  @include respond-to(lg) {
+    grid-template-columns: 1fr 400px;
+    gap: $spacing-12;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Product hero content (left)
+// -----------------------------------------------------------------------------
+.product-hero__content {
+  color: $color-white;
+}
+
+.product-hero__badge {
+  margin-bottom: $spacing-4;
+}
+
+.product-hero__title {
+  @include heading-xl;
+  color: $color-white;
+  margin-bottom: $spacing-4;
+}
+
+.product-hero__description {
+  font-size: $font-size-base;
+  color: rgba($color-white, 0.9);
+  margin-bottom: $spacing-6;
+  max-width: 500px;
+  line-height: $line-height-relaxed;
+}
+
+.product-hero__meta {
+  @include flex-start;
+  flex-wrap: wrap;
+  gap: $spacing-4;
+  margin-bottom: $spacing-6;
+}
+
+.product-hero__meta-item {
+  @include flex-center;
+  gap: $spacing-2;
+  font-size: $font-size-sm;
+  color: rgba($color-white, 0.8);
+  
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.product-hero__actions {
+  @include flex-start;
+  flex-wrap: wrap;
+  gap: $spacing-3;
+}
+
+// Hero-specific button overrides for product page
+.product-hero .btn--primary {
+  background: $color-white;
+  color: $color-primary;
+  
+  &:hover {
+    background: rgba($color-white, 0.9);
+  }
+}
+
+.product-hero .btn--secondary {
+  background: transparent;
+  color: $color-white;
+  border-color: $color-white;
+  
+  &:hover {
+    background: rgba($color-white, 0.1);
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Pricing card (right side)
+// -----------------------------------------------------------------------------
+.pricing-card {
+  @include card;
+  padding: $spacing-6;
+}
+
+.pricing-card__label {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  color: $color-text-muted;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: $spacing-2;
+}
+
+.pricing-card__price {
+  font-size: $font-size-3xl;
+  font-weight: $font-weight-bold;
+  color: $color-secondary;
+  margin-bottom: $spacing-2;
+}
+
+.pricing-card__note {
+  font-size: $font-size-sm;
+  color: $color-text-muted;
+  margin-bottom: $spacing-6;
+}
+
+.pricing-card__details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $spacing-4;
+  padding: $spacing-4 0;
+  border-top: 1px solid $color-gray-200;
+  border-bottom: 1px solid $color-gray-200;
+  margin-bottom: $spacing-6;
+}
+
+.pricing-card__detail-label {
+  font-size: $font-size-xs;
+  color: $color-text-muted;
+  margin-bottom: $spacing-1;
+}
+
+.pricing-card__detail-value {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+}
+
+.pricing-card__highlights {
+  margin-bottom: $spacing-6;
+}
+
+.pricing-card__highlights-title {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-3;
+}
+
+.pricing-card__highlight-item {
+  @include flex-start;
+  gap: $spacing-2;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin-bottom: $spacing-2;
+  
+  &::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: $color-secondary;
+    border-radius: $radius-full;
+    flex-shrink: 0;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Product detail sections
+// -----------------------------------------------------------------------------
+.product-details {
+  padding: $spacing-12 0;
+}
+
+.product-details__container {
+  @include container;
+  display: grid;
+  gap: $spacing-8;
+  
+  @include respond-to(lg) {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Features section (left column)
+// -----------------------------------------------------------------------------
+.product-features {
+  @include flex-column;
+  gap: $spacing-6;
+}
+
+.product-features__title {
+  @include heading-md;
+  margin-bottom: $spacing-4;
+}
+
+.product-features__content {
+  @include body-text;
+  line-height: $line-height-relaxed;
+}
+
+.product-features__specs {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-4;
+  margin-top: $spacing-6;
+}
+
+.product-features__spec {
+  @include card;
+  padding: $spacing-4;
+}
+
+.product-features__spec-label {
+  font-size: $font-size-xs;
+  color: $color-text-muted;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: $spacing-1;
+}
+
+.product-features__spec-value {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+}
+
+// -----------------------------------------------------------------------------
+// Sidebar (right column)
+// -----------------------------------------------------------------------------
+.product-sidebar {
+  @include flex-column;
+  gap: $spacing-6;
+}
+
+.product-sidebar__card {
+  @include card;
+  padding: $spacing-6;
+}
+
+.product-sidebar__title {
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-4;
+}
+
+.product-sidebar__list {
+  @include flex-column;
+  gap: $spacing-2;
+}
+
+.product-sidebar__list-item {
+  @include flex-start;
+  gap: $spacing-2;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  
+  &::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: $color-secondary;
+    border-radius: $radius-full;
+    flex-shrink: 0;
+  }
+}
+
+.product-sidebar__cta {
+  width: 100%;
+}
+
+.product-sidebar__demo {
+  margin-top: $spacing-6;
+  padding-top: $spacing-6;
+  border-top: 1px solid $color-gray-200;
+}
+
+.product-sidebar__demo-title {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-2;
+}
+
+.product-sidebar__demo-text {
+  font-size: $font-size-sm;
+  color: $color-text-muted;
+  margin-bottom: $spacing-2;
+}
+
+.product-sidebar__demo-link {
+  font-size: $font-size-sm;
+  color: $color-primary;
+  
+  &:hover {
+    text-decoration: underline;
+  }
+}

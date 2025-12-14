@@ -1,0 +1,80 @@
+// ==========================================================================
+// HERO - Hero section for landing page
+// ==========================================================================
+
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+// -----------------------------------------------------------------------------
+// Hero section
+// -----------------------------------------------------------------------------
+.hero {
+  background: $gradient-hero;
+  padding: $spacing-12 0;
+  
+  @include respond-to(lg) {
+    padding: $spacing-16 0;
+  }
+}
+
+.hero__container {
+  @include container;
+  display: grid;
+  gap: $spacing-8;
+  align-items: center;
+  
+  @include respond-to(lg) {
+    grid-template-columns: 1fr 400px;
+    gap: $spacing-12;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Hero content (left side)
+// -----------------------------------------------------------------------------
+.hero__content {
+  color: $color-white;
+}
+
+.hero__title {
+  @include heading-xl;
+  color: $color-white;
+  margin-bottom: $spacing-4;
+}
+
+.hero__description {
+  font-size: $font-size-base;
+  color: rgba($color-white, 0.9);
+  margin-bottom: $spacing-6;
+  max-width: 500px;
+  
+  @include respond-to(lg) {
+    font-size: $font-size-lg;
+  }
+}
+
+.hero__actions {
+  @include flex-start;
+  flex-wrap: wrap;
+  gap: $spacing-3;
+}
+
+// Hero-specific button overrides
+.hero .btn--primary {
+  background: $color-white;
+  color: $color-primary;
+  
+  &:hover {
+    background: rgba($color-white, 0.9);
+  }
+}
+
+.hero .btn--secondary {
+  background: transparent;
+  color: $color-white;
+  border-color: $color-white;
+  
+  &:hover {
+    background: rgba($color-white, 0.1);
+  }
+}

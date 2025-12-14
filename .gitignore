@@ -23,6 +23,17 @@ out/
 # --- VS Code ---
 .vscode/
 
+# --- AI tooling / agents ---
+.github/
+.claude/
+.gemini/
+.codex/
+.cursor/
+.windsurf/
+.continue/
+.cline/
+.aider*
+
 # --- OS / Editor ---
 .DS_Store
 Thumbs.db

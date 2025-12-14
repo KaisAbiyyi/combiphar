@@ -1,0 +1,50 @@
+// ==========================================================================
+// CATALOG PAGE - Product catalog styles
+// ==========================================================================
+
+@use '../../abstracts/variables' as *;
+@use '../../abstracts/mixins' as *;
+
+// -----------------------------------------------------------------------------
+// Catalog section
+// -----------------------------------------------------------------------------
+.catalog {
+  padding: $spacing-12 0;
+}
+
+.catalog__container {
+  @include container;
+}
+
+.catalog__header {
+  @include flex-between;
+  flex-wrap: wrap;
+  gap: $spacing-4;
+  margin-bottom: $spacing-8;
+}
+
+.catalog__title {
+  @include heading-lg;
+}
+
+.catalog__subtitle {
+  @include body-text;
+  margin-top: $spacing-2;
+}
+
+// -----------------------------------------------------------------------------
+// Product grid
+// -----------------------------------------------------------------------------
+.catalog__grid {
+  display: grid;
+  gap: $spacing-6;
+  grid-template-columns: 1fr;
+  
+  @include respond-to(sm) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  @include respond-to(lg) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

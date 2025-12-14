@@ -1,0 +1,13 @@
+// ==========================================================================
+// HEADER - Site header (alias for navbar in customer layout)
+// ==========================================================================
+
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+// Header is essentially the navbar for customer pages.
+// Additional header-specific styles go here if needed.
+
+.header {
+  background: $color-white;
+}

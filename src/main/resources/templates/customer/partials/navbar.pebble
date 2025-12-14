@@ -1,0 +1,24 @@
+{# ========================================================================== #}
+{# NAVBAR - Customer navigation partial                                       #}
+{# ========================================================================== #}
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar__container">
+      {# Brand / Logo #}
+      <a href="/" class="navbar__brand">
+        <div class="navbar__logo">CU</div>
+        <div class="navbar__brand-text">
+          <span class="navbar__brand-name">Combiphar Used Goods</span>
+          <span class="navbar__brand-tagline">Premium Preloved Office Furnitures</span>
+        </div>
+      </a>
+      
+      {# Navigation links and auth buttons #}
+      <div class="navbar__nav">
+        <a href="/catalog" class="navbar__link{% if activePage == 'catalog' %} navbar__link--active{% endif %}">Katalog</a>
+        <a href="/login" class="btn btn--secondary btn--sm">Masuk</a>
+        <a href="/register" class="btn btn--primary btn--sm">Daftar</a>
+      </div>
+    </div>
+  </nav>
+</header>

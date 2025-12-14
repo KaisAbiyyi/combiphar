@@ -1,0 +1,197 @@
+{# ========================================================================== #}
+{# CATALOG PAGE - Home / Product catalog for customers                        #}
+{# ========================================================================== #}
+{% extends "customer/layout" %}
+
+{% block content %}
+{# ============================================================================ #}
+{# HERO SECTION                                                                 #}
+{# ============================================================================ #}
+<section class="hero">
+  <div class="hero__container">
+    {# Hero content (left) #}
+    <div class="hero__content">
+      <h1 class="hero__title">
+        Upgrade ruang kerjamu<br>
+        dengan pilihan bekas pakai<br>
+        berkualitas
+      </h1>
+      <p class="hero__description">
+        Koleksi furnitur office premium yang telah melalui proses inspeksi ketat. Hemat 
+        hingga 60% dengan kondisi prima dan garansi kenyamanan.
+      </p>
+      <div class="hero__actions">
+        <a href="#katalog" class="btn btn--primary">Jelajahi Produk</a>
+        <a href="/checkout" class="btn btn--secondary">Lanjut ke Checkout</a>
+      </div>
+    </div>
+    
+    {# Info card (right) #}
+    <div class="info-card">
+      <div class="info-card__header">
+        <span class="info-card__title">Rating Kepuasan</span>
+        <span class="info-card__rating">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+          </svg>
+          4.9
+        </span>
+      </div>
+      
+      <div class="info-card__stats">
+        <div class="info-card__stat">
+          <div class="info-card__stat-value">312+</div>
+          <div class="info-card__stat-label">Barang Tersedia</div>
+        </div>
+        <div class="info-card__stat">
+          <div class="info-card__stat-value">64</div>
+          <div class="info-card__stat-label">Partner Korporat</div>
+        </div>
+      </div>
+      
+      <p class="info-card__quote">
+        "Kami memastikan setiap barang layak pakai dengan 
+        inspeksi 45 titik kualitas sebelum sampai ke ruang kerja 
+        Anda."
+      </p>
+      
+      <div class="info-card__author">
+        <div class="info-card__avatar">
+          <img src="https://i.pravatar.cc/80?img=32" alt="Andien Maharani">
+        </div>
+        <div>
+          <div class="info-card__author-name">Andien Maharani</div>
+          <div class="info-card__author-role">Lead Curator Combiphar</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{# ============================================================================ #}
+{# CATALOG SECTION                                                              #}
+{# ============================================================================ #}
+<section class="catalog" id="katalog">
+  <div class="catalog__container">
+    {# Catalog header #}
+    <div class="catalog__header">
+      <div>
+        <h2 class="catalog__title">Katalog Produk</h2>
+        <p class="catalog__subtitle">Pilihan furnitur kantor siap pakai dengan kualitas terjamin.</p>
+      </div>
+      
+      {# Filter tabs #}
+      <div class="filter-tabs">
+        <button class="filter-tab filter-tab--active">Semua Produk</button>
+        <button class="filter-tab">Furnitur</button>
+        <button class="filter-tab">Elektronik</button>
+      </div>
+    </div>
+    
+    {# Product grid #}
+    <div class="catalog__grid">
+      {# Product 1 #}
+      <article class="product-card">
+        <div class="product-card__image">
+          <img src="https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=400&h=300&fit=crop" alt="Meja Kantor Eksekutif">
+          <span class="product-card__badge badge badge--stock">Stok 8</span>
+        </div>
+        <div class="product-card__body">
+          <h3 class="product-card__title">Meja Kantor Eksekutif</h3>
+          <p class="product-card__description">Kayu jati solid, finishing glossy premium, dilengkapi manajemen kabel.</p>
+          <div class="product-card__price">Rp 7.500.000</div>
+        </div>
+        <div class="product-card__actions">
+          <a href="/product/1" class="btn btn--ghost btn--sm">Lihat Detail</a>
+          <button class="btn btn--primary btn--sm">Tambah ke Keranjang</button>
+        </div>
+      </article>
+      
+      {# Product 2 #}
+      <article class="product-card">
+        <div class="product-card__image">
+          <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=400&h=300&fit=crop" alt="Set Meja Rapat Glasium">
+          <span class="product-card__badge badge badge--stock">Stok 3</span>
+        </div>
+        <div class="product-card__body">
+          <h3 class="product-card__title">Set Meja Rapat Glasium</h3>
+          <p class="product-card__description">Meja kaca tempered 10 kursi dengan sistem kabel tersembunyi.</p>
+          <div class="product-card__price">Rp 15.900.000</div>
+        </div>
+        <div class="product-card__actions">
+          <a href="/product/2" class="btn btn--ghost btn--sm">Lihat Detail</a>
+          <button class="btn btn--primary btn--sm">Tambah ke Keranjang</button>
+        </div>
+      </article>
+      
+      {# Product 3 #}
+      <article class="product-card">
+        <div class="product-card__image">
+          <img src="https://images.unsplash.com/photo-1580480055273-228ff5388ef8?w=400&h=300&fit=crop" alt="Kursi Ergonomis Lumbar+">
+          <span class="product-card__badge badge badge--stock">Stok 21</span>
+        </div>
+        <div class="product-card__body">
+          <h3 class="product-card__title">Kursi Ergonomis Lumbar+</h3>
+          <p class="product-card__description">Sandaran mesh breathable, penyangga lumbar adjustable, dan armrest 4D.</p>
+          <div class="product-card__price">Rp 3.250.000</div>
+        </div>
+        <div class="product-card__actions">
+          <a href="/product/3" class="btn btn--ghost btn--sm">Lihat Detail</a>
+          <button class="btn btn--primary btn--sm">Tambah ke Keranjang</button>
+        </div>
+      </article>
+      
+      {# Product 4 #}
+      <article class="product-card">
+        <div class="product-card__image">
+          <img src="https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=400&h=300&fit=crop" alt="Monitor LCD 24 inch">
+          <span class="product-card__badge badge badge--stock">Stok 14</span>
+        </div>
+        <div class="product-card__body">
+          <h3 class="product-card__title">Monitor LCD 24 inch</h3>
+          <p class="product-card__description">Panel IPS Full HD, bezel tipis, konektivitas HDMI & DisplayPort.</p>
+          <div class="product-card__price">Rp 1.850.000</div>
+        </div>
+        <div class="product-card__actions">
+          <a href="/product/4" class="btn btn--ghost btn--sm">Lihat Detail</a>
+          <button class="btn btn--primary btn--sm">Tambah ke Keranjang</button>
+        </div>
+      </article>
+      
+      {# Product 5 #}
+      <article class="product-card">
+        <div class="product-card__image">
+          <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop" alt="Lemari Arsip Besi Tactical">
+          <span class="product-card__badge badge badge--stock">Stok 5</span>
+        </div>
+        <div class="product-card__body">
+          <h3 class="product-card__title">Lemari Arsip Besi Tactical</h3>
+          <p class="product-card__description">4 tingkat rak dengan kunci digital fingerprint dan anti karat.</p>
+          <div class="product-card__price">Rp 4.200.000</div>
+        </div>
+        <div class="product-card__actions">
+          <a href="/product/5" class="btn btn--ghost btn--sm">Lihat Detail</a>
+          <button class="btn btn--primary btn--sm">Tambah ke Keranjang</button>
+        </div>
+      </article>
+      
+      {# Product 6 #}
+      <article class="product-card">
+        <div class="product-card__image">
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop" alt="Task Lamp Focus Pro">
+          <span class="product-card__badge badge badge--stock">Stok 17</span>
+        </div>
+        <div class="product-card__body">
+          <h3 class="product-card__title">Task Lamp Focus Pro</h3>
+          <p class="product-card__description">Lampu meja LED dengan sensor cahaya adaptif dan wireless charging.</p>
+          <div class="product-card__price">Rp 980.000</div>
+        </div>
+        <div class="product-card__actions">
+          <a href="/product/6" class="btn btn--ghost btn--sm">Lihat Detail</a>
+          <button class="btn btn--primary btn--sm">Tambah ke Keranjang</button>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,101 @@
+// ==========================================================================
+// FOOTER - Site footer
+// ==========================================================================
+
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+// -----------------------------------------------------------------------------
+// Main footer
+// -----------------------------------------------------------------------------
+.footer {
+  background: $color-white;
+  border-top: 1px solid $color-gray-200;
+  padding: $spacing-12 0 $spacing-6;
+}
+
+.footer__container {
+  @include container;
+}
+
+.footer__grid {
+  display: grid;
+  gap: $spacing-8;
+  margin-bottom: $spacing-8;
+  
+  @include respond-to(md) {
+    grid-template-columns: 2fr 1fr 1fr;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Footer columns
+// -----------------------------------------------------------------------------
+.footer__brand {
+  max-width: 300px;
+}
+
+.footer__brand-name {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-2;
+}
+
+.footer__brand-description {
+  font-size: $font-size-sm;
+  color: $color-text-muted;
+  line-height: $line-height-relaxed;
+}
+
+.footer__column-title {
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-4;
+}
+
+.footer__links {
+  @include flex-column;
+  gap: $spacing-2;
+}
+
+.footer__link {
+  font-size: $font-size-sm;
+  color: $color-text-muted;
+  transition: color $transition-fast;
+  
+  &:hover {
+    color: $color-primary;
+  }
+}
+
+.footer__contact-item {
+  @include flex-start;
+  gap: $spacing-2;
+  font-size: $font-size-sm;
+  color: $color-text-muted;
+  margin-bottom: $spacing-2;
+  
+  a {
+    color: $color-primary;
+    
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Footer bottom (copyright)
+// -----------------------------------------------------------------------------
+.footer__bottom {
+  padding-top: $spacing-6;
+  border-top: 1px solid $color-gray-200;
+  text-align: center;
+}
+
+.footer__copyright {
+  font-size: $font-size-sm;
+  color: $color-text-muted;
+}
