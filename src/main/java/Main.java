@@ -83,5 +83,19 @@ public class Main {
             );
             ctx.render("customer/cart", model);
         });
+        
+        // Checkout page
+        app.get("/checkout", ctx -> {
+            Map<String, Object> model = Map.of(
+                "title", "Checkout Pesanan - Combiphar Used Goods",
+                "activePage", "checkout"
+            );
+            ctx.render("customer/checkout", model);
+        });
+        
+        // Admin login page
+        app.get("/admin/login", ctx -> {
+            ctx.render("admin/login");
+        });
     }
 }

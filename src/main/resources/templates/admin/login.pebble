@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login - Combiphar Used Goods</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+  <div class="admin-login">
+    <!-- Left Side - Info Panel -->
+    <div class="admin-login__info">
+      <div class="admin-login__info-content">
+        <span class="admin-login__badge">Admin Suite</span>
+        
+        <h1 class="admin-login__title">
+          Masuk ke portal operasional Combiphar Used Goods
+        </h1>
+        
+        <p class="admin-login__description">
+          Kelola inventaris, transaksi, pengiriman, dan laporan keuangan sistem gudang dengan dashboard terhubung.
+        </p>
+        
+        <ul class="admin-login__benefits">
+          <li class="admin-login__benefit">
+            Dapatkan email @combiphar.id
+          </li>
+          <li class="admin-login__benefit">
+            OTP dikirim via aplikasi Auth+Priv
+          </li>
+          <li class="admin-login__benefit">
+            Bisa dominasi bagus selama 30 menit saja
+          </li>
+        </ul>
+        
+        <div class="admin-login__contact">
+          Belum punya Email? Email ke <a href="mailto:dev@combiphar.com">dev@combiphar.com</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Side - Login Form -->
+    <div class="admin-login__form-wrapper">
+      <div class="admin-login__form-container">
+        <a href="/" class="admin-login__back-link">Kembali ke halaman</a>
+        
+        <div class="admin-login__form-header">
+          <span class="role-label">Masuk Untuk Ops</span>
+          <h1>Admin Warehouse / Finance</h1>
+          <p>Gunakan kredensial enterprise Anda</p>
+        </div>
+
+        <form class="admin-login__form">
+          <div class="admin-login__field">
+            <label for="email">Email</label>
+            <input 
+              type="email" 
+              id="email" 
+              name="email" 
+              placeholder="admin@combiphar.id"
+              required
+            >
+          </div>
+
+          <div class="admin-login__field">
+            <label for="password">Kata Sandi</label>
+            <input 
+              type="password" 
+              id="password" 
+              name="password" 
+              placeholder="••••••••"
+              required
+            >
+          </div>
+
+          <div class="admin-login__field">
+            <label for="otp">Kode OTP</label>
+            <input 
+              type="text" 
+              id="otp" 
+              name="otp" 
+              placeholder="6 digit dari Auth+Priv"
+              maxlength="6"
+              required
+            >
+          </div>
+
+          <div class="admin-login__forgot-link">
+            <label>
+              <input type="checkbox" name="remember" id="remember">
+              Ingat perangkat ini
+            </label>
+            <a href="#">Lupa kata sandi?</a>
+          </div>
+
+          <div class="admin-login__submit">
+            <button type="submit">Masuk ke Dashboard</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
