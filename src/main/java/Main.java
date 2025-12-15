@@ -74,5 +74,14 @@ public class Main {
             );
             ctx.render("customer/product-detail", model);
         });
+        
+        // Cart page
+        app.get("/cart", ctx -> {
+            Map<String, Object> model = Map.of(
+                "title", "Keranjang Saya - Combiphar Used Goods",
+                "activePage", "cart"
+            );
+            ctx.render("customer/cart", model);
+        });
     }
 }

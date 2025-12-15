@@ -1,0 +1,172 @@
+{# ========================================================================== #}
+{# CART PAGE - Shopping cart view for customers                               #}
+{# ========================================================================== #}
+{% extends "customer/layout" %}
+
+{% block content %}
+<section class="cart-page">
+  <div class="cart-page__container">
+    {# ========================================================================== #}
+    {# CART SECTION (Left Column)                                                 #}
+    {# ========================================================================== #}
+    <div class="cart-section">
+      {# Header #}
+      <div class="cart-section__header">
+        <div class="cart-section__heading">
+          <h1 class="cart-section__title">Keranjang Saya</h1>
+          <p class="cart-section__subtitle">3 barang siap ditambah. Update qty sebelum checkout</p>
+        </div>
+        <button class="cart-section__clear">Hapus Semua</button>
+      </div>
+      
+      {# Cart Items #}
+      <div class="cart-items">
+        {# Item 1: Meja Eksekutif Alto #}
+        <article class="cart-item">
+          <div class="cart-item__image">
+            <img src="https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=200&h=200&fit=crop" alt="Meja Eksekutif Alto">
+          </div>
+          
+          <div class="cart-item__details">
+            <div class="cart-item__meta">
+              <span class="cart-item__meta-item">Furniture</span>
+              <span class="cart-item__meta-item">Lemari</span>
+              <span class="cart-item__meta-item">Jadi</span>
+            </div>
+            <h3 class="cart-item__name">Meja Eksekutif Alto</h3>
+            <p class="cart-item__sku">SKU: KE-01-2025</p>
+          </div>
+          
+          <div class="cart-item__actions-wrapper">
+            <div class="cart-item__quantity">
+              <span class="cart-item__quantity-label">Qty</span>
+              <button class="cart-item__quantity-control" aria-label="Kurangi jumlah">-</button>
+              <span class="cart-item__quantity-value">1</span>
+              <button class="cart-item__quantity-control" aria-label="Tambah jumlah">+</button>
+            </div>
+            
+            <div class="cart-item__price-section">
+              <div class="cart-item__price">Rp 7.500.000</div>
+              <button class="cart-item__remove">Hapus</button>
+            </div>
+          </div>
+        </article>
+        
+        {# Item 2: Kursi Lumbar+ (4) #}
+        <article class="cart-item">
+          <div class="cart-item__image">
+            <img src="https://images.unsplash.com/photo-1580480055273-228ff5388ef8?w=200&h=200&fit=crop" alt="Kursi Lumbar+">
+          </div>
+          
+          <div class="cart-item__details">
+            <div class="cart-item__meta">
+              <span class="cart-item__meta-item">Furniture</span>
+              <span class="cart-item__meta-item">Lemari</span>
+              <span class="cart-item__meta-item">Jadi</span>
+            </div>
+            <h3 class="cart-item__name">Kursi Lumbar+ (4)</h3>
+            <p class="cart-item__sku">SKU: KL-04-2025</p>
+          </div>
+          
+          <div class="cart-item__actions-wrapper">
+            <div class="cart-item__quantity">
+              <span class="cart-item__quantity-label">Qty</span>
+              <button class="cart-item__quantity-control" aria-label="Kurangi jumlah">-</button>
+              <span class="cart-item__quantity-value">4</span>
+              <button class="cart-item__quantity-control" aria-label="Tambah jumlah">+</button>
+            </div>
+            
+            <div class="cart-item__price-section">
+              <div class="cart-item__price">Rp 13.000.000</div>
+              <button class="cart-item__remove">Hapus</button>
+            </div>
+          </div>
+        </article>
+        
+        {# Item 3: Monitor Aurora 24" (6) #}
+        <article class="cart-item">
+          <div class="cart-item__image">
+            <img src="https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=200&h=200&fit=crop" alt="Monitor Aurora 24">
+          </div>
+          
+          <div class="cart-item__details">
+            <div class="cart-item__meta">
+              <span class="cart-item__meta-item">Furniture</span>
+              <span class="cart-item__meta-item">Lemari</span>
+              <span class="cart-item__meta-item">Jadi</span>
+            </div>
+            <h3 class="cart-item__name">Monitor Aurora 24" (6)</h3>
+            <p class="cart-item__sku">SKU: MT-24-2025</p>
+          </div>
+          
+          <div class="cart-item__actions-wrapper">
+            <div class="cart-item__quantity">
+              <span class="cart-item__quantity-label">Qty</span>
+              <button class="cart-item__quantity-control" aria-label="Kurangi jumlah">-</button>
+              <span class="cart-item__quantity-value">6</span>
+              <button class="cart-item__quantity-control" aria-label="Tambah jumlah">+</button>
+            </div>
+            
+            <div class="cart-item__price-section">
+              <div class="cart-item__price">Rp 11.100.000</div>
+              <button class="cart-item__remove">Hapus</button>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+    
+    {# ========================================================================== #}
+    {# SIDEBAR (Right Column)                                                     #}
+    {# ========================================================================== #}
+    <aside class="cart-summary">
+      {# Summary Card #}
+      <div class="cart-summary__card">
+        <h2 class="cart-summary__title">Ringkasan</h2>
+        
+        <div class="cart-summary__items">
+          <div class="cart-summary__item">
+            <span class="cart-summary__item-label">Subtotal</span>
+            <span class="cart-summary__item-value">Rp 31.600.000</span>
+          </div>
+          <div class="cart-summary__item">
+            <span class="cart-summary__item-label">Diskon korporat</span>
+            <span class="cart-summary__item-value cart-summary__item-value--discount">-Rp 2.500.000</span>
+          </div>
+          <div class="cart-summary__item">
+            <span class="cart-summary__item-label">Estimasi logistik</span>
+            <span class="cart-summary__item-value">Rp 1.200.000</span>
+          </div>
+        </div>
+        
+        <div class="cart-summary__total">
+          <span class="cart-summary__total-label">Total</span>
+          <span class="cart-summary__total-value">Rp 30.300.000</span>
+        </div>
+        
+        <a href="/checkout" class="btn btn--primary btn--lg cart-summary__cta">Lanjut Checkout</a>
+        
+        <p class="cart-summary__note">
+          Dealer akan diterapkan saat pemilihan metode pembayaran selesai
+        </p>
+      </div>
+      
+      {# Important Notes #}
+      <div class="cart-notes">
+        <h3 class="cart-notes__title">Catatan Penting</h3>
+        <ul class="cart-notes__list">
+          <li class="cart-notes__item">
+            Barang dibawa pulang 4 jam setelah dikonfirmasi ke keranjang
+          </li>
+          <li class="cart-notes__item">
+            Pembatalan di atas 60 10 hari mengakibatkan potonsi pick-up otomatis
+          </li>
+          <li class="cart-notes__item">
+            Perhatian spesial pengemasan terkilat untuk menghindari rusak (ready)
+          </li>
+        </ul>
+      </div>
+    </aside>
+  </div>
+</section>
+{% endblock %}
