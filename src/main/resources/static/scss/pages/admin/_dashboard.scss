@@ -1,0 +1,489 @@
+// ==========================================================================
+// ADMIN DASHBOARD - Main dashboard page styling
+// ==========================================================================
+
+@use '../../abstracts/variables' as *;
+@use '../../abstracts/mixins' as *;
+
+.admin-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-6;
+
+  // Statistics Cards Grid
+  &__stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: $spacing-5;
+  }
+
+  // Middle section with chart and operations
+  &__middle {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: $spacing-5;
+  }
+
+  &__chart-section {
+    min-height: 400px;
+  }
+
+  &__operations {
+    min-height: 400px;
+  }
+
+  &__transactions {
+    width: 100%;
+  }
+}
+
+// Stat Card Component
+.stat-card {
+  background: $color-white;
+  border-radius: $radius-xl;
+  padding: $spacing-5;
+  box-shadow: $shadow-card;
+  transition: transform $transition-fast;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $shadow-lg;
+  }
+
+  &__header {
+    margin-bottom: $spacing-4;
+  }
+
+  &__label {
+    font-size: $font-size-xs;
+    font-weight: $font-weight-semibold;
+    color: $color-text-secondary;
+    letter-spacing: 0.5px;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-2;
+  }
+
+  &__value {
+    font-size: $font-size-3xl;
+    font-weight: $font-weight-bold;
+    color: $color-text-primary;
+    margin: 0;
+  }
+
+  &__change {
+    display: flex;
+    align-items: center;
+    gap: $spacing-1;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+
+    &--up {
+      color: $color-success;
+      
+      .stat-card__arrow {
+        color: $color-success;
+      }
+    }
+
+    &--down {
+      color: $color-error;
+      
+      .stat-card__arrow {
+        color: $color-error;
+      }
+    }
+  }
+
+  &__arrow {
+    width: 16px;
+    height: 16px;
+  }
+
+  &__footer {
+    font-size: $font-size-xs;
+    color: $color-text-muted;
+    margin: 0;
+    line-height: 1.4;
+  }
+}
+
+// Chart Card Component
+.chart-card {
+  background: $color-white;
+  border-radius: $radius-xl;
+  padding: $spacing-6;
+  box-shadow: $shadow-card;
+  height: 100%;
+
+  &__header {
+    margin-bottom: $spacing-5;
+  }
+
+  &__title {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    color: $color-text-primary;
+    margin: 0 0 $spacing-1 0;
+  }
+
+  &__subtitle {
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+    margin: 0;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-4;
+  }
+
+  &__legend {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: $spacing-4;
+    border-bottom: 1px solid $color-gray-200;
+  }
+
+  &__download-btn {
+    display: flex;
+    align-items: center;
+    gap: $spacing-2;
+    padding: $spacing-2 $spacing-4;
+    background: #F3E8FF;
+    border: 1px solid #E9D5FF;
+    border-radius: $radius-md;
+    color: $color-primary;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    cursor: pointer;
+    transition: all $transition-fast;
+
+    &:hover {
+      background: #E9D5FF;
+    }
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+}
+
+// Chart Legend
+.chart-legend {
+  display: flex;
+  gap: $spacing-5;
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: $spacing-2;
+  }
+
+  &__dot {
+    width: 12px;
+    height: 12px;
+    border-radius: $radius-full;
+
+    &--week1 {
+      background: linear-gradient(135deg, #F472B6 0%, #EC4899 100%);
+    }
+
+    &--week2 {
+      background: linear-gradient(135deg, #A855F7 0%, #9333EA 100%);
+    }
+
+    &--week3 {
+      background: linear-gradient(135deg, #818CF8 0%, #6366F1 100%);
+    }
+
+    &--week4 {
+      background: #E5E7EB;
+    }
+  }
+
+  &__label {
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+    font-weight: $font-weight-medium;
+  }
+}
+
+// Chart Canvas (Simplified visualization)
+.chart-canvas {
+  background: linear-gradient(135deg, #7C3AED 0%, #A855F7 50%, #EC4899 100%);
+  border-radius: $radius-lg;
+  padding: $spacing-6;
+  min-height: 280px;
+  position: relative;
+}
+
+.chart-bars {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  height: 250px;
+  gap: $spacing-4;
+}
+
+.chart-bar-group {
+  display: flex;
+  gap: 6px;
+  align-items: flex-end;
+  flex: 1;
+}
+
+.chart-bar {
+  flex: 1;
+  min-height: 40px;
+  border-radius: 4px 4px 0 0;
+  transition: all $transition-fast;
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  &--week1 {
+    background: rgba(244, 114, 182, 0.9);
+  }
+
+  &--week2 {
+    background: rgba(168, 85, 247, 0.9);
+  }
+
+  &--week3 {
+    background: rgba(129, 140, 248, 0.9);
+  }
+
+  &--week4 {
+    background: rgba(229, 231, 235, 0.9);
+  }
+}
+
+// Operations Card
+.operations-card {
+  background: $color-white;
+  border-radius: $radius-xl;
+  padding: $spacing-6;
+  box-shadow: $shadow-card;
+  height: 100%;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: $spacing-5;
+  }
+
+  &__title {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    color: $color-text-primary;
+    margin: 0;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-4;
+  }
+}
+
+.operations-badge {
+  padding: $spacing-1 $spacing-3;
+  border-radius: $radius-full;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+
+  &--best {
+    background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+    color: #92400E;
+    border: 1px solid #FDE68A;
+  }
+}
+
+.operation-item {
+  display: flex;
+  gap: $spacing-3;
+  align-items: flex-start;
+}
+
+.operation-badge {
+  padding: $spacing-1 $spacing-3;
+  border-radius: $radius-md;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  white-space: nowrap;
+  flex-shrink: 0;
+
+  &--gudang {
+    background: #DBEAFE;
+    color: #1E40AF;
+  }
+
+  &--qc {
+    background: #D1FAE5;
+    color: #065F46;
+  }
+
+  &--logistik {
+    background: #FEF3C7;
+    color: #92400E;
+  }
+
+  &--alert {
+    background: #FEE2E2;
+    color: #991B1B;
+  }
+}
+
+.operation-text {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: 1.5;
+  margin: 0;
+}
+
+// Transactions Card
+.transactions-card {
+  background: $color-white;
+  border-radius: $radius-xl;
+  padding: $spacing-6;
+  box-shadow: $shadow-card;
+
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: $spacing-5;
+  }
+
+  &__title {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    color: $color-text-primary;
+    margin: 0 0 $spacing-1 0;
+  }
+
+  &__subtitle {
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+    margin: 0;
+  }
+
+  &__actions {
+    display: flex;
+    gap: $spacing-3;
+  }
+}
+
+// Transactions Table
+.transactions-table {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+
+  &__head {
+    border-bottom: 1px solid $color-gray-200;
+  }
+
+  &__header {
+    text-align: left;
+    padding: $spacing-3 $spacing-4;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-semibold;
+    color: $color-text-secondary;
+    letter-spacing: 0.5px;
+  }
+
+  &__body {
+  }
+
+  &__row {
+    border-bottom: 1px solid $color-gray-100;
+    transition: background-color $transition-fast;
+
+    &:hover {
+      background-color: $color-gray-50;
+    }
+  }
+
+  &__cell {
+    padding: $spacing-4;
+    font-size: $font-size-sm;
+    color: $color-text-primary;
+  }
+}
+
+// Badge Component
+.badge {
+  display: inline-block;
+  padding: $spacing-1 $spacing-3;
+  border-radius: $radius-full;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+
+  &--proses {
+    background: #FEF3C7;
+    color: #92400E;
+  }
+
+  &--selesai {
+    background: #D1FAE5;
+    color: #065F46;
+  }
+
+  &--dikemas {
+    background: #DBEAFE;
+    color: #1E40AF;
+  }
+
+  &--pending {
+    background: #FEE2E2;
+    color: #991B1B;
+  }
+}
+
+// Button Components
+.btn-primary {
+  padding: $spacing-2 $spacing-5;
+  background: linear-gradient(135deg, $color-secondary 0%, $color-primary 100%);
+  color: $color-white;
+  border: none;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  cursor: pointer;
+  transition: all $transition-fast;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: $shadow-md;
+  }
+}
+
+.btn-secondary {
+  padding: $spacing-2 $spacing-5;
+  background: $color-white;
+  color: $color-primary;
+  border: 1px solid #E9D5FF;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  cursor: pointer;
+  transition: all $transition-fast;
+
+  &:hover {
+    background: #FAF5FF;
+    border-color: $color-primary;
+  }
+}

@@ -21,6 +21,9 @@
 @use 'components/cards';
 @use 'components/navbar';
 @use 'components/badges';
+@use 'components/admin-sidebar';
+@use 'components/admin-navbar';
+@use 'components/admin-footer';
 
 // -----------------------------------------------------------------------------
 // Layout (structural pieces)
@@ -28,6 +31,7 @@
 @use 'layout/header';
 @use 'layout/footer';
 @use 'layout/hero';
+@use 'layout/admin-layout';
 
 // -----------------------------------------------------------------------------
 // Pages (page-specific styles)
@@ -35,3 +39,4 @@
 @use 'pages/customer/catalog';
 @use 'pages/customer/product-detail';
 @use 'pages/customer/cart';
+@use 'pages/admin/dashboard';

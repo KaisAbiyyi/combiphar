@@ -83,5 +83,26 @@ public class Main {
             );
             ctx.render("customer/cart", model);
         });
+        
+        // Admin dashboard page
+        app.get("/admin", ctx -> {
+            Map<String, Object> model = Map.of(
+                "title", "Dashboard Admin",
+                "pageTitle", "Dashboard Admin",
+                "userName", "Nashya Putri",
+                "userRole", "Admin Warehouse Jakarta"
+            );
+            ctx.render("admin/dashboard", model);
+        });
+        
+        app.get("/admin/dashboard", ctx -> {
+            Map<String, Object> model = Map.of(
+                "title", "Dashboard Admin",
+                "pageTitle", "Dashboard Admin",
+                "userName", "Nashya Putri",
+                "userRole", "Admin Warehouse Jakarta"
+            );
+            ctx.render("admin/dashboard", model);
+        });
     }
 }

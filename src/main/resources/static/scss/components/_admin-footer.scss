@@ -1,0 +1,23 @@
+// ==========================================================================
+// ADMIN FOOTER - Footer section styling
+// ==========================================================================
+
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+.admin-footer {
+  background: $color-white;
+  border-top: 1px solid #E9D5FF;
+  padding: $spacing-4 $spacing-6;
+  margin-top: auto;
+
+  &__container {
+    text-align: center;
+  }
+
+  &__text {
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+    margin: 0;
+  }
+}
