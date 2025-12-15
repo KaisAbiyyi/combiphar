@@ -25,6 +25,7 @@
 @import url('pages/customer/cart.css');
 @import url('pages/customer/checkout.css');
 @import url('pages/customer/payment.css');
+@import url('pages/customer/history.css');
 
 /* Pages - Admin pages */
 @import url('pages/admin/login.css');

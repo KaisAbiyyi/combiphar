@@ -104,6 +104,14 @@ public class Main {
             ctx.render("customer/payment", model);
         });
 
+        // History page
+        app.get("/history", ctx -> {
+            Map<String, Object> model = Map.of(
+                    "title", "Riwayat Transaksi - Combiphar Used Goods",
+                    "activePage", "history");
+            ctx.render("customer/history", model);
+        });
+
         // Admin login page
         app.get("/admin/login", ctx -> {
             ctx.render("admin/login");
