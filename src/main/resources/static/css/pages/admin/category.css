@@ -1,0 +1,370 @@
+/* ========================================================================== */
+/* ADMIN CATEGORY PAGE                                                        */
+/* Page-specific styles for category management in admin dashboard            */
+/* ========================================================================== */
+
+/* Category Page Layout
+   ========================================================================== */
+.admin-category {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Header Stats Section
+   ========================================================================== */
+.admin-category__header {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+}
+
+/* Content Grid Layout
+   ========================================================================== */
+.admin-category__content {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+/* Table Section
+   ========================================================================== */
+.admin-category__table-section {
+  width: 100%;
+}
+
+/* Form Section
+   ========================================================================== */
+.admin-category__form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Category Table Component
+   ========================================================================== */
+.category-table {
+  background: #FFFFFF;
+  border-radius: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.category-table__header {
+  padding: 1.5rem;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.category-table__title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 0.25rem 0;
+}
+
+.category-table__subtitle {
+  font-size: 0.875rem;
+  color: #6B7280;
+  margin: 0 0 1rem 0;
+}
+
+.category-table__actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.category-table__body {
+  overflow-x: auto;
+}
+
+/* Data Table Component
+   ========================================================================== */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.data-table thead {
+  background: #F9FAFB;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.data-table th {
+  padding: 0.875rem 1.5rem;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #6B7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.data-table tbody tr {
+  border-bottom: 1px solid #F3F4F6;
+  transition: background-color 150ms ease;
+}
+
+.data-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.data-table tbody tr:hover {
+  background: #F9FAFB;
+}
+
+.data-table td {
+  padding: 1rem 1.5rem;
+  color: #374151;
+}
+
+.data-table__name {
+  font-weight: 500;
+  color: #111827;
+}
+
+.data-table__actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* Category Form Component
+   ========================================================================== */
+.category-form {
+  background: #FFFFFF;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.category-form__title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 0.25rem 0;
+}
+
+.category-form__subtitle {
+  font-size: 0.875rem;
+  color: #6B7280;
+  margin: 0 0 1.5rem 0;
+}
+
+/* Form Elements
+   ========================================================================== */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+  width: 100%;
+  padding: 0.625rem 0.875rem;
+  font-size: 0.875rem;
+  color: #111827;
+  background: #FFFFFF;
+  border: 1px solid #D1D5DB;
+  border-radius: 0.5rem;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: #EC4899;
+  box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.1);
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+  color: #9CA3AF;
+}
+
+.form-textarea {
+  resize: vertical;
+  font-family: inherit;
+}
+
+.form-select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.875rem center;
+  padding-right: 2.5rem;
+}
+
+.form-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.form-checkbox__input {
+  width: 1rem;
+  height: 1rem;
+  border: 1px solid #D1D5DB;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+.form-checkbox__input:checked {
+  background-color: #EC4899;
+  border-color: #EC4899;
+}
+
+.form-checkbox__label {
+  font-size: 0.875rem;
+  color: #374151;
+  cursor: pointer;
+  user-select: none;
+}
+
+.form-help {
+  font-size: 0.75rem;
+  color: #6B7280;
+  margin: 0.25rem 0 0 0;
+}
+
+.form-actions {
+  margin-top: 0.5rem;
+}
+
+/* Info Box Component
+   ========================================================================== */
+.info-box {
+  background: linear-gradient(135deg, #F9FAFB 0%, #F3F4F6 100%);
+  border: 1px solid #E5E7EB;
+  border-radius: 0.75rem;
+  padding: 1rem;
+}
+
+.info-box__title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+  margin: 0 0 0.5rem 0;
+}
+
+.info-box__text {
+  font-size: 0.8125rem;
+  color: #6B7280;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Button Icon Variants
+   ========================================================================== */
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: background-color 150ms ease;
+}
+
+.btn-icon--edit {
+  color: #3B82F6;
+}
+
+.btn-icon--edit:hover {
+  background: #EFF6FF;
+}
+
+.btn-icon--archive {
+  color: #6B7280;
+}
+
+.btn-icon--archive:hover {
+  background: #F3F4F6;
+}
+
+.btn-icon--disable {
+  color: #F59E0B;
+}
+
+.btn-icon--disable:hover {
+  background: #FEF3C7;
+}
+
+.btn-icon--confirm {
+  color: #10B981;
+}
+
+.btn-icon--confirm:hover {
+  background: #D1FAE5;
+}
+
+.btn-icon--delete {
+  color: #EF4444;
+}
+
+.btn-icon--delete:hover {
+  background: #FEE2E2;
+}
+
+/* Responsive Design
+   ========================================================================== */
+@media (max-width: 1280px) {
+  .admin-category__content {
+    grid-template-columns: 1fr 360px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .admin-category__header {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .admin-category__content {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-category__form-section {
+    order: -1;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-category__header {
+    grid-template-columns: 1fr;
+  }
+
+  .category-table__actions {
+    flex-direction: column;
+  }
+
+  .data-table {
+    font-size: 0.8125rem;
+  }
+
+  .data-table th,
+  .data-table td {
+    padding: 0.75rem 1rem;
+  }
+}

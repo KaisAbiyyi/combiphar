@@ -1,3 +1,4 @@
+
 import java.util.Map;
 
 import com.mitchellbosecke.pebble.PebbleEngine;
@@ -7,8 +8,8 @@ import io.javalin.Javalin;
 import io.javalin.rendering.template.JavalinPebble;
 
 /**
- * Application entry point for Combiphar Used Goods system.
- * Configures Javalin server with Pebble templating and static file serving.
+ * Application entry point for Combiphar Used Goods system. Configures Javalin
+ * server with Pebble templating and static file serving.
  */
 public class Main {
 
@@ -98,7 +99,8 @@ public class Main {
                     "title", "Dashboard Admin",
                     "pageTitle", "Dashboard Admin",
                     "userName", "Nashya Putri",
-                    "userRole", "Admin Warehouse Jakarta");
+                    "userRole", "Admin Warehouse Jakarta",
+                    "activePage", "dashboard");
             ctx.render("admin/dashboard", model);
         });
 
@@ -107,8 +109,20 @@ public class Main {
                     "title", "Dashboard Admin",
                     "pageTitle", "Dashboard Admin",
                     "userName", "Nashya Putri",
-                    "userRole", "Admin Warehouse Jakarta");
+                    "userRole", "Admin Warehouse Jakarta",
+                    "activePage", "dashboard");
             ctx.render("admin/dashboard", model);
+        });
+
+        // Admin category page
+        app.get("/admin/kategori", ctx -> {
+            Map<String, Object> model = Map.of(
+                    "title", "Kategori Produk",
+                    "pageTitle", "Kategori Produk",
+                    "userName", "Nashya Putri",
+                    "userRole", "Admin Warehouse Jakarta",
+                    "activePage", "kategori");
+            ctx.render("admin/category", model);
         });
     }
 }

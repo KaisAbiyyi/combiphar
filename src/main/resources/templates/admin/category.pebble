@@ -1,0 +1,275 @@
+{% extends "admin/layout" %}
+
+{% block content %}
+<div class="admin-category">
+  {# Header Section with Stats #}
+  <div class="admin-category__header">
+    {# Stat Card 1 #}
+    <div class="stat-card stat-card--compact">
+      <div class="stat-card__label">KATEGORI AKTIF</div>
+      <div class="stat-card__value">18</div>
+      <div class="stat-card__description">Organisasi di existing produk</div>
+    </div>
+
+    {# Stat Card 2 #}
+    <div class="stat-card stat-card--compact">
+      <div class="stat-card__label">BUTUH REVIEW</div>
+      <div class="stat-card__value">4</div>
+      <div class="stat-card__description">3 Kategori dieditkan</div>
+    </div>
+
+    {# Stat Card 3 #}
+    <div class="stat-card stat-card--compact">
+      <div class="stat-card__label">PRODUK PER KATEGORI</div>
+      <div class="stat-card__value">12</div>
+      <div class="stat-card__description">Rata-rata existing saat ini</div>
+    </div>
+
+    {# Stat Card 4 #}
+    <div class="stat-card stat-card--compact">
+      <div class="stat-card__label">TERAKHIR DIPERBARUI</div>
+      <div class="stat-card__value">25 Sep</div>
+      <div class="stat-card__description">1456 Visits - Uniqly</div>
+    </div>
+  </div>
+
+  {# Main Content Area #}
+  <div class="admin-category__content">
+    {# Left Section - Category Table #}
+    <div class="admin-category__table-section">
+      <div class="category-table">
+        {# Table Header #}
+        <div class="category-table__header">
+          <h3 class="category-table__title">Daftar Kategori</h3>
+          <p class="category-table__subtitle">Pengeloaan isi data warehouse, dan user meeting</p>
+          
+          <div class="category-table__actions">
+            <button class="btn btn--secondary">
+              <span>Filter Status</span>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <button class="btn btn--secondary">
+              <span>Ekspor CSV</span>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8 2V10M8 10L11 7M8 10L5 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M2 14H14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        {# Table Content #}
+        <div class="category-table__body">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>NAMA KATEGORI</th>
+                <th>SEGMENT</th>
+                <th>PRODUK AKTIF</th>
+                <th>TERAKHIR UPDATE</th>
+                <th>STATUS</th>
+                <th>AKSI</th>
+              </tr>
+            </thead>
+            <tbody>
+              {# Row 1 #}
+              <tr>
+                <td class="data-table__name">Furnitur Eksekutif</td>
+                <td>Office</td>
+                <td>24 barang</td>
+                <td>25 Sep 2025</td>
+                <td><span class="badge badge--success">Aktif</span></td>
+                <td>
+                  <div class="data-table__actions">
+                    <button class="btn-icon btn-icon--edit" title="Edit">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M11.3 2.3L13.7 4.7L5 13.4L2 14L2.6 11L11.3 2.3Z" stroke="currentColor" stroke-width="1.5"/>
+                      </svg>
+                    </button>
+                    <button class="btn-icon btn-icon--archive" title="Arsip">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M2 5H14M4 5V13H12V5M6 8H10" stroke="currentColor" stroke-width="1.5"/>
+                      </svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              {# Row 2 #}
+              <tr>
+                <td class="data-table__name">Elektronik Refurbished</td>
+                <td>Device</td>
+                <td>32 barang</td>
+                <td>24 Sep 2025</td>
+                <td><span class="badge badge--success">Aktif</span></td>
+                <td>
+                  <div class="data-table__actions">
+                    <button class="btn-icon btn-icon--edit" title="Edit">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M11.3 2.3L13.7 4.7L5 13.4L2 14L2.6 11L11.3 2.3Z" stroke="currentColor" stroke-width="1.5"/>
+                      </svg>
+                    </button>
+                    <button class="btn-icon btn-icon--archive" title="Arsip">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M2 5H14M4 5V13H12V5M6 8H10" stroke="currentColor" stroke-width="1.5"/>
+                      </svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              {# Row 3 #}
+              <tr>
+                <td class="data-table__name">Perangkat Meeting</td>
+                <td>Collaboration</td>
+                <td>11 barang</td>
+                <td>24 Sep 2025</td>
+                <td><span class="badge badge--warning">Perlu Review</span></td>
+                <td>
+                  <div class="data-table__actions">
+                    <button class="btn-icon btn-icon--edit" title="Edit">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M11.3 2.3L13.7 4.7L5 13.4L2 14L2.6 11L11.3 2.3Z" stroke="currentColor" stroke-width="1.5"/>
+                      </svg>
+                    </button>
+                    <button class="btn-icon btn-icon--disable" title="Alat Ulang">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M13 6L11 4M11 4L9 6M11 4V9C11 10.6569 9.65685 12 8 12C6.34315 12 5 10.6569 5 9V3" stroke="currentColor" stroke-width="1.5"/>
+                      </svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              {# Row 4 #}
+              <tr>
+                <td class="data-table__name">Aksesoris Kerja</td>
+                <td>Support</td>
+                <td>18 barang</td>
+                <td>22 Nov 2025</td>
+                <td><span class="badge badge--success">Aktif</span></td>
+                <td>
+                  <div class="data-table__actions">
+                    <button class="btn-icon btn-icon--edit" title="Edit">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M11.3 2.3L13.7 4.7L5 13.4L2 14L2.6 11L11.3 2.3Z" stroke="currentColor" stroke-width="1.5"/>
+                      </svg>
+                    </button>
+                    <button class="btn-icon btn-icon--archive" title="Arsip">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M2 5H14M4 5V13H12V5M6 8H10" stroke="currentColor" stroke-width="1.5"/>
+                      </svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              {# Row 5 #}
+              <tr>
+                <td class="data-table__name">Stok Lebong Bulk</td>
+                <td>Wholesale</td>
+                <td>7 barang</td>
+                <td>21 Sep 2025</td>
+                <td><span class="badge badge--draft">Draft</span></td>
+                <td>
+                  <div class="data-table__actions">
+                    <button class="btn-icon btn-icon--confirm" title="Akhir dan Hapus">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M4 8L7 11L12 5" stroke="currentColor" stroke-width="1.5"/>
+                      </svg>
+                    </button>
+                    <button class="btn-icon btn-icon--delete" title="Hapus">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M3 4H13M5 4V3H11V4M6 7V11M10 7V11" stroke="currentColor" stroke-width="1.5"/>
+                      </svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    {# Right Section - Form #}
+    <div class="admin-category__form-section">
+      <div class="category-form">
+        <h3 class="category-form__title">Buat / Edit Kategori</h3>
+        <p class="category-form__subtitle">Organizen patel filling dengan kategori dan selerahkan</p>
+
+        <form class="form">
+          {# Nama Kategori #}
+          <div class="form-group">
+            <label class="form-label" for="categoryName">Nama Kategori</label>
+            <input 
+              type="text" 
+              id="categoryName" 
+              class="form-input" 
+              placeholder="Contoh: Furnitur Premium"
+            >
+          </div>
+
+          {# Segment #}
+          <div class="form-group">
+            <label class="form-label" for="segment">Segment</label>
+            <select id="segment" class="form-select">
+              <option value="">Office</option>
+              <option value="device">Device</option>
+              <option value="collaboration">Collaboration</option>
+              <option value="support">Support</option>
+              <option value="wholesale">Wholesale</option>
+            </select>
+          </div>
+
+          {# Deskripsi #}
+          <div class="form-group">
+            <label class="form-label" for="description">Deskripsi</label>
+            <textarea 
+              id="description" 
+              class="form-textarea" 
+              rows="4"
+              placeholder="Tuliskan kriteria barang yang termasuk kategori ini"
+            ></textarea>
+          </div>
+
+          {# Status #}
+          <div class="form-group">
+            <label class="form-label" for="status">Status</label>
+            <select id="status" class="form-select">
+              <option value="aktif">Aktif</option>
+              <option value="review">Perlu Review</option>
+              <option value="draft">Draft</option>
+            </select>
+            <div class="form-checkbox">
+              <input type="checkbox" id="unpublishCategory" class="form-checkbox__input">
+              <label for="unpublishCategory" class="form-checkbox__label">
+                Tambah sebagai kategori-categoria
+              </label>
+            </div>
+            <p class="form-help">Reset otam</p>
+          </div>
+
+          {# Action Buttons #}
+          <div class="form-actions">
+            <button type="submit" class="btn btn--primary btn--block">
+              Simpan Kategori
+            </button>
+          </div>
+        </form>
+      </div>
+
+      {# Standardisasi Kategori Info Box #}
+      <div class="info-box">
+        <h4 class="info-box__title">Standardisasi Kategori</h4>
+        <p class="info-box__text">
+          Pastikan nama kategori kematangan dengan kesatuan di e-commerce
+          arsitektur.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

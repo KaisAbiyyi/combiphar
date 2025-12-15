@@ -24,7 +24,7 @@
 
   <nav class="admin-sidebar__nav">
     <ul class="admin-sidebar__menu">
-      <li class="admin-sidebar__menu-item admin-sidebar__menu-item--active">
+      <li class="admin-sidebar__menu-item {% if activePage == 'dashboard' %}admin-sidebar__menu-item--active{% endif %}">
         <a href="/admin/dashboard" class="admin-sidebar__link">
           <svg class="admin-sidebar__icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M3 4C3 3.44772 3.44772 3 4 3H7C7.55228 3 8 3.44772 8 4V7C8 7.55228 7.55228 8 7 8H4C3.44772 8 3 7.55228 3 7V4Z" fill="currentColor"/>
@@ -36,7 +36,7 @@
         </a>
       </li>
 
-      <li class="admin-sidebar__menu-item">
+      <li class="admin-sidebar__menu-item {% if activePage == 'kategori' %}admin-sidebar__menu-item--active{% endif %}">
         <a href="/admin/kategori" class="admin-sidebar__link">
           <svg class="admin-sidebar__icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M7 3C7 2.44772 7.44772 2 8 2H12C12.5523 2 13 2.44772 13 3V7C13 7.55228 12.5523 8 12 8H8C7.44772 8 7 7.55228 7 7V3Z" fill="currentColor"/>
