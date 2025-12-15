@@ -1,0 +1,329 @@
+.product-hero {
+  background: linear-gradient(135deg, #EC4899 0%, #8B5CF6 50%, #6366F1 100%);
+  padding: 3rem 0;
+}
+
+.product-hero__container {
+  width: 100%;
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  display: grid;
+  gap: 2rem;
+  align-items: start;
+}
+@media (min-width: 1024px) {
+  .product-hero__container {
+    grid-template-columns: 1fr 400px;
+    gap: 3rem;
+  }
+}
+
+.product-hero__content {
+  color: #FFFFFF;
+}
+
+.product-hero__badge {
+  margin-bottom: 1rem;
+}
+
+.product-hero__title {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 1.875rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+@media (min-width: 1024px) {
+  .product-hero__title {
+    font-size: 2.25rem;
+  }
+}
+.product-hero__title {
+  color: #FFFFFF;
+  margin-bottom: 1rem;
+}
+
+.product-hero__description {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 1.5rem;
+  max-width: 500px;
+  line-height: 1.75;
+}
+
+.product-hero__meta {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.product-hero__meta-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+.product-hero__meta-item svg {
+  width: 16px;
+  height: 16px;
+}
+
+.product-hero__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.product-hero .btn--primary {
+  background: #FFFFFF;
+  color: #9333EA;
+}
+.product-hero .btn--primary:hover {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.product-hero .btn--secondary {
+  background: transparent;
+  color: #FFFFFF;
+  border-color: #FFFFFF;
+}
+.product-hero .btn--secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.pricing-card {
+  background: #FFFFFF;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  padding: 1.5rem;
+}
+
+.pricing-card__label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #6B7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.5rem;
+}
+
+.pricing-card__price {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #EC4899;
+  margin-bottom: 0.5rem;
+}
+
+.pricing-card__note {
+  font-size: 0.875rem;
+  color: #6B7280;
+  margin-bottom: 1.5rem;
+}
+
+.pricing-card__details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-top: 1px solid #E5E7EB;
+  border-bottom: 1px solid #E5E7EB;
+  margin-bottom: 1.5rem;
+}
+
+.pricing-card__detail-label {
+  font-size: 0.75rem;
+  color: #6B7280;
+  margin-bottom: 0.25rem;
+}
+
+.pricing-card__detail-value {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #1F2937;
+}
+
+.pricing-card__highlights {
+  margin-bottom: 1.5rem;
+}
+
+.pricing-card__highlights-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1F2937;
+  margin-bottom: 0.75rem;
+}
+
+.pricing-card__highlight-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #4B5563;
+  margin-bottom: 0.5rem;
+}
+.pricing-card__highlight-item::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  background: #EC4899;
+  border-radius: 9999px;
+  flex-shrink: 0;
+}
+
+.product-details {
+  padding: 3rem 0;
+}
+
+.product-details__container {
+  width: 100%;
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  display: grid;
+  gap: 2rem;
+}
+@media (min-width: 1024px) {
+  .product-details__container {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+
+.product-features {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.product-features__title {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.25;
+  margin-bottom: 1rem;
+}
+
+.product-features__content {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #4B5563;
+  line-height: 1.75;
+}
+
+.product-features__specs {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.product-features__spec {
+  background: #FFFFFF;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  padding: 1rem;
+}
+
+.product-features__spec-label {
+  font-size: 0.75rem;
+  color: #6B7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.25rem;
+}
+
+.product-features__spec-value {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #1F2937;
+}
+
+.product-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.product-sidebar__card {
+  background: #FFFFFF;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  padding: 1.5rem;
+}
+
+.product-sidebar__title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1F2937;
+  margin-bottom: 1rem;
+}
+
+.product-sidebar__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.product-sidebar__list-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #4B5563;
+}
+.product-sidebar__list-item::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  background: #EC4899;
+  border-radius: 9999px;
+  flex-shrink: 0;
+}
+
+.product-sidebar__cta {
+  width: 100%;
+}
+
+.product-sidebar__demo {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #E5E7EB;
+}
+
+.product-sidebar__demo-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1F2937;
+  margin-bottom: 0.5rem;
+}
+
+.product-sidebar__demo-text {
+  font-size: 0.875rem;
+  color: #6B7280;
+  margin-bottom: 0.5rem;
+}
+
+.product-sidebar__demo-link {
+  font-size: 0.875rem;
+  color: #9333EA;
+}
+.product-sidebar__demo-link:hover {
+  text-decoration: underline;
+}

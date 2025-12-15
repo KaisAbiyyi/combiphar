@@ -1,0 +1,91 @@
+.footer {
+  background: #FFFFFF;
+  border-top: 1px solid #E5E7EB;
+  padding: 3rem 0 1.5rem;
+}
+
+.footer__container {
+  width: 100%;
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.footer__grid {
+  display: grid;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+@media (min-width: 768px) {
+  .footer__grid {
+    grid-template-columns: 2fr 1fr 1fr;
+  }
+}
+
+.footer__brand {
+  max-width: 300px;
+}
+
+.footer__brand-name {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #1F2937;
+  margin-bottom: 0.5rem;
+}
+
+.footer__brand-description {
+  font-size: 0.875rem;
+  color: #6B7280;
+  line-height: 1.75;
+}
+
+.footer__column-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1F2937;
+  margin-bottom: 1rem;
+}
+
+.footer__links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.footer__link {
+  font-size: 0.875rem;
+  color: #6B7280;
+  transition: color 150ms ease;
+}
+.footer__link:hover {
+  color: #9333EA;
+}
+
+.footer__contact-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #6B7280;
+  margin-bottom: 0.5rem;
+}
+.footer__contact-item a {
+  color: #9333EA;
+}
+.footer__contact-item a:hover {
+  text-decoration: underline;
+}
+
+.footer__bottom {
+  padding-top: 1.5rem;
+  border-top: 1px solid #E5E7EB;
+  text-align: center;
+}
+
+.footer__copyright {
+  font-size: 0.875rem;
+  color: #6B7280;
+}
