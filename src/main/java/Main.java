@@ -124,5 +124,16 @@ public class Main {
                     "activePage", "kategori");
             ctx.render("admin/category", model);
         });
+
+        // Admin product page
+        app.get("/admin/produk", ctx -> {
+            Map<String, Object> model = Map.of(
+                    "title", "Manajemen Produk",
+                    "pageTitle", "Manajemen Produk",
+                    "userName", "Nashya Putri",
+                    "userRole", "Admin Warehouse Jakarta",
+                    "activePage", "produk");
+            ctx.render("admin/product", model);
+        });
     }
 }
