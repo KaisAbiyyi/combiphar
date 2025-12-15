@@ -56,7 +56,7 @@
         </a>
       </li>
 
-      <li class="admin-sidebar__menu-item">
+      <li class="admin-sidebar__menu-item {% if activePage == 'pesanan' %}admin-sidebar__menu-item--active{% endif %}">
         <a href="/admin/pesanan" class="admin-sidebar__link">
           <svg class="admin-sidebar__icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M3 1C2.44772 1 2 1.44772 2 2V4C2 4.55228 2.44772 5 3 5H17C17.5523 5 18 4.55228 18 4V2C18 1.44772 17.5523 1 17 1H3Z" fill="currentColor"/>

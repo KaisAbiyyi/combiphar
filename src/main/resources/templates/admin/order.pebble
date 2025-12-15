@@ -1,0 +1,268 @@
+{% extends "admin/layout" %}
+
+{% block content %}
+<div class="admin-order">
+  {# Header Section with Stats #}
+  <div class="admin-order__header">
+    {# Stat Card 1 #}
+    <div class="stat-card stat-card--compact">
+      <div class="stat-card__label">PESANAN AKTIF</div>
+      <div class="stat-card__value">58</div>
+      <div class="stat-card__description">Dalam 7 hari terakhir</div>
+    </div>
+
+    {# Stat Card 2 #}
+    <div class="stat-card stat-card--compact">
+      <div class="stat-card__label">BUTUH AKSI</div>
+      <div class="stat-card__value">9</div>
+      <div class="stat-card__description stat-card__description--alert">3 belum verifikasi pembayaran</div>
+    </div>
+
+    {# Stat Card 3 #}
+    <div class="stat-card stat-card--compact">
+      <div class="stat-card__label">RATA-RATA LEAD TIME</div>
+      <div class="stat-card__value">2.4 hari</div>
+      <div class="stat-card__description">Order masuk hingga pickup</div>
+    </div>
+
+    {# Stat Card 4 #}
+    <div class="stat-card stat-card--compact">
+      <div class="stat-card__label">BACKORDER</div>
+      <div class="stat-card__value">4</div>
+      <div class="stat-card__description">Menunggu restock furnitur</div>
+    </div>
+  </div>
+
+  {# Main Content Area #}
+  <div class="admin-order__content">
+    {# Left Section - Order Table #}
+    <div class="admin-order__table-section">
+      <div class="order-table">
+        {# Table Header #}
+        <div class="order-table__header">
+          <div class="order-table__header-top">
+            <div>
+              <h3 class="order-table__title">Daftar Pesanan</h3>
+              <p class="order-table__subtitle">Kelola transaksi pesanan dan pickup</p>
+            </div>
+            <div class="order-table__actions-top">
+              <button class="btn btn--secondary">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M2 4H14M4 4V2H12V4M4 6L5 14H11L12 6H4Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Filter Terapkan</span>
+              </button>
+              <button class="btn btn--secondary">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M8 2V10M8 10L11 7M8 10L5 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M2 14H14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <span>Export XLSX</span>
+              </button>
+            </div>
+          </div>
+          
+          <div class="order-table__tabs-row">
+            <div class="order-table__search">
+              <input type="search" class="search-input" placeholder="Cari order, customer, ID..." aria-label="Cari" />
+            </div>
+            <div class="order-table__tabs">
+              <button class="order-tab order-tab--active">Tag Gudang</button>
+              <button class="order-tab">Status Pembayaran</button>
+            </div>
+          </div>
+        </div>
+
+        {# Table Content #}
+        <div class="order-table__body">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>ORDER ID</th>
+                <th>CUSTOMER</th>
+                <th>NILAI</th>
+                <th>TANGGAPAN</th>
+                <th>PAYMENT</th>
+                <th>PEMBAHARUAN</th>
+                <th>AKSI</th>
+              </tr>
+            </thead>
+            <tbody>
+              {# Row 1 #}
+              <tr>
+                <td class="order-id">ORD-42391</td>
+                <td>PT Sirnar Digital</td>
+                <td class="order-value">Rp 30.300.000</td>
+                <td class="order-response">
+                  <span class="badge badge--pending">Picking</span>
+                </td>
+                <td>
+                  <span class="badge badge--success">Paid</span>
+                </td>
+                <td class="order-date">25 Sep • 18:30</td>
+                <td>
+                  <button class="btn-text btn-text--primary">Detail</button>
+                </td>
+              </tr>
+
+              {# Row 2 #}
+              <tr>
+                <td class="order-id">ORD-42387</td>
+                <td>CV Hamonix Media</td>
+                <td class="order-value">Rp 21.600.000</td>
+                <td class="order-response">
+                  <span class="badge badge--selesai">Selesai</span>
+                </td>
+                <td>
+                  <span class="badge badge--success">Paid</span>
+                </td>
+                <td class="order-date">25 Sep • 18:25</td>
+                <td>
+                  <button class="btn-text btn-text--primary">Invoice</button>
+                </td>
+              </tr>
+
+              {# Row 3 #}
+              <tr>
+                <td class="order-id">ORD-42380</td>
+                <td>PT Videotok</td>
+                <td class="order-value">Rp 24.600.000</td>
+                <td class="order-response">
+                  <span class="badge badge--dikemas">QC</span>
+                </td>
+                <td>
+                  <span class="badge badge--dikemas">Pending</span>
+                </td>
+                <td class="order-date">25 Sep • 18:50</td>
+                <td>
+                  <button class="btn-text btn-text--primary">Follow Up</button>
+                </td>
+              </tr>
+
+              {# Row 4 #}
+              <tr>
+                <td class="order-id">ORD-42371</td>
+                <td>PT Mandiri Kreacif</td>
+                <td class="order-value">Rp 39.200.000</td>
+                <td class="order-response">
+                  <span class="badge badge--warning">Hold</span>
+                </td>
+                <td>
+                  <span class="badge badge--dikemas">Pending</span>
+                </td>
+                <td class="order-date">24 Sep • 19:16</td>
+                <td>
+                  <button class="btn-text btn-text--primary">Hubungi</button>
+                </td>
+              </tr>
+
+              {# Row 5 #}
+              <tr>
+                <td class="order-id">ORD-42368</td>
+                <td>PT Nusantara Health</td>
+                <td class="order-value">Rp 16.750.000</td>
+                <td class="order-response">
+                  <span class="badge badge--selesai">Selesai</span>
+                </td>
+                <td>
+                  <span class="badge badge--success">Paid</span>
+                </td>
+                <td class="order-date">24 Sep • 18:10</td>
+                <td>
+                  <button class="btn-text btn-text--primary">Invoice</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    {# Right Section - Order Detail #}
+    <div class="admin-order__sidebar">
+      <div class="order-detail-card">
+        <div class="order-detail-card__header">
+          <h3 class="order-detail-card__title">Detail Tahapan</h3>
+          <p class="order-detail-card__subtitle">Tracking status order aktif</p>
+        </div>
+
+        <div class="order-detail-card__body">
+          <div class="order-detail-info">
+            <div class="order-detail-info__label">Order #</div>
+            <div class="order-detail-info__value order-detail-info__value--primary">ORD-42391</div>
+          </div>
+
+          {# Timeline Steps #}
+          <div class="order-timeline">
+            <div class="order-timeline-item order-timeline-item--completed">
+              <div class="order-timeline-item__icon">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path d="M3 8L6 11L13 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <div class="order-timeline-item__content">
+                <div class="order-timeline-item__title">Pesanan Masuk</div>
+                <div class="order-timeline-item__time">24 Sep 2025 • 18:30</div>
+              </div>
+            </div>
+
+            <div class="order-timeline-item order-timeline-item--completed">
+              <div class="order-timeline-item__icon">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path d="M3 8L6 11L13 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <div class="order-timeline-item__content">
+                <div class="order-timeline-item__title">Pembayaran Diverifikasi</div>
+                <div class="order-timeline-item__time">24 Sep 2025 • 19:15</div>
+              </div>
+            </div>
+
+            <div class="order-timeline-item order-timeline-item--active">
+              <div class="order-timeline-item__icon">
+                <div class="order-timeline-item__spinner"></div>
+              </div>
+              <div class="order-timeline-item__content">
+                <div class="order-timeline-item__title">Picking & Packing</div>
+                <div class="order-timeline-item__time">Sedang berlangsung</div>
+              </div>
+            </div>
+
+            <div class="order-timeline-item">
+              <div class="order-timeline-item__icon"></div>
+              <div class="order-timeline-item__content">
+                <div class="order-timeline-item__title">Siap Kirim</div>
+                <div class="order-timeline-item__time">Belum</div>
+              </div>
+            </div>
+          </div>
+
+          {# Detail Information #}
+          <div class="order-detail-section">
+            <div class="order-detail-row">
+              <span class="order-detail-row__label">Gudang:</span>
+              <span class="order-detail-row__value">Jakarta Timur</span>
+            </div>
+            <div class="order-detail-row">
+              <span class="order-detail-row__label">PIC:</span>
+              <span class="order-detail-row__value">Rifai Bambang • +62 857 323</span>
+            </div>
+            <div class="order-detail-row order-detail-row--alert">
+              <span class="order-detail-row__label">Catatan:</span>
+              <span class="order-detail-row__value">Request tambahan bubble wrap untuk 3 monitor</span>
+            </div>
+          </div>
+
+          {# Stage Notes removed per request #}
+
+          {# Action Buttons #}
+          <div class="order-detail-actions">
+            <button class="btn btn--secondary btn--block">Catat Kendala</button>
+            <button class="btn btn--primary btn--block">Tandai Tahap Berikut</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

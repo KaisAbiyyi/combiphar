@@ -1,0 +1,494 @@
+/* ========================================================================== */
+/* ADMIN ORDER PAGE                                                           */
+/* Page-specific styles for order monitoring in admin dashboard               */
+/* ========================================================================== */
+
+/* Order Page Layout
+   ========================================================================== */
+.admin-order {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Header Stats Section
+   ========================================================================== */
+.admin-order__header {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+}
+
+/* Content Grid Layout
+   ========================================================================== */
+.admin-order__content {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 1rem;
+  align-items: start;
+}
+
+/* Table Section
+   ========================================================================== */
+.admin-order__table-section {
+  width: 100%;
+}
+
+/* Sidebar Section
+   ========================================================================== */
+.admin-order__sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Order Table Component
+   ========================================================================== */
+.order-table {
+  background: #FFFFFF;
+  border-radius: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.order-table__header {
+  padding: 1.5rem;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.order-table__header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.order-table__title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 0.25rem 0;
+}
+
+.order-table__subtitle {
+  font-size: 0.875rem;
+  color: #6B7280;
+  margin: 0;
+}
+
+.order-table__actions-top {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.order-table__tabs {
+  display: flex;
+  gap: 0.25rem;
+}
+
+/* Tabs + Search row */
+.order-table__tabs-row {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0 0.25rem;
+}
+
+.order-table__search {
+  display: flex;
+  align-items: center;
+  width: auto;
+  margin-right: 0.25rem;
+}
+
+.search-input {
+  width: 180px;
+  padding: 0.4rem 0.6rem;
+  font-size: 0.875rem;
+  color: #111827;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 0.375rem;
+  transition: box-shadow 150ms ease, border-color 150ms ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #6D28D9;
+  box-shadow: 0 0 0 4px rgba(108, 81, 255, 0.06);
+}
+
+.order-tab {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #6B7280;
+  background: transparent;
+  border: 1px solid #E5E7EB;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.order-tab:hover {
+  border-color: #EC4899;
+  color: #EC4899;
+}
+
+.order-tab--active {
+  background: linear-gradient(135deg, #EC4899 0%, #9333EA 100%);
+  color: #FFFFFF;
+  border-color: transparent;
+}
+
+.order-table__body {
+  overflow-x: auto;
+}
+
+/* Order Table Specific Styles
+   ========================================================================== */
+.order-id {
+  font-weight: 600;
+  color: #6D28D9;
+  font-size: 0.875rem;
+}
+
+.order-value {
+  font-weight: 600;
+  color: #059669;
+}
+
+.order-response {
+  font-size: 0.875rem;
+}
+
+.order-date {
+  font-size: 0.875rem;
+  color: #6B7280;
+}
+
+/* Button Text Variant
+   ========================================================================== */
+.btn-text {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 150ms ease;
+  text-decoration: underline;
+}
+
+.btn-text--primary {
+  color: #6D28D9;
+}
+
+.btn-text--primary:hover {
+  color: #5B21B6;
+}
+
+/* Order Detail Card
+   ========================================================================== */
+.order-detail-card {
+  background: #FFFFFF;
+  border-radius: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.order-detail-card__header {
+  padding: 1.25rem;
+  border-bottom: 1px solid #F3F4F6;
+}
+
+.order-detail-card__title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 0.25rem 0;
+}
+
+.order-detail-card__subtitle {
+  font-size: 0.875rem;
+  color: #6B7280;
+  margin: 0;
+}
+
+.order-detail-card__body {
+  padding: 0.875rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Order Detail Info
+   ========================================================================== */
+.order-detail-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.order-detail-info__label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #6B7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.order-detail-info__value {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.order-detail-info__value--primary {
+  color: #6D28D9;
+}
+
+/* Order Timeline
+   ========================================================================== */
+.order-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+}
+
+.order-timeline-item {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+  position: relative;
+}
+
+.order-timeline-item:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 2rem;
+  bottom: -0.75rem;
+  width: 2px;
+  background: #E5E7EB;
+}
+
+.order-timeline-item--completed:not(:last-child)::before {
+  background: #10B981;
+}
+
+.order-timeline-item--active:not(:last-child)::before {
+  background: linear-gradient(to bottom, #10B981 0%, #E5E7EB 100%);
+}
+
+.order-timeline-item__icon {
+  width: 1.125rem;
+  height: 1.125rem;
+  border-radius: 50%;
+  background: #E5E7EB;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.order-timeline-item--completed .order-timeline-item__icon {
+  background: #10B981;
+  color: #FFFFFF;
+}
+
+.order-timeline-item--active .order-timeline-item__icon {
+  background: #EC4899;
+}
+
+.order-timeline-item__spinner {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(0.95);
+  }
+}
+
+.order-timeline-item__icon svg {
+  width: 10px;
+  height: 10px;
+}
+
+.order-timeline-item__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.order-timeline-item__title {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #111827;
+}
+
+.order-timeline-item--completed .order-timeline-item__title {
+  color: #059669;
+}
+
+.order-timeline-item--active .order-timeline-item__title {
+  color: #EC4899;
+  font-weight: 600;
+}
+
+.order-timeline-item__time {
+  font-size: 0.75rem;
+  color: #9CA3AF;
+}
+
+.order-timeline-item--active .order-timeline-item__time {
+  color: #EC4899;
+  font-weight: 500;
+}
+
+/* Order Detail Section
+   ========================================================================== */
+.order-detail-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: #F9FAFB;
+  border-radius: 0.5rem;
+}
+
+.order-detail-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem;
+}
+
+.order-detail-row__label {
+  font-weight: 500;
+  color: #6B7280;
+}
+
+.order-detail-row__value {
+  font-weight: 500;
+  color: #111827;
+  text-align: right;
+}
+
+.order-detail-row--alert .order-detail-row__label {
+  color: #DC2626;
+}
+
+.order-detail-row--alert .order-detail-row__value {
+  color: #DC2626;
+}
+
+/* Order Detail Notes
+   ========================================================================== */
+.order-detail-notes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.order-note {
+  padding: 0.5rem;
+  font-size: 0.8125rem;
+  color: #374151;
+  background: #FEF3C7;
+  border-left: 3px solid #F59E0B;
+  border-radius: 0.3125rem;
+}
+
+/* Order Detail Actions
+   ========================================================================== */
+.order-detail-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid #E5E7EB;
+}
+
+/* Stat Card Alert Description
+   ========================================================================== */
+.stat-card__description--alert {
+  color: #DC2626;
+  font-weight: 500;
+}
+
+/* Responsive Design
+   ========================================================================== */
+@media (max-width: 1280px) {
+  .admin-order__content {
+    grid-template-columns: 1fr 360px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .admin-order__header {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .admin-order__content {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-order__sidebar {
+    order: -1;
+  }
+
+  .order-table__header-top {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .order-table__actions-top {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-order__header {
+    grid-template-columns: 1fr;
+  }
+
+  .data-table {
+    font-size: 0.8125rem;
+  }
+
+  .order-table__tabs {
+    flex-direction: column;
+  }
+
+  .order-tab {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+@media (max-width: 640px) {
+  .order-table__actions-top {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
