@@ -89,6 +89,21 @@ public class Main {
             ctx.render("customer/checkout", model);
         });
 
+        // Payment page
+        app.get("/payment", ctx -> {
+            Map<String, Object> model = Map.of(
+                    "title", "Pembayaran Pesanan - Combiphar Used Goods",
+                    "activePage", "payment");
+            ctx.render("customer/payment", model);
+        });
+        
+        app.get("/checkout/payment", ctx -> {
+            Map<String, Object> model = Map.of(
+                    "title", "Pembayaran Pesanan - Combiphar Used Goods",
+                    "activePage", "payment");
+            ctx.render("customer/payment", model);
+        });
+
         // Admin login page
         app.get("/admin/login", ctx -> {
             ctx.render("admin/login");

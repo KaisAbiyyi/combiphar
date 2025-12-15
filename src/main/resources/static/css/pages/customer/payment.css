@@ -1,0 +1,450 @@
+/* ==========================================================================
+   PAYMENT PAGE - Order payment with QR code styles
+   ========================================================================== */
+
+/* -----------------------------------------------------------------------------
+   Payment page layout
+   ----------------------------------------------------------------------------- */
+.payment-page {
+  padding: 3rem 0;
+  min-height: calc(100vh - 64px);
+  background: linear-gradient(135deg, #FAF5FF 0%, #F5F3FF 100%);
+}
+
+.payment-page__container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: grid;
+  gap: 2rem;
+}
+
+@media (min-width: 1024px) {
+  .payment-page__container {
+    grid-template-columns: 1fr 420px;
+  }
+}
+
+/* -----------------------------------------------------------------------------
+   Payment method section (left column)
+   ----------------------------------------------------------------------------- */
+.payment-method-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Payment card */
+.payment-card {
+  background: #FFFFFF;
+  border-radius: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: 0;
+  overflow: hidden;
+}
+
+.payment-card__header {
+  padding: 1.25rem 1.5rem;
+  background: linear-gradient(135deg, #F3E8FF 0%, #FAF5FF 100%);
+  border-bottom: 1px solid #E9D5FF;
+}
+
+.payment-card__label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #9333EA;
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+.payment-card__body {
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: center;
+  text-align: center;
+}
+
+.payment-card__title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1F2937;
+  margin: 0;
+}
+
+.payment-card__subtitle {
+  font-size: 0.875rem;
+  color: #6B7280;
+  margin: 0;
+}
+
+/* Payment total */
+.payment-total {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #F3E8FF 0%, #FAF5FF 100%);
+  border-radius: 0.75rem;
+  width: 100%;
+  max-width: 400px;
+}
+
+.payment-total__label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #6B7280;
+  letter-spacing: 0.5px;
+}
+
+.payment-total__amount {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: #9333EA;
+  margin: 0;
+}
+
+/* QR Code */
+.payment-qr {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 1.5rem;
+  background: #FFFFFF;
+  border: 2px solid #E9D5FF;
+  border-radius: 1rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.payment-qr__code {
+  width: 280px;
+  height: 280px;
+  padding: 1rem;
+  background: #FFFFFF;
+  border-radius: 0.75rem;
+}
+
+.payment-qr__svg {
+  width: 100%;
+  height: 100%;
+}
+
+.payment-qr__invoice {
+  font-size: 0.875rem;
+  color: #6B7280;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* Instructions note */
+.payment-instructions {
+  padding: 1rem 1.5rem;
+  background: #FEF3C7;
+  border-left: 4px solid #F59E0B;
+  border-radius: 0.5rem;
+  max-width: 600px;
+}
+
+.payment-instructions__note {
+  font-size: 0.875rem;
+  color: #78350F;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Payment steps */
+.payment-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 600px;
+  padding: 1.25rem;
+  background: #F9FAFB;
+  border-radius: 0.75rem;
+}
+
+.payment-steps__title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1F2937;
+  margin: 0;
+}
+
+.payment-steps__list {
+  margin: 0;
+  padding-left: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.payment-steps__item {
+  font-size: 0.875rem;
+  color: #6B7280;
+  line-height: 1.6;
+}
+
+/* -----------------------------------------------------------------------------
+   Order summary section (right column)
+   ----------------------------------------------------------------------------- */
+.order-summary-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Order card */
+.order-card {
+  background: #FFFFFF;
+  border-radius: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: 0;
+  overflow: hidden;
+}
+
+.order-card__header {
+  padding: 1.25rem 1.5rem;
+  background: linear-gradient(135deg, #DBEAFE 0%, #E0E7FF 100%);
+  border-bottom: 1px solid #BFDBFE;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.order-card__title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #1F2937;
+  margin: 0;
+}
+
+.order-card__company {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1E40AF;
+  margin: 0;
+}
+
+.order-card__date {
+  font-size: 0.875rem;
+  color: #6B7280;
+  margin: 0;
+}
+
+/* Order items */
+.order-card__items {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.order-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.order-item__info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.order-item__name {
+  font-size: 0.875rem;
+  color: #1F2937;
+  font-weight: 500;
+}
+
+.order-item__qty {
+  font-size: 0.875rem;
+  color: #6B7280;
+  font-weight: 500;
+}
+
+/* Order pricing */
+.order-card__pricing {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.order-price-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.order-price-row--total {
+  padding-top: 0.75rem;
+  border-top: 2px solid #E5E7EB;
+  margin-top: 0.5rem;
+}
+
+.order-price-row--total .order-price-row__label {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1F2937;
+}
+
+.order-price-row--total .order-price-row__value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #9333EA;
+}
+
+.order-price-row__label {
+  font-size: 0.875rem;
+  color: #6B7280;
+}
+
+.order-price-row__value {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1F2937;
+}
+
+.order-price-row__value--discount {
+  color: #10B981;
+}
+
+/* -----------------------------------------------------------------------------
+   Payment status card
+   ----------------------------------------------------------------------------- */
+.payment-status-card {
+  background: #FFFFFF;
+  border-radius: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: 0;
+  overflow: hidden;
+}
+
+.payment-status-card__header {
+  padding: 1rem 1.25rem;
+  background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+  border-bottom: 1px solid #FDE68A;
+}
+
+.payment-status-card__title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1F2937;
+  margin: 0;
+}
+
+.payment-status-card__body {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Payment status */
+.payment-status {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: #F9FAFB;
+  border-radius: 0.5rem;
+}
+
+.payment-status__indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 9999px;
+  flex-shrink: 0;
+}
+
+.payment-status__indicator--pending {
+  background: #F59E0B;
+  animation: pulse 2s infinite;
+}
+
+.payment-status__indicator--success {
+  background: #10B981;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.payment-status__text {
+  font-size: 0.875rem;
+  color: #1F2937;
+  font-weight: 500;
+}
+
+.payment-status__timer {
+  font-size: 0.875rem;
+  color: #9333EA;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  transition: background 150ms ease;
+  margin: 0;
+}
+
+.payment-status__timer:hover {
+  background: rgba(147, 51, 234, 0.1);
+}
+
+/* Footer */
+.payment-status-card__footer {
+  padding: 1rem 1.25rem;
+  background: #F9FAFB;
+  border-top: 1px solid #E5E7EB;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-align: center;
+}
+
+.payment-status-card__help {
+  font-size: 0.75rem;
+  color: #6B7280;
+  margin: 0;
+}
+
+.payment-status-card__link {
+  font-size: 0.875rem;
+  color: #9333EA;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 150ms ease;
+}
+
+.payment-status-card__link:hover {
+  color: #7C3AED;
+  text-decoration: underline;
+}
+
+/* -----------------------------------------------------------------------------
+   Responsive adjustments
+   ----------------------------------------------------------------------------- */
+@media (min-width: 768px) {
+  .payment-card__body {
+    padding: 2.5rem 2rem;
+  }
+  
+  .payment-qr__code {
+    width: 320px;
+    height: 320px;
+  }
+}

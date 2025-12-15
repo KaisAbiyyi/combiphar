@@ -1,6 +1,4 @@
-{% extends "admin/layout" %}
-
-{% block content %}
+{% extends "admin/layout" %} {% block content %}
 <div class="admin-dashboard">
   {# Statistics Cards #}
   <div class="admin-dashboard__stats">
@@ -12,8 +10,21 @@
       <div class="stat-card__body">
         <h3 class="stat-card__value">Rp 80,2M</h3>
         <div class="stat-card__change stat-card__change--up">
-          <svg class="stat-card__arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M8 12V4M8 4L4 8M8 4L12 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <svg
+            class="stat-card__arrow"
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M8 12V4M8 4L4 8M8 4L12 8"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
           </svg>
           <span>12% dari</span>
         </div>
@@ -29,8 +40,21 @@
       <div class="stat-card__body">
         <h3 class="stat-card__value">200</h3>
         <div class="stat-card__change stat-card__change--down">
-          <svg class="stat-card__arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M8 4V12M8 12L12 8M8 12L4 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <svg
+            class="stat-card__arrow"
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M8 4V12M8 12L12 8M8 12L4 8"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
           </svg>
           <span>8 unit mengapa ini</span>
         </div>
@@ -46,12 +70,26 @@
       <div class="stat-card__body">
         <h3 class="stat-card__value">46</h3>
         <div class="stat-card__change stat-card__change--up">
-          <svg class="stat-card__arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M8 12V4M8 4L4 8M8 4L12 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <svg
+            class="stat-card__arrow"
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M8 12V4M8 4L4 8M8 4L12 8"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
           </svg>
           <span>7 dari enterprise</span>
         </div>
-        <p class="stat-card__footer">Pengguna dengan status aktive 30 hari terakhir</p>
+        <p class="stat-card__footer">Pengguna dengan status aktive 30 hari
+          terakhir</p>
       </div>
     </div>
 
@@ -63,12 +101,26 @@
       <div class="stat-card__body">
         <h3 class="stat-card__value">94%</h3>
         <div class="stat-card__change stat-card__change--up">
-          <svg class="stat-card__arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M8 12V4M8 4L4 8M8 4L12 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <svg
+            class="stat-card__arrow"
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M8 12V4M8 4L4 8M8 4L12 8"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
           </svg>
           <span>1% dari target</span>
         </div>
-        <p class="stat-card__footer">Pengiriman tepat waktu untuk 14 gudang utama</p>
+        <p class="stat-card__footer">Pengiriman tepat waktu untuk 14 gudang
+          utama</p>
       </div>
     </div>
   </div>
@@ -103,51 +155,135 @@
               </div>
             </div>
             <button class="chart-card__download-btn">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M8 2V10M8 10L11 7M8 10L5 7M3 12V13C3 13.5523 3.44772 14 4 14H12C12.5523 14 13 13.5523 13 13V12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M8 2V10M8 10L11 7M8 10L5 7M3 12V13C3 13.5523 3.44772 14 4 14H12C12.5523 14 13 13.5523 13 13V12"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
               </svg>
               Rp 6.2M data-rata
             </button>
           </div>
-          
+
           {# Simplified chart visualization #}
           <div class="chart-canvas">
             <div class="chart-bars">
               <div class="chart-bar-group">
-                <div class="chart-bar chart-bar--week1" style="height: 70%;"></div>
-                <div class="chart-bar chart-bar--week2" style="height: 85%;"></div>
-                <div class="chart-bar chart-bar--week3" style="height: 60%;"></div>
-                <div class="chart-bar chart-bar--week4" style="height: 75%;"></div>
+                <div
+                  class="chart-bar chart-bar--week1"
+                  style="height: 70%;"
+                ></div>
+                <div
+                  class="chart-bar chart-bar--week2"
+                  style="height: 85%;"
+                ></div>
+                <div
+                  class="chart-bar chart-bar--week3"
+                  style="height: 60%;"
+                ></div>
+                <div
+                  class="chart-bar chart-bar--week4"
+                  style="height: 75%;"
+                ></div>
               </div>
               <div class="chart-bar-group">
-                <div class="chart-bar chart-bar--week1" style="height: 65%;"></div>
-                <div class="chart-bar chart-bar--week2" style="height: 90%;"></div>
-                <div class="chart-bar chart-bar--week3" style="height: 55%;"></div>
-                <div class="chart-bar chart-bar--week4" style="height: 80%;"></div>
+                <div
+                  class="chart-bar chart-bar--week1"
+                  style="height: 65%;"
+                ></div>
+                <div
+                  class="chart-bar chart-bar--week2"
+                  style="height: 90%;"
+                ></div>
+                <div
+                  class="chart-bar chart-bar--week3"
+                  style="height: 55%;"
+                ></div>
+                <div
+                  class="chart-bar chart-bar--week4"
+                  style="height: 80%;"
+                ></div>
               </div>
               <div class="chart-bar-group">
-                <div class="chart-bar chart-bar--week1" style="height: 75%;"></div>
-                <div class="chart-bar chart-bar--week2" style="height: 80%;"></div>
-                <div class="chart-bar chart-bar--week3" style="height: 65%;"></div>
-                <div class="chart-bar chart-bar--week4" style="height: 85%;"></div>
+                <div
+                  class="chart-bar chart-bar--week1"
+                  style="height: 75%;"
+                ></div>
+                <div
+                  class="chart-bar chart-bar--week2"
+                  style="height: 80%;"
+                ></div>
+                <div
+                  class="chart-bar chart-bar--week3"
+                  style="height: 65%;"
+                ></div>
+                <div
+                  class="chart-bar chart-bar--week4"
+                  style="height: 85%;"
+                ></div>
               </div>
               <div class="chart-bar-group">
-                <div class="chart-bar chart-bar--week1" style="height: 80%;"></div>
-                <div class="chart-bar chart-bar--week2" style="height: 75%;"></div>
-                <div class="chart-bar chart-bar--week3" style="height: 70%;"></div>
-                <div class="chart-bar chart-bar--week4" style="height: 90%;"></div>
+                <div
+                  class="chart-bar chart-bar--week1"
+                  style="height: 80%;"
+                ></div>
+                <div
+                  class="chart-bar chart-bar--week2"
+                  style="height: 75%;"
+                ></div>
+                <div
+                  class="chart-bar chart-bar--week3"
+                  style="height: 70%;"
+                ></div>
+                <div
+                  class="chart-bar chart-bar--week4"
+                  style="height: 90%;"
+                ></div>
               </div>
               <div class="chart-bar-group">
-                <div class="chart-bar chart-bar--week1" style="height: 60%;"></div>
-                <div class="chart-bar chart-bar--week2" style="height: 70%;"></div>
-                <div class="chart-bar chart-bar--week3" style="height: 75%;"></div>
-                <div class="chart-bar chart-bar--week4" style="height: 65%;"></div>
+                <div
+                  class="chart-bar chart-bar--week1"
+                  style="height: 60%;"
+                ></div>
+                <div
+                  class="chart-bar chart-bar--week2"
+                  style="height: 70%;"
+                ></div>
+                <div
+                  class="chart-bar chart-bar--week3"
+                  style="height: 75%;"
+                ></div>
+                <div
+                  class="chart-bar chart-bar--week4"
+                  style="height: 65%;"
+                ></div>
               </div>
               <div class="chart-bar-group">
-                <div class="chart-bar chart-bar--week1" style="height: 85%;"></div>
-                <div class="chart-bar chart-bar--week2" style="height: 80%;"></div>
-                <div class="chart-bar chart-bar--week3" style="height: 60%;"></div>
-                <div class="chart-bar chart-bar--week4" style="height: 95%;"></div>
+                <div
+                  class="chart-bar chart-bar--week1"
+                  style="height: 85%;"
+                ></div>
+                <div
+                  class="chart-bar chart-bar--week2"
+                  style="height: 80%;"
+                ></div>
+                <div
+                  class="chart-bar chart-bar--week3"
+                  style="height: 60%;"
+                ></div>
+                <div
+                  class="chart-bar chart-bar--week4"
+                  style="height: 95%;"
+                ></div>
               </div>
             </div>
           </div>
@@ -165,19 +301,25 @@
         <div class="operations-card__body">
           <div class="operation-item">
             <span class="operation-badge operation-badge--gudang">Gudang</span>
-            <p class="operation-text">Barang terima dipastikan masuk 12 gudang sebelum dalam 24 jam terakhir</p>
+            <p class="operation-text">Barang terima dipastikan masuk 12 gudang
+              sebelum dalam 24 jam terakhir</p>
           </div>
           <div class="operation-item">
             <span class="operation-badge operation-badge--qc">QC</span>
-            <p class="operation-text">38 barang sidia inspeksi kuota.mu, 7 beregu perlu inwark finishing</p>
+            <p class="operation-text">38 barang sidia inspeksi kuota.mu, 7
+              beregu perlu inwark finishing</p>
           </div>
           <div class="operation-item">
-            <span class="operation-badge operation-badge--logistik">Logistik</span>
-            <p class="operation-text">Rute &amp;alokpaya mangalami penurunan 8 (km bonus) percarepstoni dating tidak</p>
+            <span
+              class="operation-badge operation-badge--logistik"
+            >Logistik</span>
+            <p class="operation-text">Rute &amp;alokpaya mangalami penurunan 8
+              (km bonus) percarepstoni dating tidak</p>
           </div>
           <div class="operation-item">
             <span class="operation-badge operation-badge--alert">Alert</span>
-            <p class="operation-text">Monitor LCD batch 21 perlu penyesuaian label gemurai sebelum dikirim.</p>
+            <p class="operation-text">Monitor LCD batch 21 perlu penyesuaian
+              label gemurai sebelum dikirim.</p>
           </div>
         </div>
       </div>
@@ -190,14 +332,15 @@
       <div class="transactions-card__header">
         <div>
           <h3 class="transactions-card__title">Transaksi Terbaru</h3>
-          <p class="transactions-card__subtitle">Pembaruan terakhir: 21 September 2025 - 13:48 WIB</p>
+          <p class="transactions-card__subtitle">Pembaruan terakhir: 21
+            September 2025 - 13:48 WIB</p>
         </div>
         <div class="transactions-card__actions">
           <button class="btn-secondary">Ekspor CSV</button>
           <button class="btn-primary">Rekpnse POT</button>
         </div>
       </div>
-      
+
       <div class="transactions-table">
         <table class="table">
           <thead class="table__head">
