@@ -3,7 +3,7 @@ USE combiphar_db;
 
 -- Users Table
 CREATE TABLE IF NOT EXISTS users (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id VARCHAR(36) PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     email VARCHAR(150) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS users (
 
 -- Categories Table
 CREATE TABLE IF NOT EXISTS categories (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id VARCHAR(36) PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -26,8 +26,8 @@ CREATE TABLE IF NOT EXISTS categories (
 
 -- Items Table
 CREATE TABLE IF NOT EXISTS items (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    category_id BIGINT,
+    id VARCHAR(36) PRIMARY KEY,
+    category_id VARCHAR(36),
     name VARCHAR(150) NOT NULL,
     `condition` ENUM('NEW', 'USED_GOOD', 'USED_FAIR', 'DAMAGED') NOT NULL,
     description TEXT,
@@ -42,8 +42,8 @@ CREATE TABLE IF NOT EXISTS items (
 
 -- Orders Table
 CREATE TABLE IF NOT EXISTS orders (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    user_id BIGINT,
+    id VARCHAR(36) PRIMARY KEY,
+    user_id VARCHAR(36),
     order_number VARCHAR(50) NOT NULL UNIQUE,
     total_price DECIMAL(12,2) NOT NULL,
     payment_method ENUM('QRIS', 'CASH') NOT NULL,
@@ -58,9 +58,9 @@ CREATE TABLE IF NOT EXISTS orders (
 
 -- Order Items Table
 CREATE TABLE IF NOT EXISTS order_items (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    order_id BIGINT NOT NULL,
-    item_id BIGINT,
+    id VARCHAR(36) PRIMARY KEY,
+    order_id VARCHAR(36) NOT NULL,
+    item_id VARCHAR(36),
     quantity INT NOT NULL,
     unit_price DECIMAL(12,2) NOT NULL,
     subtotal DECIMAL(12,2) NOT NULL,
@@ -70,8 +70,8 @@ CREATE TABLE IF NOT EXISTS order_items (
 
 -- Payments Table
 CREATE TABLE IF NOT EXISTS payments (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    order_id BIGINT NOT NULL,
+    id VARCHAR(36) PRIMARY KEY,
+    order_id VARCHAR(36) NOT NULL,
     type ENUM('QRIS', 'CASH') NOT NULL,
     amount DECIMAL(12,2) NOT NULL,
     status ENUM('PENDING', 'SUCCESS', 'FAILED') DEFAULT 'PENDING',
@@ -83,8 +83,8 @@ CREATE TABLE IF NOT EXISTS payments (
 
 -- Shipments Table
 CREATE TABLE IF NOT EXISTS shipments (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    order_id BIGINT NOT NULL,
+    id VARCHAR(36) PRIMARY KEY,
+    order_id VARCHAR(36) NOT NULL,
     courier_name VARCHAR(100),
     tracking_number VARCHAR(100),
     shipment_status ENUM('PENDING', 'PACKED', 'SHIPPED', 'DELIVERED') DEFAULT 'PENDING',
