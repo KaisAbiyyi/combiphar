@@ -1,0 +1,10 @@
+{# ========================================================================== #}
+{# ADMIN FOOTER - Footer section for admin pages                             #}
+{# ========================================================================== #}
+<footer class="admin-footer">
+  <div class="admin-footer__container">
+    <p class="admin-footer__text">
+      &copy; 2025 Combiphar Used Goods. All rights reserved.
+    </p>
+  </div>
+</footer>

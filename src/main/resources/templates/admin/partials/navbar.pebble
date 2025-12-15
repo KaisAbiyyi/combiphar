@@ -1,0 +1,52 @@
+{# ========================================================================== #}
+{# ADMIN NAVBAR - Top navigation bar with breadcrumb and user profile        #}
+{# ========================================================================== #}
+<nav class="admin-navbar">
+  <div class="admin-navbar__container">
+    {# Left section - Title and breadcrumb #}
+    <div class="admin-navbar__left">
+      <h2 class="admin-navbar__title">{{ pageTitle | default('Dashboard Admin') }}</h2>
+      
+      {# Breadcrumb #}
+      {% if breadcrumb %}
+      <nav class="admin-breadcrumb" aria-label="Breadcrumb">
+        <ol class="admin-breadcrumb__list">
+          {% for item in breadcrumb %}
+          <li class="admin-breadcrumb__item">
+            {% if item.url and not loop.last %}
+              <a href="{{ item.url }}" class="admin-breadcrumb__link">{{ item.label }}</a>
+            {% else %}
+              <span class="admin-breadcrumb__current">{{ item.label }}</span>
+            {% endif %}
+            {% if not loop.last %}
+              <svg class="admin-breadcrumb__separator" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            {% endif %}
+          </li>
+          {% endfor %}
+        </ol>
+      </nav>
+      {% endif %}
+    </div>
+
+    {# Right section - User profile #}
+    <div class="admin-navbar__right">
+      <div class="admin-navbar__user">
+        <div class="admin-navbar__user-info">
+          <p class="admin-navbar__user-name">{{ userName | default('Nashya Putri') }}</p>
+          <p class="admin-navbar__user-role">{{ userRole | default('Admin Warehouse Jakarta') }}</p>
+        </div>
+        <div class="admin-navbar__user-avatar">
+          {% if userAvatar %}
+            <img src="{{ userAvatar }}" alt="{{ userName }}" class="admin-navbar__avatar-img">
+          {% else %}
+            <div class="admin-navbar__avatar-placeholder">
+              <span>{{ userName | default('NP') | slice(0, 2) | upper }}</span>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,45 @@
+{# ========================================================================== #}
+{# ADMIN LAYOUT - Main layout template for admin dashboard pages             #}
+{# ========================================================================== #}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ title | default('Dashboard Admin') }} - Combiphar Used Goods</title>
+  
+  {# Google Fonts - Inter #}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  {# Main stylesheet (compiled from SCSS) #}
+  <link rel="stylesheet" href="/css/main.css">
+  
+  {# Page-specific styles #}
+  {% block styles %}{% endblock %}
+</head>
+<body class="admin-body">
+  <div class="admin-layout">
+    {# Sidebar Navigation #}
+    {% include "admin/partials/sidebar" %}
+    
+    {# Main content wrapper #}
+    <div class="admin-main">
+      {# Top Navbar #}
+      {% include "admin/partials/navbar" %}
+      
+      {# Page content #}
+      <main class="admin-content">
+        {% block content %}{% endblock %}
+      </main>
+      
+      {# Footer #}
+      {% include "admin/partials/footer" %}
+    </div>
+  </div>
+  
+  {# Scripts #}
+  {% block scripts %}{% endblock %}
+</body>
+</html>
