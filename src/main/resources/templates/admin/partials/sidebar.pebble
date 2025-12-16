@@ -88,7 +88,7 @@
         </a>
       </li>
 
-      <li class="admin-sidebar__menu-item">
+      <li class="admin-sidebar__menu-item {% if activePage == 'pengiriman' %}admin-sidebar__menu-item--active{% endif %}">
         <a href="/admin/pengiriman" class="admin-sidebar__link">
           <svg class="admin-sidebar__icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M1 4C1 2.89543 1.89543 2 3 2H11C12.1046 2 13 2.89543 13 4V14C13 15.1046 12.1046 16 11 16H3C1.89543 16 1 15.1046 1 14V4Z" fill="currentColor"/>
@@ -98,6 +98,7 @@
           </svg>
           <span class="admin-sidebar__text">Pengiriman</span>
         </a>
+      </li>
       </li>
 
       <li class="admin-sidebar__menu-item">

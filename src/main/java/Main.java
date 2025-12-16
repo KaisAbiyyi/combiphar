@@ -168,5 +168,16 @@ public class Main {
                     "activePage", "pembayaran");
             ctx.render("admin/payment", model);
         });
+
+        // Admin shipping page
+        app.get("/admin/pengiriman", ctx -> {
+            Map<String, Object> model = Map.of(
+                    "title", "Monitoring Pengiriman",
+                    "pageTitle", "Monitoring Pengiriman",
+                    "userName", "Nashya Putri",
+                    "userRole", "Admin Warehouse Jakarta",
+                    "activePage", "pengiriman");
+            ctx.render("admin/shipping", model);
+        });
     }
 }
