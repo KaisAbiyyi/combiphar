@@ -96,7 +96,7 @@ public class Main {
                     "activePage", "payment");
             ctx.render("customer/payment", model);
         });
-        
+
         app.get("/checkout/payment", ctx -> {
             Map<String, Object> model = Map.of(
                     "title", "Pembayaran Pesanan - Combiphar Used Goods",
@@ -110,6 +110,16 @@ public class Main {
                     "title", "Riwayat Transaksi - Combiphar Used Goods",
                     "activePage", "history");
             ctx.render("customer/history", model);
+        });
+
+        // Order tracking page
+        app.get("/order/{id}", ctx -> {
+            String orderId = ctx.pathParam("id");
+            Map<String, Object> model = Map.of(
+                    "title", "Detail Pesanan - Combiphar Used Goods",
+                    "orderId", orderId,
+                    "activePage", "history");
+            ctx.render("customer/order-tracking", model);
         });
 
         // Admin login page

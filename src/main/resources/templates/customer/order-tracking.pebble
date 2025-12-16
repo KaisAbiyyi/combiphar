@@ -1,0 +1,246 @@
+{# ========================================================================== #}
+{# ORDER TRACKING PAGE - Order detail and tracking status #}
+{# ========================================================================== #}
+{% extends "customer/layout" %}
+
+{% block content %}
+<section class="order-tracking-page">
+  <div class="order-tracking-page__container">
+    
+    {# Back Button Header #}
+    <div class="order-tracking-header">
+      <a href="/history" class="back-link">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10 12L6 8L10 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Kembali ke Riwayat
+      </a>
+      
+      <div class="order-tracking-user">
+        <span class="order-tracking-user__name">Salma P. Wijaya</span>
+        <div class="order-tracking-user__avatar">
+          <img src="/static/images/avatar-placeholder.jpg" alt="Salma P. Wijaya" class="order-tracking-user__img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <div class="order-tracking-user__placeholder" style="display: none;">SW</div>
+        </div>
+      </div>
+    </div>
+
+    {# Order Info Card #}
+    <div class="order-info-card">
+      <div class="order-info-card__header">
+        <div class="order-info-card__left">
+          <div class="order-info-card__label">ORDER ID</div>
+          <h1 class="order-info-card__id">ORD-42391</h1>
+          <p class="order-info-card__date">Dibuat 25 Sep 2025 • 11:57 WIB</p>
+        </div>
+        
+        <div class="order-info-card__badges">
+          <span class="order-status-badge order-status-badge--paid">Pembayaran Lunas (QRIS)</span>
+          <span class="order-status-badge order-status-badge--shipped">Pengiriman: Dikirim</span>
+        </div>
+      </div>
+    </div>
+
+    {# Main Content Grid #}
+    <div class="order-tracking-grid">
+      
+      {# Left Column - Items & Delivery #}
+      <div class="order-tracking-main">
+        
+        {# Items Section #}
+        <div class="order-items-card">
+          <div class="order-items-card__header">
+            <h2 class="order-items-card__title">Barang yang dibeli</h2>
+            <button class="order-items-card__action">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8 2V10M8 10L11 7M8 10L5 7M3 12V13C3 13.5523 3.44772 14 4 14H12C12.5523 14 13 13.5523 13 13V12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Unduh Invoice
+            </button>
+          </div>
+
+          <div class="order-items-list">
+            {# Item 1 #}
+            <div class="order-item">
+              <div class="order-item__image">
+                <img src="https://via.placeholder.com/80x80/9333EA/FFFFFF?text=Meja" alt="Meja Eksekutif Alto" class="order-item__img">
+              </div>
+              <div class="order-item__details">
+                <h3 class="order-item__name">Meja Eksekutif Alto</h3>
+                <p class="order-item__meta">Qty 1 • 1.350.000</p>
+              </div>
+              <div class="order-item__price">Rp 7.500.000</div>
+            </div>
+
+            {# Item 2 #}
+            <div class="order-item">
+              <div class="order-item__image">
+                <img src="https://via.placeholder.com/80x80/7C3AED/FFFFFF?text=Kursi" alt="Kursi Lumbar+ (4)" class="order-item__img">
+              </div>
+              <div class="order-item__details">
+                <h3 class="order-item__name">Kursi Lumbar+ (4)</h3>
+                <p class="order-item__meta">Qty 4 • Rp 1.250.000</p>
+              </div>
+              <div class="order-item__price">Rp 13.000.000</div>
+            </div>
+
+            {# Item 3 #}
+            <div class="order-item">
+              <div class="order-item__image">
+                <img src="https://via.placeholder.com/80x80/A855F7/FFFFFF?text=Monitor" alt="Monitor Aurora 24&quot; (6)" class="order-item__img">
+              </div>
+              <div class="order-item__details">
+                <h3 class="order-item__name">Monitor Aurora 24" (6)</h3>
+                <p class="order-item__meta">Qty 6 • Rp 1.850.000</p>
+              </div>
+              <div class="order-item__price">Rp 11.100.000</div>
+            </div>
+          </div>
+
+          {# Price Breakdown #}
+          <div class="order-price-breakdown">
+            <div class="order-price-row">
+              <span class="order-price-label">Subtotal</span>
+              <span class="order-price-value">Rp 31.600.000</span>
+            </div>
+            <div class="order-price-row order-price-row--discount">
+              <span class="order-price-label">Diskon karyawan</span>
+              <span class="order-price-value">- Rp 2.500.000</span>
+            </div>
+            <div class="order-price-row">
+              <span class="order-price-label">Asuransi & logistik</span>
+              <span class="order-price-value">Rp 1.200.000</span>
+            </div>
+            <div class="order-price-total">
+              <span class="order-price-total__label">Total</span>
+              <span class="order-price-total__value">Rp 30.300.000</span>
+            </div>
+          </div>
+        </div>
+
+        {# Delivery Info Card #}
+        <div class="delivery-info-card">
+          <h3 class="delivery-info-card__title">Metode Pengiriman</h3>
+          <div class="delivery-info-card__content">
+            <div class="delivery-method">
+              <strong class="delivery-method__name">Delivery • Premium Logistics (2–3 hari)</strong>
+            </div>
+            
+            <div class="delivery-address">
+              <div class="delivery-address__label">Alamat Pengiriman</div>
+              <div class="delivery-address__content">
+                <strong class="delivery-address__name">Jl. Melati No. 45, Kebayoran Baru</strong>
+              </div>
+            </div>
+            
+            <div class="delivery-contact">
+              <div class="delivery-contact__label">Kontak Penerima</div>
+              <div class="delivery-contact__content">Indra Purnama (0812 3456 7890)</div>
+            </div>
+            
+            <div class="delivery-notes">
+              <div class="delivery-notes__label">Catatan Kustdi</div>
+              <div class="delivery-notes__content">Drop di loading dock basement, hubungi security Pat John.</div>
+            </div>
+
+            <div class="delivery-proof">
+              <div class="delivery-proof__label">Bukti pengiriman dikirirm? Hubungi</div>
+              <a href="mailto:support@combiphar.com" class="delivery-proof__link">support@combiphar.com</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      {# Right Column - Help Card #}
+      <div class="order-tracking-sidebar">
+        <div class="order-help-card">
+          <div class="order-help-card__header">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="32" height="32" rx="16" fill="#F3E8FF"/>
+              <path d="M16 12V16M16 20H16.01M24 16C24 20.4183 20.4183 24 16 24C11.5817 24 8 20.4183 8 16C8 11.5817 11.5817 8 16 8C20.4183 8 24 11.5817 24 16Z" stroke="#9333EA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <h3 class="order-help-card__title">Butuh bantuan?</h3>
+          </div>
+          <p class="order-help-card__text">
+            Tim fulfilment kami siap membantu update status dan jadwal ulang.
+          </p>
+          <a href="mailto:support@combiphar.com" class="order-help-card__link">
+            Email tim fulfilment
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+    {# Tracking Timeline #}
+    <div class="tracking-timeline-card">
+      <h2 class="tracking-timeline-card__title">Riwayat Status</h2>
+      <p class="tracking-timeline-card__subtitle">Pelacakan Pengiriman</p>
+
+      <div class="tracking-timeline">
+        {# Step 1 - Completed #}
+        <div class="tracking-step tracking-step--completed">
+          <div class="tracking-step__indicator">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="10" cy="10" r="10" fill="#10B981"/>
+              <path d="M6 10L9 13L14 7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="tracking-step__content">
+            <div class="tracking-step__title">Dikerinci ke eksisendiri</div>
+            <div class="tracking-step__time">25 Sep 2025 • 17:30</div>
+            <div class="tracking-step__resi">Nomor resi: JNE-CGP-42391</div>
+          </div>
+        </div>
+
+        {# Step 2 - Completed #}
+        <div class="tracking-step tracking-step--completed">
+          <div class="tracking-step__indicator">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="10" cy="10" r="10" fill="#F59E0B"/>
+              <circle cx="10" cy="10" r="4" fill="white"/>
+            </svg>
+          </div>
+          <div class="tracking-step__content">
+            <div class="tracking-step__title">Sedang dikemas</div>
+            <div class="tracking-step__time">25 Sep 2025 • 03:12</div>
+          </div>
+        </div>
+
+        {# Step 3 - Completed #}
+        <div class="tracking-step tracking-step--completed">
+          <div class="tracking-step__indicator">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="10" cy="10" r="10" fill="#F59E0B"/>
+              <circle cx="10" cy="10" r="4" fill="white"/>
+            </svg>
+          </div>
+          <div class="tracking-step__content">
+            <div class="tracking-step__title">Pembayaran terkonfirmasi</div>
+            <div class="tracking-step__time">25 Sep 2025 • 03:12</div>
+          </div>
+        </div>
+
+        {# Step 4 - Completed #}
+        <div class="tracking-step tracking-step--completed">
+          <div class="tracking-step__indicator">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="10" cy="10" r="10" fill="#F59E0B"/>
+              <circle cx="10" cy="10" r="4" fill="white"/>
+            </svg>
+          </div>
+          <div class="tracking-step__content">
+            <div class="tracking-step__title">Menunggu pembayaran</div>
+            <div class="tracking-step__time">25 Sep 2025 • 03:12</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+{% endblock %}

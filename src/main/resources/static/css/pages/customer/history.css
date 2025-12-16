@@ -8,7 +8,7 @@
 .history-page {
   padding: 3rem 0;
   min-height: calc(100vh - 64px);
-  background: linear-gradient(135deg, #FAF5FF 0%, #F5F3FF 100%);
+  background: linear-gradient(135deg, #faf5ff 0%, #f5f3ff 100%);
 }
 
 .history-page__container {
@@ -27,7 +27,7 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  background: #FFFFFF;
+  background: #ffffff;
   padding: 2rem;
   border-radius: 1rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -42,13 +42,13 @@
 .history-page__title {
   font-size: 1.875rem;
   font-weight: 700;
-  color: #1F2937;
+  color: #1f2937;
   margin: 0;
 }
 
 .history-page__subtitle {
   font-size: 0.875rem;
-  color: #6B7280;
+  color: #6b7280;
   line-height: 1.6;
   margin: 0;
 }
@@ -78,22 +78,22 @@
 
 .history-filter__select {
   padding: 0.75rem 1rem;
-  border: 1px solid #D1D5DB;
+  border: 1px solid #d1d5db;
   border-radius: 0.5rem;
   font-size: 0.875rem;
-  color: #1F2937;
-  background: #FFFFFF;
+  color: #1f2937;
+  background: #ffffff;
   cursor: pointer;
   transition: all 150ms ease;
 }
 
 .history-filter__select:hover {
-  border-color: #9333EA;
+  border-color: #9333ea;
 }
 
 .history-filter__select:focus {
   outline: none;
-  border-color: #9333EA;
+  border-color: #9333ea;
   box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.1);
 }
 
@@ -124,8 +124,8 @@
 }
 
 .history-btn--primary {
-  background: linear-gradient(135deg, #EC4899 0%, #9333EA 100%);
-  color: #FFFFFF;
+  background: linear-gradient(135deg, #ec4899 0%, #9333ea 100%);
+  color: #ffffff;
 }
 
 .history-btn--primary:hover {
@@ -134,21 +134,21 @@
 }
 
 .history-btn--secondary {
-  background: #FFFFFF;
-  color: #9333EA;
-  border: 1px solid #E9D5FF;
+  background: #ffffff;
+  color: #9333ea;
+  border: 1px solid #e9d5ff;
 }
 
 .history-btn--secondary:hover {
-  background: #FAF5FF;
-  border-color: #9333EA;
+  background: #faf5ff;
+  border-color: #9333ea;
 }
 
 /* -----------------------------------------------------------------------------
    Transaction table
    ----------------------------------------------------------------------------- */
 .history-table-wrapper {
-  background: #FFFFFF;
+  background: #ffffff;
   border-radius: 1rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   overflow: hidden;
@@ -160,8 +160,8 @@
 }
 
 .history-table__head {
-  background: linear-gradient(135deg, #F3E8FF 0%, #FAF5FF 100%);
-  border-bottom: 2px solid #E9D5FF;
+  background: linear-gradient(135deg, #f3e8ff 0%, #faf5ff 100%);
+  border-bottom: 2px solid #e9d5ff;
 }
 
 .history-table__header {
@@ -169,7 +169,7 @@
   text-align: left;
   font-size: 0.75rem;
   font-weight: 600;
-  color: #6B7280;
+  color: #6b7280;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -178,12 +178,12 @@
 }
 
 .history-table__row {
-  border-bottom: 1px solid #E5E7EB;
+  border-bottom: 1px solid #e5e7eb;
   transition: background 150ms ease;
 }
 
 .history-table__row:hover {
-  background: #F9FAFB;
+  background: #f9fafb;
 }
 
 .history-table__row:last-child {
@@ -193,7 +193,7 @@
 .history-table__cell {
   padding: 1.25rem 1.5rem;
   font-size: 0.875rem;
-  color: #1F2937;
+  color: #1f2937;
   vertical-align: middle;
 }
 
@@ -204,7 +204,7 @@
 
 .history-table__cell--price {
   font-weight: 600;
-  color: #1F2937;
+  color: #1f2937;
 }
 
 /* Invoice cell */
@@ -230,7 +230,7 @@
 
 .product-cell__name {
   font-size: 0.875rem;
-  color: #1F2937;
+  color: #1f2937;
   line-height: 1.4;
 }
 
@@ -246,31 +246,31 @@
 }
 
 .status-badge--proses {
-  background: #FEF3C7;
-  color: #92400E;
+  background: #fef3c7;
+  color: #92400e;
 }
 
 .status-badge--selesai {
-  background: #D1FAE5;
-  color: #065F46;
+  background: #d1fae5;
+  color: #065f46;
 }
 
 .status-badge--pending {
-  background: #FEE2E2;
-  color: #991B1B;
+  background: #fee2e2;
+  color: #991b1b;
 }
 
 .status-badge--dikemas {
-  background: #DBEAFE;
-  color: #1E40AF;
+  background: #dbeafe;
+  color: #1e40af;
 }
 
 /* Action button */
 .history-action-btn {
   padding: 0.5rem 1rem;
   background: transparent;
-  color: #9333EA;
-  border: 1px solid #E9D5FF;
+  color: #9333ea;
+  border: 1px solid #e9d5ff;
   border-radius: 0.375rem;
   font-size: 0.875rem;
   font-weight: 600;
@@ -280,9 +280,9 @@
 }
 
 .history-action-btn:hover {
-  background: #FAF5FF;
-  border-color: #9333EA;
-  color: #7C3AED;
+  background: #faf5ff;
+  border-color: #9333ea;
+  color: #7c3aed;
 }
 
 /* -----------------------------------------------------------------------------
@@ -294,7 +294,7 @@
   justify-content: space-between;
   gap: 1rem;
   padding: 1.5rem;
-  background: #FFFFFF;
+  background: #ffffff;
   border-radius: 0.75rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
@@ -304,9 +304,9 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.625rem 1rem;
-  background: #FFFFFF;
-  color: #9333EA;
-  border: 1px solid #E9D5FF;
+  background: #ffffff;
+  color: #9333ea;
+  border: 1px solid #e9d5ff;
   border-radius: 0.5rem;
   font-size: 0.875rem;
   font-weight: 600;
@@ -315,8 +315,8 @@
 }
 
 .pagination-btn:hover:not(:disabled) {
-  background: #FAF5FF;
-  border-color: #9333EA;
+  background: #faf5ff;
+  border-color: #9333ea;
 }
 
 .pagination-btn:disabled {
@@ -331,11 +331,11 @@
 
 .pagination-info {
   font-size: 0.875rem;
-  color: #6B7280;
+  color: #6b7280;
 }
 
 .pagination-info strong {
-  color: #1F2937;
+  color: #1f2937;
   font-weight: 600;
 }
 
@@ -346,7 +346,7 @@
   .history-table-wrapper {
     overflow-x: auto;
   }
-  
+
   .history-table {
     min-width: 800px;
   }
@@ -356,39 +356,39 @@
   .history-page {
     padding: 1.5rem 0;
   }
-  
+
   .history-page__header {
     padding: 1.5rem;
   }
-  
+
   .history-page__title {
     font-size: 1.5rem;
   }
-  
+
   .history-page__controls {
     flex-direction: column;
     align-items: stretch;
   }
-  
+
   .history-page__actions {
     width: 100%;
   }
-  
+
   .history-btn {
     flex: 1;
     justify-content: center;
   }
-  
+
   .history-table__header,
   .history-table__cell {
     padding: 0.75rem 1rem;
   }
-  
+
   .history-pagination {
     flex-direction: column;
     text-align: center;
   }
-  
+
   .pagination-btn {
     width: 100%;
     justify-content: center;
@@ -399,11 +399,11 @@
   .history-page__actions {
     flex-direction: column;
   }
-  
+
   .product-cell__name {
     font-size: 0.8125rem;
   }
-  
+
   .history-action-btn {
     padding: 0.375rem 0.75rem;
     font-size: 0.8125rem;
