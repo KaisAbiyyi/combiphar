@@ -146,5 +146,16 @@ public class Main {
                     "activePage", "pesanan");
             ctx.render("admin/order", model);
         });
+
+        // Admin transaction page
+        app.get("/admin/transaksi", ctx -> {
+            Map<String, Object> model = Map.of(
+                    "title", "Daftar Transaksi",
+                    "pageTitle", "Daftar Transaksi",
+                    "userName", "Nashya Putri",
+                    "userRole", "Admin Warehouse Jakarta",
+                    "activePage", "transaksi");
+            ctx.render("admin/transaction", model);
+        });
     }
 }
