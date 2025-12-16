@@ -157,5 +157,16 @@ public class Main {
                     "activePage", "transaksi");
             ctx.render("admin/transaction", model);
         });
+
+        // Admin payment page
+        app.get("/admin/pembayaran", ctx -> {
+            Map<String, Object> model = Map.of(
+                    "title", "Verifikasi Pembayaran",
+                    "pageTitle", "Verifikasi Pembayaran",
+                    "userName", "Nashya Putri",
+                    "userRole", "Admin Keuangan",
+                    "activePage", "pembayaran");
+            ctx.render("admin/payment", model);
+        });
     }
 }

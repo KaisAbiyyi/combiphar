@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="220" viewBox="0 0 800 220">
+  <rect width="100%" height="100%" rx="16" fill="#FBF7FF"/>
+  <g font-family="Inter, Arial, Helvetica, sans-serif" fill="#6B7280">
+    <text x="28" y="40" font-size="14" fill="#6D2B7B" font-weight="700">Kuitansi Setoran Tunai</text>
+    <text x="28" y="80" font-size="13"><tspan fill="#374151">Kasir:</tspan> <tspan x="140" fill="#111827" font-weight="600">Lola Hidayat</tspan></text>
+    <text x="28" y="110" font-size="13"><tspan fill="#374151">No. referensi:</tspan> <tspan x="140" fill="#111827" font-weight="600">CASH-9912</tspan></text>
+    <text x="28" y="140" font-size="13"><tspan fill="#374151">Bank tujuan:</tspan> <tspan x="140" fill="#111827" font-weight="600">BCA 288.221.11</tspan></text>
+  </g>
+</svg>
