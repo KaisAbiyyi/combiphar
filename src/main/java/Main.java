@@ -89,6 +89,47 @@ public class Main {
             ctx.render("customer/checkout", model);
         });
 
+        // Payment page
+        app.get("/payment", ctx -> {
+            Map<String, Object> model = Map.of(
+                    "title", "Pembayaran Pesanan - Combiphar Used Goods",
+                    "activePage", "payment");
+            ctx.render("customer/payment", model);
+        });
+
+        app.get("/checkout/payment", ctx -> {
+            Map<String, Object> model = Map.of(
+                    "title", "Pembayaran Pesanan - Combiphar Used Goods",
+                    "activePage", "payment");
+            ctx.render("customer/payment", model);
+        });
+
+        // History page
+        app.get("/history", ctx -> {
+            Map<String, Object> model = Map.of(
+                    "title", "Riwayat Transaksi - Combiphar Used Goods",
+                    "activePage", "history");
+            ctx.render("customer/history", model);
+        });
+
+        // Order tracking page
+        app.get("/order/{id}", ctx -> {
+            String orderId = ctx.pathParam("id");
+            Map<String, Object> model = Map.of(
+                    "title", "Detail Pesanan - Combiphar Used Goods",
+                    "orderId", orderId,
+                    "activePage", "history");
+            ctx.render("customer/order-tracking", model);
+        });
+
+        // Profile page
+        app.get("/profile", ctx -> {
+            Map<String, Object> model = Map.of(
+                    "title", "Pengaturan Akun - Combiphar Used Goods",
+                    "activePage", "profile");
+            ctx.render("customer/profile", model);
+        });
+
         // Admin login page
         app.get("/admin/login", ctx -> {
             ctx.render("admin/login");

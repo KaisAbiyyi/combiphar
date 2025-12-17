@@ -1,0 +1,220 @@
+{# ========================================================================== #}
+{# PAYMENT PAGE - Order payment page with QR code #} {#
+========================================================================== #} {%
+extends "customer/layout" %} {% block content %}
+<section class="payment-page">
+  <div class="payment-page__container">
+
+    {#
+    ==========================================================================
+    #} {# PAYMENT METHOD SECTION (Left Column) #} {#
+    ==========================================================================
+    #}
+    <div class="payment-method-section">
+      {# Payment Method Card #}
+      <div class="payment-card">
+        <div class="payment-card__header">
+          <h2 class="payment-card__label">METODE PEMBAYARAN</h2>
+        </div>
+
+        <div class="payment-card__body">
+          <h3 class="payment-card__title">Scan QRIS untuk menyelesaikan
+            pembayaran</h3>
+          <p class="payment-card__subtitle">Batas waktu pembayaran: 28 Sep 2025
+            - 18:30 WIB</p>
+
+          {# Total Amount #}
+          <div class="payment-total">
+            <span class="payment-total__label">TOTAL YANG HARUS DIBAYAR</span>
+            <h2 class="payment-total__amount">Rp 30.300.000</h2>
+          </div>
+
+          {# QR Code #}
+          <div class="payment-qr">
+            <div class="payment-qr__code">
+              {# Placeholder QR Code - in production, this would be dynamic #}
+              <svg
+                class="payment-qr__svg"
+                viewBox="0 0 200 200"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <rect width="200" height="200" fill="white" />
+                {# QR Pattern - simplified representation #}
+                <g fill="black">
+                  {# Corner markers #}
+                  <rect x="10" y="10" width="50" height="50" />
+                  <rect x="20" y="20" width="30" height="30" fill="white" />
+                  <rect x="25" y="25" width="20" height="20" />
+
+                  <rect x="140" y="10" width="50" height="50" />
+                  <rect x="150" y="20" width="30" height="30" fill="white" />
+                  <rect x="155" y="25" width="20" height="20" />
+
+                  <rect x="10" y="140" width="50" height="50" />
+                  <rect x="20" y="150" width="30" height="30" fill="white" />
+                  <rect x="25" y="155" width="20" height="20" />
+
+                  {# Data pattern - simplified #}
+                  <rect x="70" y="10" width="10" height="10" />
+                  <rect x="90" y="10" width="10" height="10" />
+                  <rect x="110" y="10" width="10" height="10" />
+                  <rect x="70" y="30" width="10" height="10" />
+                  <rect x="90" y="30" width="10" height="10" />
+                  <rect x="110" y="30" width="10" height="10" />
+                  <rect x="130" y="30" width="10" height="10" />
+
+                  <rect x="10" y="70" width="10" height="10" />
+                  <rect x="30" y="70" width="10" height="10" />
+                  <rect x="50" y="70" width="10" height="10" />
+                  <rect x="70" y="70" width="10" height="10" />
+                  <rect x="90" y="70" width="10" height="10" />
+                  <rect x="110" y="70" width="10" height="10" />
+                  <rect x="130" y="70" width="10" height="10" />
+                  <rect x="150" y="70" width="10" height="10" />
+                  <rect x="170" y="70" width="10" height="10" />
+
+                  <rect x="10" y="90" width="10" height="10" />
+                  <rect x="30" y="90" width="10" height="10" />
+                  <rect x="70" y="90" width="10" height="10" />
+                  <rect x="110" y="90" width="10" height="10" />
+                  <rect x="130" y="90" width="10" height="10" />
+                  <rect x="170" y="90" width="10" height="10" />
+
+                  <rect x="70" y="110" width="10" height="10" />
+                  <rect x="90" y="110" width="10" height="10" />
+                  <rect x="130" y="110" width="10" height="10" />
+                  <rect x="150" y="110" width="10" height="10" />
+                  <rect x="170" y="110" width="10" height="10" />
+
+                  <rect x="70" y="130" width="10" height="10" />
+                  <rect x="110" y="130" width="10" height="10" />
+                  <rect x="150" y="130" width="10" height="10" />
+
+                  <rect x="70" y="150" width="10" height="10" />
+                  <rect x="90" y="150" width="10" height="10" />
+                  <rect x="130" y="150" width="10" height="10" />
+                  <rect x="170" y="150" width="10" height="10" />
+
+                  <rect x="70" y="170" width="10" height="10" />
+                  <rect x="110" y="170" width="10" height="10" />
+                  <rect x="130" y="170" width="10" height="10" />
+                  <rect x="170" y="170" width="10" height="10" />
+                </g>
+              </svg>
+            </div>
+            <p class="payment-qr__invoice">Invoice Rp: 289210</p>
+          </div>
+
+          {# Instructions #}
+          <div class="payment-instructions">
+            <p class="payment-instructions__note">
+              Gunakan aplikasi mobile banking / e-wallet Anda untuk memindai
+              kode QR. Transaksi akan otomatis dikonfirmasi setelah pembayaran
+              berhasil.
+            </p>
+          </div>
+
+          {# Instructions List #}
+          <div class="payment-steps">
+            <h4 class="payment-steps__title">Petunjuk:</h4>
+            <ol class="payment-steps__list">
+              <li class="payment-steps__item">Buka aplikasi pembayaran yang
+                mendukung QRIS</li>
+              <li class="payment-steps__item">Pindai kode QR di samping</li>
+              <li class="payment-steps__item">Periksa nominal dan konfirmasi</li>
+              <li class="payment-steps__item">Setelah berhasil halaman ini akan
+                memperbaharui status otomatis</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {#
+    ==========================================================================
+    #} {# ORDER SUMMARY SECTION (Right Column) #} {#
+    ==========================================================================
+    #}
+    <div class="order-summary-section">
+      {# Order Details Card #}
+      <div class="order-card">
+        <div class="order-card__header">
+          <h3 class="order-card__title">Ringkasan Pesanan</h3>
+          <p class="order-card__company">PT Sinar Digital</p>
+          <p class="order-card__date">Order ID: ORD-42501</p>
+        </div>
+
+        <div class="order-card__items">
+          {# Item 1 #}
+          <div class="order-item">
+            <div class="order-item__info">
+              <span class="order-item__name">Meja Eksekutif Alto</span>
+              <span class="order-item__qty">1x</span>
+            </div>
+          </div>
+
+          {# Item 2 #}
+          <div class="order-item">
+            <div class="order-item__info">
+              <span class="order-item__name">Kursi Lumbar+</span>
+              <span class="order-item__qty">4x</span>
+            </div>
+          </div>
+
+          {# Item 3 #}
+          <div class="order-item">
+            <div class="order-item__info">
+              <span class="order-item__name">Monitor Aurora 24"</span>
+              <span class="order-item__qty">6x</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="order-card__pricing">
+          <div class="order-price-row">
+            <span class="order-price-row__label">Subtotal</span>
+            <span class="order-price-row__value">Rp 16.800.000</span>
+          </div>
+          <div class="order-price-row">
+            <span class="order-price-row__label">Diskon korporat</span>
+            <span
+              class="order-price-row__value order-price-row__value--discount"
+            >- Rp 2.500.000</span>
+          </div>
+          <div class="order-price-row">
+            <span class="order-price-row__label">Asuransi & logistik</span>
+            <span class="order-price-row__value">Rp 1.200.000</span>
+          </div>
+          <div class="order-price-row order-price-row--total">
+            <span class="order-price-row__label">Total</span>
+            <span class="order-price-row__value">Rp 30.300.000</span>
+          </div>
+        </div>
+      </div>
+
+      {# Payment Status Card #}
+      <div class="payment-status-card">
+        <div class="payment-status-card__header">
+          <h4 class="payment-status-card__title">Status Pembayaran</h4>
+        </div>
+        <div class="payment-status-card__body">
+          <div class="payment-status">
+            <div
+              class="payment-status__indicator payment-status__indicator--pending"
+            ></div>
+            <span class="payment-status__text">Menunggu pembayaran (Sisa)</span>
+          </div>
+          <p class="payment-status__timer">Saya sudah bayar</p>
+        </div>
+        <div class="payment-status-card__footer">
+          <p class="payment-status-card__help">Ada masalah atau pertanyaan?</p>
+          <a
+            href="mailto:finance@combiphar.id"
+            class="payment-status-card__link"
+          >finance@combiphar.id</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

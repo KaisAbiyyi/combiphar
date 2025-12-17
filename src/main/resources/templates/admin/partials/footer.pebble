@@ -1,6 +1,6 @@
 {# ========================================================================== #}
-{# ADMIN FOOTER - Footer section for admin pages                             #}
-{# ========================================================================== #}
+{# ADMIN FOOTER - Footer section for admin pages #} {#
+========================================================================== #}
 <footer class="admin-footer">
   <div class="admin-footer__container">
     <p class="admin-footer__text">

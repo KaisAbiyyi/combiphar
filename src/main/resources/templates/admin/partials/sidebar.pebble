@@ -1,17 +1,24 @@
 {# ========================================================================== #}
-{# ADMIN SIDEBAR - Left navigation panel with menu items                     #}
-{# ========================================================================== #}
+{# ADMIN SIDEBAR - Left navigation panel with menu items #} {#
+========================================================================== #}
 <aside class="admin-sidebar">
   <div class="admin-sidebar__header">
     <div class="admin-sidebar__logo">
-      <svg class="admin-sidebar__logo-icon" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="16" cy="16" r="16" fill="url(#gradient-logo)"/>
-        <path d="M16 8L20 12H12L16 8Z" fill="white"/>
-        <rect x="12" y="14" width="8" height="10" rx="1" fill="white"/>
+      <svg
+        class="admin-sidebar__logo-icon"
+        width="32"
+        height="32"
+        viewBox="0 0 32 32"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <circle cx="16" cy="16" r="16" fill="url(#gradient-logo)" />
+        <path d="M16 8L20 12H12L16 8Z" fill="white" />
+        <rect x="12" y="14" width="8" height="10" rx="1" fill="white" />
         <defs>
           <linearGradient id="gradient-logo" x1="0" y1="0" x2="32" y2="32">
-            <stop offset="0%" stop-color="#EC4899"/>
-            <stop offset="100%" stop-color="#9333EA"/>
+            <stop offset="0%" stop-color="#EC4899" />
+            <stop offset="100%" stop-color="#9333EA" />
           </linearGradient>
         </defs>
       </svg>
@@ -24,43 +31,109 @@
 
   <nav class="admin-sidebar__nav">
     <ul class="admin-sidebar__menu">
-      <li class="admin-sidebar__menu-item {% if activePage == 'dashboard' %}admin-sidebar__menu-item--active{% endif %}">
+      <li
+        class="admin-sidebar__menu-item {% if activePage == 'dashboard' %}admin-sidebar__menu-item--active{% endif %}"
+      >
         <a href="/admin/dashboard" class="admin-sidebar__link">
-          <svg class="admin-sidebar__icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M3 4C3 3.44772 3.44772 3 4 3H7C7.55228 3 8 3.44772 8 4V7C8 7.55228 7.55228 8 7 8H4C3.44772 8 3 7.55228 3 7V4Z" fill="currentColor"/>
-            <path d="M3 13C3 12.4477 3.44772 12 4 12H7C7.55228 12 8 12.4477 8 13V16C8 16.5523 7.55228 17 7 17H4C3.44772 17 3 16.5523 3 16V13Z" fill="currentColor"/>
-            <path d="M12 4C12 3.44772 12.4477 3 13 3H16C16.5523 3 17 3.44772 17 4V7C17 7.55228 16.5523 8 16 8H13C12.4477 8 12 7.55228 12 7V4Z" fill="currentColor"/>
-            <path d="M12 13C12 12.4477 12.4477 12 13 12H16C16.5523 12 17 12.4477 17 13V16C17 16.5523 16.5523 17 16 17H13C12.4477 17 12 16.5523 12 16V13Z" fill="currentColor"/>
+          <svg
+            class="admin-sidebar__icon"
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M3 4C3 3.44772 3.44772 3 4 3H7C7.55228 3 8 3.44772 8 4V7C8 7.55228 7.55228 8 7 8H4C3.44772 8 3 7.55228 3 7V4Z"
+              fill="currentColor"
+            />
+            <path
+              d="M3 13C3 12.4477 3.44772 12 4 12H7C7.55228 12 8 12.4477 8 13V16C8 16.5523 7.55228 17 7 17H4C3.44772 17 3 16.5523 3 16V13Z"
+              fill="currentColor"
+            />
+            <path
+              d="M12 4C12 3.44772 12.4477 3 13 3H16C16.5523 3 17 3.44772 17 4V7C17 7.55228 16.5523 8 16 8H13C12.4477 8 12 7.55228 12 7V4Z"
+              fill="currentColor"
+            />
+            <path
+              d="M12 13C12 12.4477 12.4477 12 13 12H16C16.5523 12 17 12.4477 17 13V16C17 16.5523 16.5523 17 16 17H13C12.4477 17 12 16.5523 12 16V13Z"
+              fill="currentColor"
+            />
           </svg>
           <span class="admin-sidebar__text">Dashboard</span>
         </a>
       </li>
 
-      <li class="admin-sidebar__menu-item {% if activePage == 'kategori' %}admin-sidebar__menu-item--active{% endif %}">
+      <li
+        class="admin-sidebar__menu-item {% if activePage == 'kategori' %}admin-sidebar__menu-item--active{% endif %}"
+      >
         <a href="/admin/kategori" class="admin-sidebar__link">
-          <svg class="admin-sidebar__icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M7 3C7 2.44772 7.44772 2 8 2H12C12.5523 2 13 2.44772 13 3V7C13 7.55228 12.5523 8 12 8H8C7.44772 8 7 7.55228 7 7V3Z" fill="currentColor"/>
-            <path d="M3 10C3 9.44772 3.44772 9 4 9H16C16.5523 9 17 9.44772 17 10V16C17 16.5523 16.5523 17 16 17H4C3.44772 17 3 16.5523 3 16V10Z" fill="currentColor"/>
+          <svg
+            class="admin-sidebar__icon"
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M7 3C7 2.44772 7.44772 2 8 2H12C12.5523 2 13 2.44772 13 3V7C13 7.55228 12.5523 8 12 8H8C7.44772 8 7 7.55228 7 7V3Z"
+              fill="currentColor"
+            />
+            <path
+              d="M3 10C3 9.44772 3.44772 9 4 9H16C16.5523 9 17 9.44772 17 10V16C17 16.5523 16.5523 17 16 17H4C3.44772 17 3 16.5523 3 16V10Z"
+              fill="currentColor"
+            />
           </svg>
           <span class="admin-sidebar__text">Kategori</span>
         </a>
       </li>
 
-      <li class="admin-sidebar__menu-item {% if activePage == 'produk' %}admin-sidebar__menu-item--active{% endif %}">
+      <li
+        class="admin-sidebar__menu-item {% if activePage == 'produk' %}admin-sidebar__menu-item--active{% endif %}"
+      >
         <a href="/admin/produk" class="admin-sidebar__link">
-          <svg class="admin-sidebar__icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M4 3C3.44772 3 3 3.44772 3 4V6C3 6.55228 3.44772 7 4 7H16C16.5523 7 17 6.55228 17 6V4C17 3.44772 16.5523 3 16 3H4Z" fill="currentColor"/>
-            <path d="M4 9C3.44772 9 3 9.44772 3 10V16C3 16.5523 3.44772 17 4 17H16C16.5523 17 17 16.5523 17 16V10C17 9.44772 16.5523 9 16 9H4Z" fill="currentColor"/>
+          <svg
+            class="admin-sidebar__icon"
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M4 3C3.44772 3 3 3.44772 3 4V6C3 6.55228 3.44772 7 4 7H16C16.5523 7 17 6.55228 17 6V4C17 3.44772 16.5523 3 16 3H4Z"
+              fill="currentColor"
+            />
+            <path
+              d="M4 9C3.44772 9 3 9.44772 3 10V16C3 16.5523 3.44772 17 4 17H16C16.5523 17 17 16.5523 17 16V10C17 9.44772 16.5523 9 16 9H4Z"
+              fill="currentColor"
+            />
           </svg>
           <span class="admin-sidebar__text">Produk</span>
         </a>
       </li>
 
-      <li class="admin-sidebar__menu-item {% if activePage == 'pesanan' %}admin-sidebar__menu-item--active{% endif %}">
+      <li
+        class="admin-sidebar__menu-item {% if activePage == 'pesanan' %}admin-sidebar__menu-item--active{% endif %}"
+      >
         <a href="/admin/pesanan" class="admin-sidebar__link">
-          <svg class="admin-sidebar__icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M3 1C2.44772 1 2 1.44772 2 2V4C2 4.55228 2.44772 5 3 5H17C17.5523 5 18 4.55228 18 4V2C18 1.44772 17.5523 1 17 1H3Z" fill="currentColor"/>
-            <path d="M4 7C3.44772 7 3 7.44772 3 8V17C3 17.5523 3.44772 18 4 18H16C16.5523 18 17 17.5523 17 17V8C17 7.44772 16.5523 7 16 7H4Z" fill="currentColor"/>
+          <svg
+            class="admin-sidebar__icon"
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M3 1C2.44772 1 2 1.44772 2 2V4C2 4.55228 2.44772 5 3 5H17C17.5523 5 18 4.55228 18 4V2C18 1.44772 17.5523 1 17 1H3Z"
+              fill="currentColor"
+            />
+            <path
+              d="M4 7C3.44772 7 3 7.44772 3 8V17C3 17.5523 3.44772 18 4 18H16C16.5523 18 17 17.5523 17 17V8C17 7.44772 16.5523 7 16 7H4Z"
+              fill="currentColor"
+            />
           </svg>
           <span class="admin-sidebar__text">Pesanan</span>
         </a>
@@ -68,11 +141,21 @@
 
       <li class="admin-sidebar__menu-item {% if activePage == 'transaksi' %}admin-sidebar__menu-item--active{% endif %}">
         <a href="/admin/transaksi" class="admin-sidebar__link">
-          <svg class="admin-sidebar__icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M4 4C4 2.89543 4.89543 2 6 2H14C15.1046 2 16 2.89543 16 4V16C16 17.1046 15.1046 18 14 18H6C4.89543 18 4 17.1046 4 16V4Z" fill="currentColor"/>
-            <path d="M7 7H13V8H7V7Z" fill="white"/>
-            <path d="M7 10H13V11H7V10Z" fill="white"/>
-            <path d="M7 13H10V14H7V13Z" fill="white"/>
+          <svg
+            class="admin-sidebar__icon"
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M4 4C4 2.89543 4.89543 2 6 2H14C15.1046 2 16 2.89543 16 4V16C16 17.1046 15.1046 18 14 18H6C4.89543 18 4 17.1046 4 16V4Z"
+              fill="currentColor"
+            />
+            <path d="M7 7H13V8H7V7Z" fill="white" />
+            <path d="M7 10H13V11H7V10Z" fill="white" />
+            <path d="M7 13H10V14H7V13Z" fill="white" />
           </svg>
           <span class="admin-sidebar__text">Transaksi</span>
         </a>
@@ -80,9 +163,19 @@
 
       <li class="admin-sidebar__menu-item">
         <a href="/admin/pembayaran" class="admin-sidebar__link">
-          <svg class="admin-sidebar__icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M4 4C2.89543 4 2 4.89543 2 6V14C2 15.1046 2.89543 16 4 16H16C17.1046 16 18 15.1046 18 14V6C18 4.89543 17.1046 4 16 4H4Z" fill="currentColor"/>
-            <rect x="4" y="8" width="12" height="2" fill="white"/>
+          <svg
+            class="admin-sidebar__icon"
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M4 4C2.89543 4 2 4.89543 2 6V14C2 15.1046 2.89543 16 4 16H16C17.1046 16 18 15.1046 18 14V6C18 4.89543 17.1046 4 16 4H4Z"
+              fill="currentColor"
+            />
+            <rect x="4" y="8" width="12" height="2" fill="white" />
           </svg>
           <span class="admin-sidebar__text">Pembayaran</span>
         </a>
@@ -90,11 +183,24 @@
 
       <li class="admin-sidebar__menu-item">
         <a href="/admin/pengiriman" class="admin-sidebar__link">
-          <svg class="admin-sidebar__icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M1 4C1 2.89543 1.89543 2 3 2H11C12.1046 2 13 2.89543 13 4V14C13 15.1046 12.1046 16 11 16H3C1.89543 16 1 15.1046 1 14V4Z" fill="currentColor"/>
-            <path d="M13 6H15L18 9V14C18 15.1046 17.1046 16 16 16H15V14H16V10H13V6Z" fill="currentColor"/>
-            <circle cx="5" cy="16" r="2" fill="currentColor"/>
-            <circle cx="15" cy="16" r="2" fill="currentColor"/>
+          <svg
+            class="admin-sidebar__icon"
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M1 4C1 2.89543 1.89543 2 3 2H11C12.1046 2 13 2.89543 13 4V14C13 15.1046 12.1046 16 11 16H3C1.89543 16 1 15.1046 1 14V4Z"
+              fill="currentColor"
+            />
+            <path
+              d="M13 6H15L18 9V14C18 15.1046 17.1046 16 16 16H15V14H16V10H13V6Z"
+              fill="currentColor"
+            />
+            <circle cx="5" cy="16" r="2" fill="currentColor" />
+            <circle cx="15" cy="16" r="2" fill="currentColor" />
           </svg>
           <span class="admin-sidebar__text">Pengiriman</span>
         </a>
@@ -102,9 +208,22 @@
 
       <li class="admin-sidebar__menu-item">
         <a href="/admin/pengguna" class="admin-sidebar__link">
-          <svg class="admin-sidebar__icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M10 9C11.6569 9 13 7.65685 13 6C13 4.34315 11.6569 3 10 3C8.34315 3 7 4.34315 7 6C7 7.65685 8.34315 9 10 9Z" fill="currentColor"/>
-            <path d="M3 18C3 14.134 6.13401 11 10 11C13.866 11 17 14.134 17 18H3Z" fill="currentColor"/>
+          <svg
+            class="admin-sidebar__icon"
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M10 9C11.6569 9 13 7.65685 13 6C13 4.34315 11.6569 3 10 3C8.34315 3 7 4.34315 7 6C7 7.65685 8.34315 9 10 9Z"
+              fill="currentColor"
+            />
+            <path
+              d="M3 18C3 14.134 6.13401 11 10 11C13.866 11 17 14.134 17 18H3Z"
+              fill="currentColor"
+            />
           </svg>
           <span class="admin-sidebar__text">Pengguna</span>
         </a>
@@ -112,8 +231,18 @@
 
       <li class="admin-sidebar__menu-item">
         <a href="/admin/laporan" class="admin-sidebar__link">
-          <svg class="admin-sidebar__icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M3 3C2.44772 3 2 3.44772 2 4V16C2 16.5523 2.44772 17 3 17H17C17.5523 17 18 16.5523 18 16V7C18 6.44772 17.5523 6 17 6H12L10 4H3Z" fill="currentColor"/>
+          <svg
+            class="admin-sidebar__icon"
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M3 3C2.44772 3 2 3.44772 2 4V16C2 16.5523 2.44772 17 3 17H17C17.5523 17 18 16.5523 18 16V7C18 6.44772 17.5523 6 17 6H12L10 4H3Z"
+              fill="currentColor"
+            />
           </svg>
           <span class="admin-sidebar__text">Laporan</span>
         </a>
@@ -124,8 +253,12 @@
   <div class="admin-sidebar__footer">
     <div class="admin-sidebar__support">
       <p class="admin-sidebar__support-title">Dukungan</p>
-      <p class="admin-sidebar__support-text">Hubungi kami untuk<br>bantuan lebih lanjut</p>
-      <a href="mailto:vps@combiphar.id" class="admin-sidebar__support-link">vps@combiphar.id</a>
+      <p class="admin-sidebar__support-text">Hubungi kami untuk<br />bantuan
+        lebih lanjut</p>
+      <a
+        href="mailto:vps@combiphar.id"
+        class="admin-sidebar__support-link"
+      >vps@combiphar.id</a>
     </div>
   </div>
 </aside>

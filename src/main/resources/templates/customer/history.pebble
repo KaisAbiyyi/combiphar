@@ -1,0 +1,221 @@
+{# ========================================================================== #}
+{# HISTORY PAGE - Customer transaction history view #} {#
+========================================================================== #} {%
+extends "customer/layout" %} {% block content %}
+<section class="history-page">
+  <div class="history-page__container">
+
+    {# Page Header #}
+    <div class="history-page__header">
+      <div class="history-page__heading">
+        <h1 class="history-page__title">Riwayat Transaksi Saya</h1>
+        <p class="history-page__subtitle">
+          Pantau status pesanan Anda, lacak dan lihat pengiriman hingga barang
+          sampai tujuan. Setelah itu juga mengajukan klaim sesuai mengatur ulang
+          pembatalan.
+        </p>
+      </div>
+
+      {# Filter Controls #}
+      <div class="history-page__controls">
+        <div class="history-filter">
+          <label class="history-filter__label">Ringkasan Akun</label>
+          <select class="history-filter__select">
+            <option value="all">Semua periode • Des 2025</option>
+            <option value="2025-12">Desember 2025</option>
+            <option value="2025-11">November 2025</option>
+            <option value="2025-10">Oktober 2025</option>
+            <option value="2025-09">September 2025</option>
+          </select>
+        </div>
+
+        <div class="history-page__actions">
+          <button class="history-btn history-btn--secondary">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M8 2V10M8 10L11 7M8 10L5 7M3 12V13C3 13.5523 3.44772 14 4 14H12C12.5523 14 13 13.5523 13 13V12"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            Unduh Rekap Laporan
+          </button>
+          <button class="history-btn history-btn--primary">Filter Status</button>
+        </div>
+      </div>
+    </div>
+
+    {# Transaction Table #}
+    <div class="history-table-wrapper">
+      <table class="history-table">
+        <thead class="history-table__head">
+          <tr>
+            <th class="history-table__header">No Invoice</th>
+            <th class="history-table__header">Tanggal</th>
+            <th class="history-table__header">Barang</th>
+            <th class="history-table__header">Status</th>
+            <th class="history-table__header">Nilai</th>
+            <th class="history-table__header">Aksi</th>
+          </tr>
+        </thead>
+        <tbody class="history-table__body">
+
+          {# Transaction 1 #}
+          <tr class="history-table__row">
+            <td class="history-table__cell history-table__cell--invoice">
+              <div class="invoice-cell">
+                <span class="invoice-cell__number">INV-229021</span>
+              </div>
+            </td>
+            <td class="history-table__cell">26 Sep 2025</td>
+            <td class="history-table__cell">
+              <div class="product-cell">
+                <span class="product-cell__name">Meja Eksekutif Aura Lumbar+</span>
+              </div>
+            </td>
+            <td class="history-table__cell">
+              <span class="status-badge status-badge--proses">Dikirim</span>
+            </td>
+            <td class="history-table__cell history-table__cell--price">
+              Rp 30.300.000
+            </td>
+            <td class="history-table__cell">
+              <button class="history-action-btn">Lihat Detail</button>
+            </td>
+          </tr>
+
+          {# Transaction 2 #}
+          <tr class="history-table__row">
+            <td class="history-table__cell history-table__cell--invoice">
+              <div class="invoice-cell">
+                <span class="invoice-cell__number">INV-229444</span>
+              </div>
+            </td>
+            <td class="history-table__cell">17 Sep 2025</td>
+            <td class="history-table__cell">
+              <div class="product-cell">
+                <span class="product-cell__name">Monitor LCD GF, Lamour Mwax Pro</span>
+              </div>
+            </td>
+            <td class="history-table__cell">
+              <span class="status-badge status-badge--selesai">Selesai</span>
+            </td>
+            <td class="history-table__cell history-table__cell--price">
+              Rp 21.780.000
+            </td>
+            <td class="history-table__cell">
+              <button class="history-action-btn">Unduh Invoice</button>
+            </td>
+          </tr>
+
+          {# Transaction 3 #}
+          <tr class="history-table__row">
+            <td class="history-table__cell history-table__cell--invoice">
+              <div class="invoice-cell">
+                <span class="invoice-cell__number">INV-229410</span>
+              </div>
+            </td>
+            <td class="history-table__cell">16 Sep 2025</td>
+            <td class="history-table__cell">
+              <div class="product-cell">
+                <span class="product-cell__name">Bet Meja Digital Western</span>
+              </div>
+            </td>
+            <td class="history-table__cell">
+              <span class="status-badge status-badge--pending">Menunggu</span>
+            </td>
+            <td class="history-table__cell history-table__cell--price">
+              Rp 35.500.000
+            </td>
+            <td class="history-table__cell">
+              <button class="history-action-btn">Ajukan Revisi</button>
+            </td>
+          </tr>
+
+          {# Transaction 4 #}
+          <tr class="history-table__row">
+            <td class="history-table__cell history-table__cell--invoice">
+              <div class="invoice-cell">
+                <span class="invoice-cell__number">INV-227986</span>
+              </div>
+            </td>
+            <td class="history-table__cell">26 Jul 2025</td>
+            <td class="history-table__cell">
+              <div class="product-cell">
+                <span class="product-cell__name">Lemari Arsip Polywood</span>
+              </div>
+            </td>
+            <td class="history-table__cell">
+              <span class="status-badge status-badge--selesai">Selesai</span>
+            </td>
+            <td class="history-table__cell history-table__cell--price">
+              Rp 4.250.000
+            </td>
+            <td class="history-table__cell">
+              <button class="history-action-btn">Beri Penilaian</button>
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    {# Pagination #}
+    <div class="history-pagination">
+      <button class="pagination-btn pagination-btn--prev" disabled>
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 16 16"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M10 12L6 8L10 4"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+        Sebelumnya
+      </button>
+
+      <div class="pagination-info">
+        Halaman
+        <strong>1</strong>
+        dari
+        <strong>5</strong>
+      </div>
+
+      <button class="pagination-btn pagination-btn--next">
+        Selanjutnya
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 16 16"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M6 4L10 8L6 12"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
+    </div>
+
+  </div>
+</section>
+{% endblock %}
