@@ -198,5 +198,53 @@ public class Main {
                     "activePage", "transaksi");
             ctx.render("admin/transaction", model);
         });
+
+        // Admin payment page
+        app.get("/admin/pembayaran", ctx -> {
+            Map<String, Object> model = Map.of(
+                    "title", "Verifikasi Pembayaran",
+                    "pageTitle", "Verifikasi Pembayaran",
+                    "userName", "Nashya Putri",
+                    "userRole", "Admin Keuangan",
+                    "activePage", "pembayaran");
+            ctx.render("admin/payment", model);
+        });
+
+        // Admin shipping page
+        app.get("/admin/pengiriman", ctx -> {
+            Map<String, Object> model = Map.of(
+                    "title", "Monitoring Pengiriman",
+                    "pageTitle", "Monitoring Pengiriman",
+                    "userName", "Nashya Putri",
+                    "userRole", "Admin Warehouse Jakarta",
+                    "activePage", "pengiriman");
+            ctx.render("admin/shipping", model);
+        });
+
+        // Admin user page
+        app.get("/admin/pengguna", ctx -> {
+            Map<String, Object> model = Map.of(
+                    "title", "Manajemen Pengguna",
+                    "pageTitle", "Manajemen Pengguna",
+                    "userName", "Nashya Putri",
+                    "userRole", "Admin Warehouse Jakarta",
+                    "activePage", "pengguna",
+                    "totalUsers", 128,
+                    "customerCount", 102,
+                    "adminCount", 6,
+                    "activeToday", 5);
+            ctx.render("admin/user", model);
+        });
+
+        // Admin laporan page
+        app.get("/admin/laporan", ctx -> {
+            Map<String, Object> model = Map.of(
+                    "title", "Laporan Kinerja",
+                    "pageTitle", "Laporan Kinerja",
+                    "userName", "Nashya Putri",
+                    "userRole", "Admin Warehouse Jakarta",
+                    "activePage", "laporan");
+            ctx.render("admin/laporan", model);
+        });
     }
 }

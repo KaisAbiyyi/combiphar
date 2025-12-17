@@ -1,0 +1,204 @@
+{% extends "admin/layout" %}
+
+{% block content %}
+<div class="admin-shipping">
+  {# Header Section with Stats #}
+  <div class="admin-shipping__header">
+    {# Stat Card 1 #}
+    <div class="stat-card stat-card--compact">
+      <div class="stat-card__label">SIAP KIRIM</div>
+      <div class="stat-card__value">23</div>
+      <div class="stat-card__description">Menunggu pickup hari ini</div>
+    </div>
+
+    {# Stat Card 2 #}
+    <div class="stat-card stat-card--compact">
+      <div class="stat-card__label">DALAM PERJALANAN</div>
+      <div class="stat-card__value">15</div>
+      <div class="stat-card__description">Sedang dikirim ke customer</div>
+    </div>
+
+    {# Stat Card 3 #}
+    <div class="stat-card stat-card--compact">
+      <div class="stat-card__label">SELESAI HARI INI</div>
+      <div class="stat-card__value">8</div>
+      <div class="stat-card__description stat-card__description--success">+2 dari target</div>
+    </div>
+
+    {# Stat Card 4 #}
+    <div class="stat-card stat-card--compact">
+      <div class="stat-card__label">KENDALA</div>
+      <div class="stat-card__value">2</div>
+      <div class="stat-card__description stat-card__description--alert">Alamat tidak ditemukan</div>
+    </div>
+  </div>
+
+  {# Main Content Area #}
+  <div class="admin-shipping__content">
+    {# Shipping Table #}
+    <div class="shipping-table">
+      {# Table Header #}
+      <div class="shipping-table__header">
+        <div class="shipping-table__header-top">
+          <div>
+            <h3 class="shipping-table__title">Daftar Pengiriman</h3>
+            <p class="shipping-table__subtitle">Kelola transaksi pesanan dan pickup</p>
+          </div>
+          <div class="shipping-table__actions-top">
+            <button class="btn btn--primary">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2H4C2.89543 2 2 2.89543 2 4V12C2 13.1046 2.89543 14 4 14H12C13.1046 14 14 13.1046 14 12V4C14 2.89543 13.1046 2 12 2Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M2 6H14M5 10H8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>Jadwal Hari Ini</span>
+            </button>
+            <button class="btn btn--secondary">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2 4H14M4 4V2H12V4M4 6L5 14H11L12 6H4Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>Filter Status</span>
+            </button>
+            <button class="btn btn--secondary">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8 2V10M8 10L11 7M8 10L5 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M2 14H14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              <span>Export XLSX</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {# Table Content #}
+      <div class="shipping-table__body">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>ORDER ID</th>
+              <th>CUSTOMER</th>
+              <th>TANGGAL PICKUP</th>
+              <th>GUDANG</th>
+              <th>STATUS</th>
+              <th>SURAT JALAN</th>
+            </tr>
+          </thead>
+          <tbody>
+            {# Row 1 #}
+            <tr>
+              <td class="shipping-order-id">ORD-42391</td>
+              <td>PT Sinar Digital</td>
+              <td class="shipping-date">25 Sep 2025 • 13:00</td>
+              <td>Wirehouse Jakarta</td>
+              <td>
+                <span class="badge badge--warning">Siap Kirim</span>
+              </td>
+              <td>
+                <button class="btn-text btn-text--primary">Cetak Surat Jalan</button>
+              </td>
+            </tr>
+
+            {# Row 2 #}
+            <tr>
+              <td class="shipping-order-id">ORD-42387</td>
+              <td>CV Harmoni Media</td>
+              <td class="shipping-date">25 Sep 2025 • 15:30</td>
+              <td>Wirehouse Bandung</td>
+              <td>
+                <span class="badge badge--success">Terkirim</span>
+              </td>
+              <td>
+                <button class="btn-text btn-text--secondary">Unduh PDF</button>
+              </td>
+            </tr>
+
+            {# Row 3 #}
+            <tr>
+              <td class="shipping-order-id">ORD-42380</td>
+              <td>PT Globetek</td>
+              <td class="shipping-date">25 Sep 2025 • 13:45</td>
+              <td>Wirehouse Jakarta</td>
+              <td>
+                <span class="badge badge--success">Terkirim</span>
+              </td>
+              <td>
+                <button class="btn-text btn-text--secondary">Unduh PDF</button>
+              </td>
+            </tr>
+
+            {# Row 4 #}
+            <tr>
+              <td class="shipping-order-id">ORD-42371</td>
+              <td>PT Mandiri Kreatif</td>
+              <td class="shipping-date">25 Sep 2025 • 09:00</td>
+              <td>Wirehouse Surabaya</td>
+              <td>
+                <span class="badge badge--info">Belum Konfirmasi</span>
+              </td>
+              <td>
+                <button class="btn-text btn-text--primary">Hubungi Customer</button>
+              </td>
+            </tr>
+
+            {# Row 5 #}
+            <tr>
+              <td class="shipping-order-id">ORD-42365</td>
+              <td>PT Bintang Retail</td>
+              <td class="shipping-date">24 Sep 2025 • 14:05</td>
+              <td>Wirehouse Bandung</td>
+              <td>
+                <span class="badge badge--warning">Siap Kirim</span>
+              </td>
+              <td>
+                <button class="btn-text btn-text--primary">Cetak Surat Jalan</button>
+              </td>
+            </tr>
+
+            {# Row 6 #}
+            <tr>
+              <td class="shipping-order-id">ORD-42362</td>
+              <td>CV Prima Advent</td>
+              <td class="shipping-date">24 Sep 2025 • 08:00</td>
+              <td>Wirehouse Jakarta</td>
+              <td>
+                <span class="badge badge--success">Terkirim</span>
+              </td>
+              <td>
+                <button class="btn-text btn-text--secondary">Unduh PDF</button>
+              </td>
+            </tr>
+
+            {# Row 7 #}
+            <tr>
+              <td class="shipping-order-id">ORD-42358</td>
+              <td>PT Ruangtara Health</td>
+              <td class="shipping-date">24 Sep 2025 • 09:20</td>
+              <td>Wirehouse Jakarta</td>
+              <td>
+                <span class="badge badge--danger">Pengiriman Batal</span>
+              </td>
+              <td>
+                <button class="btn-text btn-text--primary">Kurang Customer</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      {# Pagination / Footer #}
+      <div class="shipping-table__footer">
+        <div class="pagination">
+          <div class="pagination__controls">
+            <button class="pagination__btn pagination__btn--icon">‹</button>
+            <button class="pagination__btn pagination__btn--active">1</button>
+            <button class="pagination__btn">2</button>
+            <button class="pagination__btn">3</button>
+            <span class="pagination__ellipsis">…</span>
+            <button class="pagination__btn">31</button>
+            <button class="pagination__btn pagination__btn--icon">›</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

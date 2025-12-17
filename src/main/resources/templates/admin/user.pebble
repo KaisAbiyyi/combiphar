@@ -1,0 +1,255 @@
+{% extends "admin/layout" %}
+
+{% block content %}
+<div class="admin-user">
+  {# Header Section with Stats #}
+  <div class="admin-user__header">
+    <div class="stat-card stat-card--compact">
+      <div class="stat-card__label">TOTAL PENGGUNA</div>
+      <div class="stat-card__value">{{ totalUsers }}</div>
+      <div class="stat-card__description">Jumlah keseluruhan pengguna terdaftar</div>
+    </div>
+
+    <div class="stat-card stat-card--compact">
+      <div class="stat-card__label">CUSTOMER</div>
+      <div class="stat-card__value">{{ customerCount }}</div>
+      <div class="stat-card__description">Akun tipe customer aktif</div>
+    </div>
+
+    <div class="stat-card stat-card--compact">
+      <div class="stat-card__label">ADMIN</div>
+      <div class="stat-card__value">{{ adminCount }}</div>
+      <div class="stat-card__description">Akun dengan akses admin</div>
+    </div>
+
+    <div class="stat-card stat-card--compact">
+      <div class="stat-card__label">AKTIF HARI INI</div>
+      <div class="stat-card__value">{{ activeToday }}</div>
+      <div class="stat-card__description">Pengguna yang login atau terdaftar hari ini</div>
+    </div>
+  </div>
+
+  {# Main Content Area #}
+  <div class="admin-user__content">
+    {# User Table #}
+    <div class="user-table">
+    <div class="user-table__header">
+      <div class="user-table__header-top">
+        <div>
+          <h3 class="user-table__title">Daftar Pengguna</h3>
+          <p class="user-table__subtitle">Manajemen hak akses dan data pengguna</p>
+        </div>
+        <div class="user-table__actions-top">
+          <div class="search-box">
+            <input type="search" class="search-box__input" placeholder="Cari nama atau email pengguna" aria-label="Cari" />
+          </div>
+          <button class="btn btn--secondary">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2 4H14M4 4V2H12V4M4 6L5 14H11L12 6H4Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Filter Role</span>
+          </button>
+          <button class="btn btn--primary">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8 3V13M3 8H13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <span>Tambah Pengguna</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="user-table__body">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>USER ID</th>
+            <th>NAMA</th>
+            <th>EMAIL</th>
+            <th>ROLE</th>
+            <th>STATUS</th>
+            <th>AKSI</th>
+          </tr>
+        </thead>
+        <tbody>
+          {# Row 1 #}
+          <tr>
+            <td class="user-id">USR-001</td>
+            <td>Nashya Putri</td>
+            <td>nashya.putri@combiphar.id</td>
+            <td>
+              <span class="badge badge--purple">Admin</span>
+            </td>
+            <td>
+              <span class="badge badge--success">Aktif</span>
+            </td>
+            <td>
+              <div class="user-actions">
+                <button class="btn-text btn-text--primary">Atur Role</button>
+                <button class="btn-text btn-text--secondary">Nonaktifkan</button>
+              </div>
+            </td>
+          </tr>
+
+          {# Row 2 #}
+          <tr>
+            <td class="user-id">USR-002</td>
+            <td>Babu Purnomo</td>
+            <td>babu@paramdigital.co.id</td>
+            <td>
+              <span class="badge badge--info">Customer</span>
+            </td>
+            <td>
+              <span class="badge badge--success">Aktif</span>
+            </td>
+            <td>
+              <div class="user-actions">
+                <button class="btn-text btn-text--primary">Atur Role</button>
+                <button class="btn-text btn-text--secondary">Nonaktifkan</button>
+              </div>
+            </td>
+          </tr>
+
+          {# Row 3 #}
+          <tr>
+            <td class="user-id">USR-003</td>
+            <td>Cilna Lestari</td>
+            <td>cimalestari@combiphar.id</td>
+            <td>
+              <span class="badge badge--purple">Admin</span>
+            </td>
+            <td>
+              <span class="badge badge--success">Aktif</span>
+            </td>
+            <td>
+              <div class="user-actions">
+                <button class="btn-text btn-text--primary">Atur Role</button>
+                <button class="btn-text btn-text--secondary">Nonaktifkan</button>
+              </div>
+            </td>
+          </tr>
+
+          {# Row 4 #}
+          <tr>
+            <td class="user-id">USR-004</td>
+            <td>Arman Wijaya</td>
+            <td>arman.wijaya@harmonimedia.co.id</td>
+            <td>
+              <span class="badge badge--info">Customer</span>
+            </td>
+            <td>
+              <span class="badge badge--warning">Verifikasi</span>
+            </td>
+            <td>
+              <div class="user-actions">
+                <button class="btn-text btn-text--primary">Hubungi</button>
+                <button class="btn-text btn-text--secondary">Setujui</button>
+              </div>
+            </td>
+          </tr>
+
+          {# Row 5 #}
+          <tr>
+            <td class="user-id">USR-005</td>
+            <td>Maria Sebasella</td>
+            <td>maria@globetek.id</td>
+            <td>
+              <span class="badge badge--info">Customer</span>
+            </td>
+            <td>
+              <span class="badge badge--success">Aktif</span>
+            </td>
+            <td>
+              <div class="user-actions">
+                <button class="btn-text btn-text--primary">Atur Role</button>
+                <button class="btn-text btn-text--secondary">Nonaktifkan</button>
+              </div>
+            </td>
+          </tr>
+
+          {# Row 6 #}
+          <tr>
+            <td class="user-id">USR-006</td>
+            <td>Hendra Saputra</td>
+            <td>hendra.saputra@combiphar.id</td>
+            <td>
+              <span class="badge badge--purple">Admin</span>
+            </td>
+            <td>
+              <span class="badge badge--success">Aktif</span>
+            </td>
+            <td>
+              <div class="user-actions">
+                <button class="btn-text btn-text--primary">Atur Role</button>
+                <button class="btn-text btn-text--secondary">Nonaktifkan</button>
+              </div>
+            </td>
+          </tr>
+
+          {# Row 7 #}
+          <tr>
+            <td class="user-id">USR-007</td>
+            <td>Sasha Andini</td>
+            <td>sasha.andini@mandirikresatif.co.id</td>
+            <td>
+              <span class="badge badge--info">Customer</span>
+            </td>
+            <td>
+              <span class="badge badge--success">Aktif</span>
+            </td>
+            <td>
+              <div class="user-actions">
+                <button class="btn-text btn-text--primary">Atur Role</button>
+                <button class="btn-text btn-text--secondary">Nonaktifkan</button>
+              </div>
+            </td>
+          </tr>
+
+          {# Row 8 #}
+          <tr>
+            <td class="user-id">USR-008</td>
+            <td>Dhimas Aksi</td>
+            <td>dhimas.aksi@bintangretail.com</td>
+            <td>
+              <span class="badge badge--info">Customer</span>
+            </td>
+            <td>
+              <span class="badge badge--warning">Verifikasi</span>
+            </td>
+            <td>
+              <div class="user-actions">
+                <button class="btn-text btn-text--primary">Hubungi</button>
+                <button class="btn-text btn-text--secondary">Setujui</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    {# Pagination #}
+    <div class="user-table__footer">
+      <div class="pagination">
+        <div class="pagination__controls">
+          <button class="pagination__btn pagination__btn--icon">‹</button>
+          <button class="pagination__btn pagination__btn--active">1</button>
+          <button class="pagination__btn">2</button>
+          <button class="pagination__btn">3</button>
+          <span class="pagination__ellipsis">…</span>
+          <button class="pagination__btn">12</button>
+          <button class="pagination__btn pagination__btn--icon">›</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {# Info Box at Bottom #}
+  <div class="user-info-box">
+    <h4 class="user-info-box__title">Info Akses</h4>
+    <p class="user-info-box__content">
+      Pastikan hanya pengguna terdaftar yang dapat mengakses sistem. 
+      Selalu verifikasi identitas sebelum mengaktifkan akun.
+    </p>
+  </div>
+</div>
+{% endblock %}

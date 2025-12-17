@@ -1,0 +1,311 @@
+/* ========================================================================== */
+/* ADMIN LAPORAN PAGE                                                         */
+/* Page-specific styles for performance reports in admin dashboard            */
+/* ========================================================================== */
+
+/* Laporan Page Layout
+   ========================================================================== */
+.admin-laporan {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Header Stats Section
+   ========================================================================== */
+.admin-laporan__header {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+}
+
+/* Content Grid Layout
+   ========================================================================== */
+.admin-laporan__content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.admin-laporan__row {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 1rem;
+}
+
+/* Revenue Chart Component
+   ========================================================================== */
+.laporan-chart {
+  background: #FFFFFF;
+  border-radius: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.laporan-chart__header {
+  padding: 1.5rem;
+  border-bottom: 1px solid #E5E7EB;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.laporan-chart__title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 0.25rem 0;
+}
+
+.laporan-chart__subtitle {
+  font-size: 0.875rem;
+  color: #6B7280;
+  margin: 0;
+}
+
+.laporan-chart__actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.laporan-chart__body {
+  padding: 1.5rem;
+}
+
+.chart-container {
+  width: 100%;
+  height: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.revenue-chart {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Top Categories Component
+   ========================================================================== */
+.laporan-categories {
+  background: #FFFFFF;
+  border-radius: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.laporan-categories__header {
+  padding: 1.5rem;
+  border-bottom: 1px solid #E5E7EB;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.laporan-categories__title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+}
+
+.laporan-categories__link {
+  font-size: 0.875rem;
+  color: #6D28D9;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 150ms ease;
+}
+
+.laporan-categories__link:hover {
+  color: #5B21B6;
+}
+
+.laporan-categories__body {
+  padding: 1rem 1.5rem 1.5rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Category Item Styles
+   ========================================================================== */
+.category-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: #F9FAFB;
+  border-radius: 0.75rem;
+  transition: background 150ms ease;
+}
+
+.category-item:hover {
+  background: #F3F4F6;
+}
+
+.category-item__info {
+  flex: 1;
+}
+
+.category-item__name {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 0.25rem 0;
+}
+
+.category-item__meta {
+  font-size: 0.8125rem;
+  color: #6B7280;
+  margin: 0;
+}
+
+.category-item__badge {
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.category-item__badge--success {
+  background: #D1FAE5;
+  color: #065F46;
+}
+
+.category-item__badge--warning {
+  background: #FEF3C7;
+  color: #92400E;
+}
+
+/* Laporan Table Component
+   ========================================================================== */
+.laporan-table {
+  background: #FFFFFF;
+  border-radius: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.laporan-table__header {
+  padding: 1.5rem;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.laporan-table__header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.laporan-table__title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 0.25rem 0;
+}
+
+.laporan-table__subtitle {
+  font-size: 0.875rem;
+  color: #6B7280;
+  margin: 0;
+}
+
+.laporan-table__actions-top {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.laporan-table__body {
+  overflow-x: auto;
+}
+
+/* Table Metric Styles
+   ========================================================================== */
+.metric-name {
+  font-weight: 600;
+  color: #111827;
+  font-size: 0.875rem;
+}
+
+.metric-value {
+  font-weight: 600;
+  color: #6D28D9;
+  font-size: 0.9375rem;
+}
+
+.metric-change {
+  font-size: 0.875rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.metric-change--up {
+  color: #059669;
+}
+
+.metric-change--down {
+  color: #DC2626;
+}
+
+.metric-target {
+  font-size: 0.875rem;
+  color: #6B7280;
+}
+
+.metric-pic {
+  font-size: 0.875rem;
+  color: #374151;
+}
+
+.metric-note {
+  font-size: 0.8125rem;
+  color: #6B7280;
+  line-height: 1.4;
+  max-width: 300px;
+}
+
+/* Responsive Design
+   ========================================================================== */
+@media (max-width: 1280px) {
+  .admin-laporan__header {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .admin-laporan__row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-laporan__header {
+    grid-template-columns: 1fr;
+  }
+
+  .laporan-table__header-top {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .laporan-table__actions-top {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .laporan-chart__header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .chart-container {
+    height: 200px;
+  }
+
+  .metric-note {
+    max-width: 200px;
+  }
+}

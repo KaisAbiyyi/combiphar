@@ -1,0 +1,178 @@
+/* ========================================================================== */
+/* ADMIN SHIPPING PAGE                                                        */
+/* Page-specific styles for shipping monitoring in admin dashboard            */
+/* ========================================================================== */
+
+/* Shipping Page Layout
+   ========================================================================== */
+.admin-shipping {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Header Stats Section
+   ========================================================================== */
+.admin-shipping__header {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+}
+
+/* Content Grid Layout
+   ========================================================================== */
+.admin-shipping__content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Shipping Table Component
+   ========================================================================== */
+.shipping-table {
+  background: #FFFFFF;
+  border-radius: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.shipping-table__header {
+  padding: 1.5rem;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.shipping-table__header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.shipping-table__title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 0.25rem 0;
+}
+
+.shipping-table__subtitle {
+  font-size: 0.875rem;
+  color: #6B7280;
+  margin: 0;
+}
+
+.shipping-table__actions-top {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.shipping-table__body {
+  overflow-x: auto;
+}
+
+/* Shipping Table Specific Styles
+   ========================================================================== */
+.shipping-order-id {
+  font-weight: 600;
+  color: #6D28D9;
+  font-size: 0.875rem;
+}
+
+.shipping-date {
+  font-size: 0.875rem;
+  color: #6B7280;
+}
+
+/* Table footer / pagination */
+.shipping-table__footer {
+  padding: 0.75rem 1rem 1rem 1rem;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  background: #FFFFFF;
+  border-radius: 12px;
+  padding: 10px;
+  border: 1px solid #F3F4F6;
+  box-shadow: 0 2px 6px rgba(15, 15, 15, 0.02);
+}
+
+.pagination__controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.pagination__btn {
+  padding: 8px 10px;
+  min-width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  color: #374151;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.pagination__btn:hover {
+  background: #F9FAFB;
+  border-color: #D1D5DB;
+}
+
+.pagination__btn--icon {
+  width: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pagination__btn--active {
+  background: #F8F7FF;
+  border-color: #E9D5FF;
+  color: #111827;
+  font-weight: 600;
+}
+
+.pagination__ellipsis {
+  color: #9CA3AF;
+  padding: 0 6px;
+}
+
+/* Responsive Design
+   ========================================================================== */
+@media (max-width: 1280px) {
+  .admin-shipping__header {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-shipping__header {
+    grid-template-columns: 1fr;
+  }
+
+  .shipping-table__header-top {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .shipping-table__actions-top {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .pagination {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .pagination__controls {
+    justify-content: center;
+  }
+}
