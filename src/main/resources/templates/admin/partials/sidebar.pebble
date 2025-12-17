@@ -110,7 +110,7 @@
         </a>
       </li>
 
-      <li class="admin-sidebar__menu-item">
+      <li class="admin-sidebar__menu-item {% if activePage == 'laporan' %}admin-sidebar__menu-item--active{% endif %}">
         <a href="/admin/laporan" class="admin-sidebar__link">
           <svg class="admin-sidebar__icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M3 3C2.44772 3 2 3.44772 2 4V16C2 16.5523 2.44772 17 3 17H17C17.5523 17 18 16.5523 18 16V7C18 6.44772 17.5523 6 17 6H12L10 4H3Z" fill="currentColor"/>

@@ -194,5 +194,16 @@ public class Main {
                     "activeToday", 5);
             ctx.render("admin/user", model);
         });
+
+        // Admin laporan page
+        app.get("/admin/laporan", ctx -> {
+            Map<String, Object> model = Map.of(
+                    "title", "Laporan Kinerja",
+                    "pageTitle", "Laporan Kinerja",
+                    "userName", "Nashya Putri",
+                    "userRole", "Admin Warehouse Jakarta",
+                    "activePage", "laporan");
+            ctx.render("admin/laporan", model);
+        });
     }
 }
