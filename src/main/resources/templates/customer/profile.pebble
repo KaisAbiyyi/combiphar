@@ -1,0 +1,218 @@
+{# ========================================================================== #}
+{# PROFILE PAGE - Customer profile and settings #}
+{# ========================================================================== #}
+{% extends "customer/layout" %}
+
+{% block content %}
+<section class="profile-page">
+  <div class="profile-page__container">
+    
+    {# Page Header #}
+    <div class="profile-page__header">
+      <h1 class="profile-page__title">Pengaturan Akun</h1>
+      <a href="/catalog" class="profile-page__back">Kembali ke Katalog</a>
+    </div>
+
+    {# Main Grid Layout #}
+    <div class="profile-page__grid">
+      
+      {# Left Sidebar - User Card #}
+      <div class="profile-sidebar">
+        <div class="profile-user-card">
+          <div class="profile-user-card__avatar">
+            <img src="/static/images/avatar-placeholder.jpg" alt="Salma Putri Wijaya" class="profile-user-card__img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="profile-user-card__placeholder" style="display: none;">SW</div>
+          </div>
+          
+          <div class="profile-user-card__info">
+            <p class="profile-user-card__label">Akun Terdaftar</p>
+            <h2 class="profile-user-card__name">Salma Putri Wijaya</h2>
+            <p class="profile-user-card__email">salma.wijaya@combiphar.com</p>
+          </div>
+
+          <div class="profile-user-card__stats">
+            <div class="profile-stat-row">
+              <span class="profile-stat-row__label">Status Keanggotaan</span>
+              <span class="profile-stat-badge profile-stat-badge--verified">Verified Business</span>
+            </div>
+            
+            <div class="profile-stat-row">
+              <span class="profile-stat-row__label">Terdaftar Sejak</span>
+              <span class="profile-stat-row__value">Februari 2024</span>
+            </div>
+            
+            <div class="profile-stat-row">
+              <span class="profile-stat-row__label">Jumlah Transaksi</span>
+              <span class="profile-stat-row__value profile-stat-row__value--highlight">12 Transaksi</span>
+            </div>
+          </div>
+
+          <button class="profile-logout-btn">Keluar</button>
+        </div>
+      </div>
+
+      {# Right Content - Forms #}
+      <div class="profile-content">
+        
+        {# Personal Information Card #}
+        <div class="profile-info-card">
+          <div class="profile-info-card__header">
+            <h3 class="profile-info-card__title">Informasi Pribadi</h3>
+            <p class="profile-info-card__subtitle">Perbarui data kontak dan alamat perusahaan Anda</p>
+          </div>
+
+          <form class="profile-form">
+            <div class="profile-form__row">
+              <div class="profile-form__group">
+                <label class="profile-form__label" for="fullName">Nama Lengkap</label>
+                <input 
+                  type="text" 
+                  id="fullName" 
+                  class="profile-form__input" 
+                  value="Salma Putri Wijaya"
+                  placeholder="Masukkan nama lengkap"
+                >
+              </div>
+
+              <div class="profile-form__group">
+                <label class="profile-form__label" for="email">Email</label>
+                <input 
+                  type="email" 
+                  id="email" 
+                  class="profile-form__input" 
+                  value="salma.wijaya@combiphar.com"
+                  placeholder="email@example.com"
+                >
+              </div>
+            </div>
+
+            <div class="profile-form__group">
+              <label class="profile-form__label" for="phone">Nomor Telepon</label>
+              <input 
+                type="tel" 
+                id="phone" 
+                class="profile-form__input" 
+                value="0812-8899-7766"
+                placeholder="08XX-XXXX-XXXX"
+              >
+            </div>
+
+            <div class="profile-form__group">
+              <label class="profile-form__label" for="address">Alamat Pengiriman Utama</label>
+              <textarea 
+                id="address" 
+                class="profile-form__textarea" 
+                rows="4"
+                placeholder="Masukkan alamat lengkap"
+              >Jl. Gatot Subroto Kav. 18, Jakarta Selatan 12930</textarea>
+            </div>
+
+            <div class="profile-form__row">
+              <div class="profile-form__group">
+                <label class="profile-form__label" for="businessType">Jenis Perusahaan</label>
+                <select id="businessType" class="profile-form__select">
+                  <option value="pt">PT (Perseroan Terbatas)</option>
+                  <option value="cv">CV (Commanditaire Vennootschap)</option>
+                  <option value="koperasi">Koperasi</option>
+                  <option value="yayasan">Yayasan</option>
+                  <option value="perorangan">Perorangan</option>
+                </select>
+              </div>
+
+              <div class="profile-form__group">
+                <label class="profile-form__label" for="npwp">NPWP</label>
+                <input 
+                  type="text" 
+                  id="npwp" 
+                  class="profile-form__input" 
+                  value="08.222.555.6-021.000"
+                  placeholder="XX.XXX.XXX.X-XXX.XXX"
+                >
+              </div>
+            </div>
+
+            <div class="profile-form__actions">
+              <button type="button" class="profile-form__btn profile-form__btn--secondary">Batalkan</button>
+              <button type="submit" class="profile-form__btn profile-form__btn--primary">Simpan Perubahan</button>
+            </div>
+          </form>
+        </div>
+
+        {# Notification Preferences Card #}
+        <div class="profile-notification-card">
+          <div class="profile-notification-card__header">
+            <h3 class="profile-notification-card__title">Preferensi Notifikasi</h3>
+            <p class="profile-notification-card__subtitle">Sesuaikan cara kami mengirim pemberitahuan kepada Anda</p>
+          </div>
+
+          <form class="profile-notification-form">
+            <div class="profile-notification-list">
+              
+              {# Email Update Status #}
+              <div class="profile-notification-item">
+                <div class="profile-notification-item__control">
+                  <input 
+                    type="checkbox" 
+                    id="emailStatus" 
+                    class="profile-notification-checkbox"
+                    checked
+                  >
+                  <label for="emailStatus" class="profile-notification-label">
+                    <span class="profile-notification-label__title">Email Update Status</span>
+                    <span class="profile-notification-label__desc">
+                      Dapatkan pemberitahuan otomatis setiap ada perubahan status transaksi dan pengiriman.
+                    </span>
+                  </label>
+                </div>
+              </div>
+
+              {# WhatsApp Reminder #}
+              <div class="profile-notification-item">
+                <div class="profile-notification-item__control">
+                  <input 
+                    type="checkbox" 
+                    id="whatsappReminder" 
+                    class="profile-notification-checkbox"
+                    checked
+                  >
+                  <label for="whatsappReminder" class="profile-notification-label">
+                    <span class="profile-notification-label__title">WhatsApp Reminder</span>
+                    <span class="profile-notification-label__desc">
+                      Pengingat pengiriman langsung dari konfirmasi penjualan pengiriman.
+                    </span>
+                  </label>
+                </div>
+              </div>
+
+              {# Newsletter Kurasi #}
+              <div class="profile-notification-item">
+                <div class="profile-notification-item__control">
+                  <input 
+                    type="checkbox" 
+                    id="newsletter" 
+                    class="profile-notification-checkbox"
+                  >
+                  <label for="newsletter" class="profile-notification-label">
+                    <span class="profile-notification-label__title">Newsletter Kurasi</span>
+                    <span class="profile-notification-label__desc">
+                      Dapatkan rekomendasi barang kurasi terbaru setiap minggu.
+                    </span>
+                  </label>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="profile-notification-form__actions">
+              <button type="submit" class="profile-form__btn profile-form__btn--primary">Simpan Preferensi</button>
+            </div>
+          </form>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</section>
+{% endblock %}

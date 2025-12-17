@@ -122,6 +122,14 @@ public class Main {
             ctx.render("customer/order-tracking", model);
         });
 
+        // Profile page
+        app.get("/profile", ctx -> {
+            Map<String, Object> model = Map.of(
+                    "title", "Pengaturan Akun - Combiphar Used Goods",
+                    "activePage", "profile");
+            ctx.render("customer/profile", model);
+        });
+
         // Admin login page
         app.get("/admin/login", ctx -> {
             ctx.render("admin/login");
