@@ -155,95 +155,95 @@ public class Main {
             ctx.render("admin/dashboard", model);
         });
 
-        // Admin category page
-        app.get("/admin/kategori", ctx -> {
+        // Admin category page (English route)
+        app.get("/admin/category", ctx -> {
             Map<String, Object> model = Map.of(
-                    "title", "Kategori Produk",
-                    "pageTitle", "Kategori Produk",
-                    "userName", "Nashya Putri",
-                    "userRole", "Admin Warehouse Jakarta",
-                    "activePage", "kategori");
+                "title", "Kategori Produk",
+                "pageTitle", "Kategori Produk",
+                "userName", "Nashya Putri",
+                "userRole", "Admin Warehouse Jakarta",
+                "activePage", "category");
             ctx.render("admin/category", model);
         });
 
-        // Admin product page
-        app.get("/admin/produk", ctx -> {
+        // Admin product page (English route)
+        app.get("/admin/products", ctx -> {
             Map<String, Object> model = Map.of(
-                    "title", "Manajemen Produk",
-                    "pageTitle", "Manajemen Produk",
-                    "userName", "Nashya Putri",
-                    "userRole", "Admin Warehouse Jakarta",
-                    "activePage", "produk");
+                "title", "Manajemen Produk",
+                "pageTitle", "Manajemen Produk",
+                "userName", "Nashya Putri",
+                "userRole", "Admin Warehouse Jakarta",
+                "activePage", "products");
             ctx.render("admin/product", model);
         });
 
-        // Admin order page
-        app.get("/admin/pesanan", ctx -> {
+        // Admin order page (English route)
+        app.get("/admin/orders", ctx -> {
             Map<String, Object> model = Map.of(
-                    "title", "Monitoring Pesanan",
-                    "pageTitle", "Monitoring Pesanan",
-                    "userName", "Nashya Putri",
-                    "userRole", "Admin Warehouse Jakarta",
-                    "activePage", "pesanan");
+                "title", "Monitoring Pesanan",
+                "pageTitle", "Monitoring Pesanan",
+                "userName", "Nashya Putri",
+                "userRole", "Admin Warehouse Jakarta",
+                "activePage", "orders");
             ctx.render("admin/order", model);
         });
 
-        // Admin transaction page
-        app.get("/admin/transaksi", ctx -> {
+        // Admin transaction page (English route)
+        app.get("/admin/transactions", ctx -> {
             Map<String, Object> model = Map.of(
-                    "title", "Daftar Transaksi",
-                    "pageTitle", "Daftar Transaksi",
-                    "userName", "Nashya Putri",
-                    "userRole", "Admin Warehouse Jakarta",
-                    "activePage", "transaksi");
+                "title", "Daftar Transaksi",
+                "pageTitle", "Daftar Transaksi",
+                "userName", "Nashya Putri",
+                "userRole", "Admin Warehouse Jakarta",
+                "activePage", "transactions");
             ctx.render("admin/transaction", model);
         });
 
-        // Admin payment page
-        app.get("/admin/pembayaran", ctx -> {
+        // Admin payment page (English route)
+        app.get("/admin/payments", ctx -> {
             Map<String, Object> model = Map.of(
-                    "title", "Verifikasi Pembayaran",
-                    "pageTitle", "Verifikasi Pembayaran",
-                    "userName", "Nashya Putri",
-                    "userRole", "Admin Keuangan",
-                    "activePage", "pembayaran");
+                "title", "Verifikasi Pembayaran",
+                "pageTitle", "Verifikasi Pembayaran",
+                "userName", "Nashya Putri",
+                "userRole", "Admin Keuangan",
+                "activePage", "payments");
             ctx.render("admin/payment", model);
         });
 
-        // Admin shipping page
-        app.get("/admin/pengiriman", ctx -> {
+        // Admin shipping page (English route)
+        app.get("/admin/shipping", ctx -> {
             Map<String, Object> model = Map.of(
-                    "title", "Monitoring Pengiriman",
-                    "pageTitle", "Monitoring Pengiriman",
-                    "userName", "Nashya Putri",
-                    "userRole", "Admin Warehouse Jakarta",
-                    "activePage", "pengiriman");
+                "title", "Monitoring Pengiriman",
+                "pageTitle", "Monitoring Pengiriman",
+                "userName", "Nashya Putri",
+                "userRole", "Admin Warehouse Jakarta",
+                "activePage", "shipping");
             ctx.render("admin/shipping", model);
         });
 
-        // Admin user page
-        app.get("/admin/pengguna", ctx -> {
+        // Admin user page (English route)
+        app.get("/admin/users", ctx -> {
             Map<String, Object> model = Map.of(
-                    "title", "Manajemen Pengguna",
-                    "pageTitle", "Manajemen Pengguna",
-                    "userName", "Nashya Putri",
-                    "userRole", "Admin Warehouse Jakarta",
-                    "activePage", "pengguna",
-                    "totalUsers", 128,
-                    "customerCount", 102,
-                    "adminCount", 6,
-                    "activeToday", 5);
+                "title", "Manajemen Pengguna",
+                "pageTitle", "Manajemen Pengguna",
+                "userName", "Nashya Putri",
+                "userRole", "Admin Warehouse Jakarta",
+                "activePage", "users",
+                "totalUsers", 128,
+                "customerCount", 102,
+                "adminCount", 6,
+                "activeToday", 5);
             ctx.render("admin/user", model);
         });
 
-        // Admin laporan page
-        app.get("/admin/laporan", ctx -> {
+        // Admin reports page (English route)
+        app.get("/admin/reports", ctx -> {
             Map<String, Object> model = Map.of(
-                    "title", "Laporan Kinerja",
-                    "pageTitle", "Laporan Kinerja",
-                    "userName", "Nashya Putri",
-                    "userRole", "Admin Warehouse Jakarta",
-                    "activePage", "laporan");
+                "title", "Laporan Kinerja",
+                "pageTitle", "Laporan Kinerja",
+                "userName", "Nashya Putri",
+                "userRole", "Admin Warehouse Jakarta",
+                "activePage", "reports");
             ctx.render("admin/laporan", model);
         });
     }
