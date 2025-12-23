@@ -19,7 +19,11 @@ dependencies {
     implementation 'io.javalin:javalin-rendering:6.7.0'
 
     // Pebble "old coordinates" yang masih punya package com.mitchellbosecke.pebble.*
-    implementation 'com.mitchellbosecke:pebble:2.4.0'  // :contentReference[oaicite:1]{index=1}
+    implementation 'com.mitchellbosecke:pebble:2.4.0'
+
+    implementation 'com.zaxxer:HikariCP:5.1.0'
+    implementation 'com.mysql:mysql-connector-j:8.3.0'
+    implementation 'org.mindrot:jbcrypt:0.4'
 
     runtimeOnly 'org.slf4j:slf4j-simple:2.0.16'
 }
