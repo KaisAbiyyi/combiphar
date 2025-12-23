@@ -1,6 +1,10 @@
 
 import java.util.Map;
 
+import com.combiphar.core.controller.AuthController;
+import com.combiphar.core.middleware.AuthMiddleware;
+import com.combiphar.core.repository.UserRepository;
+import com.combiphar.core.service.AuthService;
 import com.mitchellbosecke.pebble.PebbleEngine;
 import com.mitchellbosecke.pebble.loader.ClasspathLoader;
 
@@ -16,9 +20,16 @@ public class Main {
     private static final int PORT = 7070;
 
     public static void main(String[] args) {
+        // Initialize dependencies
+        UserRepository userRepository = new UserRepository();
+        AuthService authService = new AuthService(userRepository);
+        AuthController authController = new AuthController(authService);
+
         PebbleEngine engine = createPebbleEngine();
         Javalin app = createApp(engine);
-        registerRoutes(app);
+        
+        registerRoutes(app, authController);
+        
         app.start(PORT);
     }
 
@@ -48,7 +59,7 @@ public class Main {
     /**
      * Registers all application routes.
      */
-    private static void registerRoutes(Javalin app) {
+    private static void registerRoutes(Javalin app, AuthController authController) {
         // Home / Catalog page
         app.get("/", ctx -> {
             Map<String, Object> model = Map.of(
@@ -63,6 +74,20 @@ public class Main {
                     "activePage", "catalog");
             ctx.render("customer/catalog", model);
         });
+
+        // Auth Routes
+        app.get("/profile", authController::showProfile);
+        app.post("/login", authController::handleLogin);
+        app.post("/register", authController::handleRegister);
+        app.get("/logout", authController::handleLogout);
+
+        // Admin Auth
+        app.get("/admin/login", authController::showAdminLogin);
+        app.post("/admin/login", authController::handleAdminLogin);
+
+        // Protected Admin Routes
+        app.before("/admin/*", AuthMiddleware.adminOnly);
+        app.before("/admin", AuthMiddleware.adminOnly);
 
         // Product detail page (dummy for now)
         app.get("/product/{id}", ctx -> {
@@ -122,18 +147,6 @@ public class Main {
             ctx.render("customer/order-tracking", model);
         });
 
-        // Profile page
-        app.get("/profile", ctx -> {
-            Map<String, Object> model = Map.of(
-                    "title", "Pengaturan Akun - Combiphar Used Goods",
-                    "activePage", "profile");
-            ctx.render("customer/profile", model);
-        });
-
-        // Admin login page
-        app.get("/admin/login", ctx -> {
-            ctx.render("admin/login");
-        });
         // Admin dashboard page
         app.get("/admin", ctx -> {
             Map<String, Object> model = Map.of(
