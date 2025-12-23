@@ -9,20 +9,19 @@
     
     {# Page Header #}
     <div class="profile-page__header">
-      <h1 class="profile-page__title">{{ user ? 'Pengaturan Akun' : 'Masuk atau Daftar' }}</h1>
+      <h1 class="profile-page__title">Pengaturan Akun</h1>
       <a href="/catalog" class="profile-page__back">Kembali ke Katalog</a>
     </div>
 
     {# Main Grid Layout #}
     <div class="profile-page__grid">
       
-      {% if user %}
       {# Left Sidebar - User Card #}
       <div class="profile-sidebar">
         <div class="profile-user-card">
           <div class="profile-user-card__avatar">
             <img src="/static/images/avatar-placeholder.jpg" alt="{{ user.name }}" class="profile-user-card__img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-            <div class="profile-user-card__placeholder" style="display: none;">{{ user.name.substring(0, 1) }}</div>
+            <div class="profile-user-card__placeholder" style="display: none;">{{ user.name ? user.name.substring(0, 1) : 'U' }}</div>
           </div>
           
           <div class="profile-user-card__info">
@@ -100,53 +99,6 @@
           </form>
         </div>
       </div>
-      {% else %}
-      <div class="profile-content" style="grid-column: span 2; max-width: 800px; margin: 0 auto; width: 100%;">
-        <div class="profile-info-card">
-          {% if error %}
-            <div style="background: #f8d7da; color: #721c24; padding: 1rem; border-radius: 4px; margin-bottom: 1rem;">
-              {{ error }}
-            </div>
-          {% endif %}
-          
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
-            <div>
-              <h3 class="profile-info-card__title">Masuk</h3>
-              <form action="/login" method="POST" class="profile-form">
-                <div class="profile-form__group">
-                  <label class="profile-form__label">Email</label>
-                  <input type="email" name="email" class="profile-form__input" required>
-                </div>
-                <div class="profile-form__group">
-                  <label class="profile-form__label">Password</label>
-                  <input type="password" name="password" class="profile-form__input" required>
-                </div>
-                <button type="submit" class="profile-logout-btn" style="background: #0056b3; color: white; width: 100%;">Login</button>
-              </form>
-            </div>
-            
-            <div style="border-left: 1px solid #eee; padding-left: 2rem;">
-              <h3 class="profile-info-card__title">Daftar</h3>
-              <form action="/register" method="POST" class="profile-form">
-                <div class="profile-form__group">
-                  <label class="profile-form__label">Nama Lengkap</label>
-                  <input type="text" name="name" class="profile-form__input" required>
-                </div>
-                <div class="profile-form__group">
-                  <label class="profile-form__label">Email</label>
-                  <input type="email" name="email" class="profile-form__input" required>
-                </div>
-                <div class="profile-form__group">
-                  <label class="profile-form__label">Password</label>
-                  <input type="password" name="password" class="profile-form__input" required minlength="6">
-                </div>
-                <button type="submit" class="profile-logout-btn" style="background: #28a745; color: white; width: 100%;">Daftar</button>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-      {% endif %}
     </div>
 
   </div>

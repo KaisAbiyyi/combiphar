@@ -81,6 +81,15 @@ public class Main {
         app.get("/register", authController::showRegister);
         app.post("/register", authController::handleRegister);
         app.get("/logout", authController::handleLogout);
+        
+        // Protected Customer Routes
+        app.before("/profile", AuthMiddleware.authenticated);
+        app.before("/cart", AuthMiddleware.authenticated);
+        app.before("/checkout", AuthMiddleware.authenticated);
+        app.before("/payment", AuthMiddleware.authenticated);
+        app.before("/history", AuthMiddleware.authenticated);
+        app.before("/order/*", AuthMiddleware.authenticated);
+        
         app.get("/profile", authController::showProfile);
 
         // Admin Auth

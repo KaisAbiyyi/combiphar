@@ -24,15 +24,11 @@ public class AuthController {
      */
     public void showProfile(Context ctx) {
         User currentUser = ctx.sessionAttribute("currentUser");
-        if (currentUser != null) {
-            ctx.render("customer/profile", Map.of(
-                "title", "Profil Saya",
-                "user", currentUser,
-                "activePage", "profile"
-            ));
-        } else {
-            ctx.redirect("/login");
-        }
+        ctx.render("customer/profile", Map.of(
+            "title", "Profil Saya",
+            "user", currentUser,
+            "activePage", "profile"
+        ));
     }
 
     /**
