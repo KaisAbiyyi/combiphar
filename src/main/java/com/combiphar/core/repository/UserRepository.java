@@ -1,12 +1,15 @@
 package com.combiphar.core.repository;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Optional;
+import java.util.UUID;
+
 import com.combiphar.core.config.DatabaseConfig;
 import com.combiphar.core.model.Role;
 import com.combiphar.core.model.User;
-
-import java.sql.*;
-import java.util.Optional;
-import java.util.UUID;
 
 /**
  * Repository for User data access.

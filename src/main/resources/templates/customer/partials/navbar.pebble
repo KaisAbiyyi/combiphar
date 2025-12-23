@@ -16,8 +16,15 @@
       {# Navigation links and auth buttons #}
       <div class="navbar__nav">
         <a href="/catalog" class="navbar__link{% if activePage == 'catalog' %} navbar__link--active{% endif %}">Katalog</a>
-        <a href="/login" class="btn btn--secondary btn--sm">Masuk</a>
-        <a href="/register" class="btn btn--primary btn--sm">Daftar</a>
+        {% if request.session.currentUser != null %}
+          <a href="/profile" class="navbar__link{% if activePage == 'profile' %} navbar__link--active{% endif %}">
+            Halo, {{ request.session.currentUser.name }}
+          </a>
+          <a href="/logout" class="btn btn--secondary btn--sm">Keluar</a>
+        {% else %}
+          <a href="/login" class="btn btn--secondary btn--sm">Masuk</a>
+          <a href="/register" class="btn btn--primary btn--sm">Daftar</a>
+        {% endif %}
       </div>
     </div>
   </nav>

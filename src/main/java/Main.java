@@ -76,10 +76,12 @@ public class Main {
         });
 
         // Auth Routes
-        app.get("/profile", authController::showProfile);
+        app.get("/login", authController::showLogin);
         app.post("/login", authController::handleLogin);
+        app.get("/register", authController::showRegister);
         app.post("/register", authController::handleRegister);
         app.get("/logout", authController::handleLogout);
+        app.get("/profile", authController::showProfile);
 
         // Admin Auth
         app.get("/admin/login", authController::showAdminLogin);

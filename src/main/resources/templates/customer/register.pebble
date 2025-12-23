@@ -1,0 +1,74 @@
+{% extends "customer/layout" %}
+
+{% block content %}
+<div class="auth-page">
+  <div class="auth-card">
+    <!-- Left Side - Info Panel -->
+    <div class="auth-card__info">
+      <div class="auth-card__info-content">
+        <span class="auth-card__badge">Customer Portal</span>
+        
+        <h1 class="auth-card__title">
+          Bergabung dengan ekosistem Combiphar
+        </h1>
+        
+        <p class="auth-card__description">
+          Daftarkan akun Anda untuk mulai melakukan penawaran dan pembelian barang operasional.
+        </p>
+        
+        <ul class="auth-card__benefits">
+          <li class="auth-card__benefit">
+            Notifikasi barang baru sesuai minat
+          </li>
+          <li class="auth-card__benefit">
+            Riwayat transaksi terpusat
+          </li>
+          <li class="auth-card__benefit">
+            Dukungan layanan pelanggan prioritas
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Right Side - Register Form -->
+    <div class="auth-card__form-container">
+      <div class="auth-card__header">
+        <h1>Buat Akun Baru</h1>
+        <p>Lengkapi data diri Anda di bawah ini</p>
+      </div>
+
+      <form action="/register" method="POST">
+        {% if error %}
+          <div class="auth-card__error">
+            {{ error }}
+          </div>
+        {% endif %}
+        
+        <div class="auth-card__field">
+          <label for="name">Nama Lengkap</label>
+          <input type="text" id="name" name="name" placeholder="Masukkan nama lengkap" required>
+        </div>
+
+        <div class="auth-card__field">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="nama@perusahaan.com" required>
+        </div>
+
+        <div class="auth-card__field">
+          <label for="password">Kata Sandi</label>
+          <input type="password" id="password" name="password" placeholder="Minimal 6 karakter" required minlength="6">
+        </div>
+
+        <div class="auth-card__submit">
+          <button type="submit">Daftar Sekarang</button>
+        </div>
+      </form>
+
+      <div class="auth-card__switch">
+        Sudah punya akun? <a href="/login">Masuk di sini</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

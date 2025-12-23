@@ -2,7 +2,7 @@ package com.combiphar.core.middleware;
 
 import com.combiphar.core.model.Role;
 import com.combiphar.core.model.User;
-import io.javalin.http.Context;
+
 import io.javalin.http.Handler;
 
 /**
@@ -23,6 +23,11 @@ public class AuthMiddleware {
      * Ensures the user has ADMIN or OWNER role.
      */
     public static Handler adminOnly = ctx -> {
+        // Skip middleware for login page to avoid redirect loop
+        if (ctx.path().equals("/admin/login")) {
+            return;
+        }
+
         User user = ctx.sessionAttribute("currentUser");
         if (user == null) {
             ctx.redirect("/admin/login");

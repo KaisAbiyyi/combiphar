@@ -1,11 +1,12 @@
 package com.combiphar.core.service;
 
+import java.util.Optional;
+
+import org.mindrot.jbcrypt.BCrypt;
+
 import com.combiphar.core.model.Role;
 import com.combiphar.core.model.User;
 import com.combiphar.core.repository.UserRepository;
-import org.mindrot.jbcrypt.BCrypt;
-
-import java.util.Optional;
 
 /**
  * Service for authentication and registration logic.

@@ -1,10 +1,12 @@
 package com.combiphar.core.controller;
 
+import java.util.Map;
+
 import com.combiphar.core.model.Role;
 import com.combiphar.core.model.User;
 import com.combiphar.core.service.AuthService;
+
 import io.javalin.http.Context;
-import java.util.Map;
 
 /**
  * Controller for authentication routes.
@@ -18,7 +20,7 @@ public class AuthController {
     }
 
     /**
-     * GET /profile - Shows login/register page or user profile.
+     * GET /profile - Shows user profile.
      */
     public void showProfile(Context ctx) {
         User currentUser = ctx.sessionAttribute("currentUser");
@@ -29,11 +31,30 @@ public class AuthController {
                 "activePage", "profile"
             ));
         } else {
-            ctx.render("customer/profile", Map.of(
-                "title", "Login / Register",
-                "activePage", "profile"
-            ));
+            ctx.redirect("/login");
         }
+    }
+
+    /**
+     * GET /login - Shows customer login page.
+     */
+    public void showLogin(Context ctx) {
+        if (ctx.sessionAttribute("currentUser") != null) {
+            ctx.redirect("/profile");
+            return;
+        }
+        ctx.render("customer/login");
+    }
+
+    /**
+     * GET /register - Shows customer registration page.
+     */
+    public void showRegister(Context ctx) {
+        if (ctx.sessionAttribute("currentUser") != null) {
+            ctx.redirect("/profile");
+            return;
+        }
+        ctx.render("customer/register");
     }
 
     /**
@@ -47,10 +68,8 @@ public class AuthController {
             ctx.sessionAttribute("currentUser", user);
             ctx.redirect("/profile");
         }, () -> {
-            ctx.render("customer/profile", Map.of(
-                "title", "Login / Register",
-                "error", "Email atau password salah",
-                "activePage", "profile"
+            ctx.render("customer/login", Map.of(
+                "error", "Email atau password salah"
             ));
         });
     }
@@ -65,12 +84,10 @@ public class AuthController {
 
         try {
             authService.registerCustomer(name, email, password);
-            ctx.redirect("/profile?registered=true");
+            ctx.redirect("/login?registered=true");
         } catch (IllegalArgumentException e) {
-            ctx.render("customer/profile", Map.of(
-                "title", "Login / Register",
-                "error", e.getMessage(),
-                "activePage", "profile"
+            ctx.render("customer/register", Map.of(
+                "error", e.getMessage()
             ));
         }
     }

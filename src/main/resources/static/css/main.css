@@ -28,6 +28,7 @@
 @import url("pages/customer/history.css");
 @import url('pages/customer/order-tracking.css');
 @import url('pages/customer/profile.css');
+@import url('pages/customer/login.css');
 /* Pages - Admin pages */
 @import url('pages/admin/login.css');
 @import url('pages/admin/dashboard.css');
