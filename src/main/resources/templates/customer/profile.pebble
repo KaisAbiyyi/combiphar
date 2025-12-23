@@ -9,45 +9,41 @@
     
     {# Page Header #}
     <div class="profile-page__header">
-      <h1 class="profile-page__title">Pengaturan Akun</h1>
+      <h1 class="profile-page__title">{{ user ? 'Pengaturan Akun' : 'Masuk atau Daftar' }}</h1>
       <a href="/catalog" class="profile-page__back">Kembali ke Katalog</a>
     </div>
 
     {# Main Grid Layout #}
     <div class="profile-page__grid">
       
+      {% if user %}
       {# Left Sidebar - User Card #}
       <div class="profile-sidebar">
         <div class="profile-user-card">
           <div class="profile-user-card__avatar">
-            <img src="/static/images/avatar-placeholder.jpg" alt="Salma Putri Wijaya" class="profile-user-card__img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-            <div class="profile-user-card__placeholder" style="display: none;">SW</div>
+            <img src="/static/images/avatar-placeholder.jpg" alt="{{ user.name }}" class="profile-user-card__img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="profile-user-card__placeholder" style="display: none;">{{ user.name.substring(0, 1) }}</div>
           </div>
           
           <div class="profile-user-card__info">
             <p class="profile-user-card__label">Akun Terdaftar</p>
-            <h2 class="profile-user-card__name">Salma Putri Wijaya</h2>
-            <p class="profile-user-card__email">salma.wijaya@combiphar.com</p>
+            <h2 class="profile-user-card__name">{{ user.name }}</h2>
+            <p class="profile-user-card__email">{{ user.email }}</p>
           </div>
 
           <div class="profile-user-card__stats">
             <div class="profile-stat-row">
               <span class="profile-stat-row__label">Status Keanggotaan</span>
-              <span class="profile-stat-badge profile-stat-badge--verified">Verified Business</span>
+              <span class="profile-stat-badge profile-stat-badge--verified">{{ user.role }}</span>
             </div>
             
             <div class="profile-stat-row">
-              <span class="profile-stat-row__label">Terdaftar Sejak</span>
-              <span class="profile-stat-row__value">Februari 2024</span>
-            </div>
-            
-            <div class="profile-stat-row">
-              <span class="profile-stat-row__label">Jumlah Transaksi</span>
-              <span class="profile-stat-row__value profile-stat-row__value--highlight">12 Transaksi</span>
+              <span class="profile-stat-row__label">Status Akun</span>
+              <span class="profile-stat-row__value">{{ user.status }}</span>
             </div>
           </div>
 
-          <button class="profile-logout-btn">Keluar</button>
+          <a href="/logout" class="profile-logout-btn" style="text-align: center; text-decoration: none; display: block;">Keluar</a>
         </div>
       </div>
 
@@ -58,7 +54,7 @@
         <div class="profile-info-card">
           <div class="profile-info-card__header">
             <h3 class="profile-info-card__title">Informasi Pribadi</h3>
-            <p class="profile-info-card__subtitle">Perbarui data kontak dan alamat perusahaan Anda</p>
+            <p class="profile-info-card__subtitle">Data kontak dan alamat Anda</p>
           </div>
 
           <form class="profile-form">
@@ -69,8 +65,8 @@
                   type="text" 
                   id="fullName" 
                   class="profile-form__input" 
-                  value="Salma Putri Wijaya"
-                  placeholder="Masukkan nama lengkap"
+                  value="{{ user.name }}"
+                  readonly
                 >
               </div>
 
@@ -80,8 +76,8 @@
                   type="email" 
                   id="email" 
                   class="profile-form__input" 
-                  value="salma.wijaya@combiphar.com"
-                  placeholder="email@example.com"
+                  value="{{ user.email }}"
+                  readonly
                 >
               </div>
             </div>
@@ -92,125 +88,65 @@
                 type="tel" 
                 id="phone" 
                 class="profile-form__input" 
-                value="0812-8899-7766"
-                placeholder="08XX-XXXX-XXXX"
+                value="{{ user.phone }}"
+                readonly
               >
             </div>
 
             <div class="profile-form__group">
-              <label class="profile-form__label" for="address">Alamat Pengiriman Utama</label>
-              <textarea 
-                id="address" 
-                class="profile-form__textarea" 
-                rows="4"
-                placeholder="Masukkan alamat lengkap"
-              >Jl. Gatot Subroto Kav. 18, Jakarta Selatan 12930</textarea>
-            </div>
-
-            <div class="profile-form__row">
-              <div class="profile-form__group">
-                <label class="profile-form__label" for="businessType">Jenis Perusahaan</label>
-                <select id="businessType" class="profile-form__select">
-                  <option value="pt">PT (Perseroan Terbatas)</option>
-                  <option value="cv">CV (Commanditaire Vennootschap)</option>
-                  <option value="koperasi">Koperasi</option>
-                  <option value="yayasan">Yayasan</option>
-                  <option value="perorangan">Perorangan</option>
-                </select>
-              </div>
-
-              <div class="profile-form__group">
-                <label class="profile-form__label" for="npwp">NPWP</label>
-                <input 
-                  type="text" 
-                  id="npwp" 
-                  class="profile-form__input" 
-                  value="08.222.555.6-021.000"
-                  placeholder="XX.XXX.XXX.X-XXX.XXX"
-                >
-              </div>
-            </div>
-
-            <div class="profile-form__actions">
-              <button type="button" class="profile-form__btn profile-form__btn--secondary">Batalkan</button>
-              <button type="submit" class="profile-form__btn profile-form__btn--primary">Simpan Perubahan</button>
+              <label class="profile-form__label" for="address">Alamat</label>
+              <textarea id="address" class="profile-form__input" readonly>{{ user.address }}</textarea>
             </div>
           </form>
         </div>
-
-        {# Notification Preferences Card #}
-        <div class="profile-notification-card">
-          <div class="profile-notification-card__header">
-            <h3 class="profile-notification-card__title">Preferensi Notifikasi</h3>
-            <p class="profile-notification-card__subtitle">Sesuaikan cara kami mengirim pemberitahuan kepada Anda</p>
-          </div>
-
-          <form class="profile-notification-form">
-            <div class="profile-notification-list">
-              
-              {# Email Update Status #}
-              <div class="profile-notification-item">
-                <div class="profile-notification-item__control">
-                  <input 
-                    type="checkbox" 
-                    id="emailStatus" 
-                    class="profile-notification-checkbox"
-                    checked
-                  >
-                  <label for="emailStatus" class="profile-notification-label">
-                    <span class="profile-notification-label__title">Email Update Status</span>
-                    <span class="profile-notification-label__desc">
-                      Dapatkan pemberitahuan otomatis setiap ada perubahan status transaksi dan pengiriman.
-                    </span>
-                  </label>
-                </div>
-              </div>
-
-              {# WhatsApp Reminder #}
-              <div class="profile-notification-item">
-                <div class="profile-notification-item__control">
-                  <input 
-                    type="checkbox" 
-                    id="whatsappReminder" 
-                    class="profile-notification-checkbox"
-                    checked
-                  >
-                  <label for="whatsappReminder" class="profile-notification-label">
-                    <span class="profile-notification-label__title">WhatsApp Reminder</span>
-                    <span class="profile-notification-label__desc">
-                      Pengingat pengiriman langsung dari konfirmasi penjualan pengiriman.
-                    </span>
-                  </label>
-                </div>
-              </div>
-
-              {# Newsletter Kurasi #}
-              <div class="profile-notification-item">
-                <div class="profile-notification-item__control">
-                  <input 
-                    type="checkbox" 
-                    id="newsletter" 
-                    class="profile-notification-checkbox"
-                  >
-                  <label for="newsletter" class="profile-notification-label">
-                    <span class="profile-notification-label__title">Newsletter Kurasi</span>
-                    <span class="profile-notification-label__desc">
-                      Dapatkan rekomendasi barang kurasi terbaru setiap minggu.
-                    </span>
-                  </label>
-                </div>
-              </div>
-
-            </div>
-
-            <div class="profile-notification-form__actions">
-              <button type="submit" class="profile-form__btn profile-form__btn--primary">Simpan Preferensi</button>
-            </div>
-          </form>
-        </div>
-
       </div>
-
+      {% else %}
+      <div class="profile-content" style="grid-column: span 2; max-width: 800px; margin: 0 auto; width: 100%;">
+        <div class="profile-info-card">
+          {% if error %}
+            <div style="background: #f8d7da; color: #721c24; padding: 1rem; border-radius: 4px; margin-bottom: 1rem;">
+              {{ error }}
+            </div>
+          {% endif %}
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+            <div>
+              <h3 class="profile-info-card__title">Masuk</h3>
+              <form action="/login" method="POST" class="profile-form">
+                <div class="profile-form__group">
+                  <label class="profile-form__label">Email</label>
+                  <input type="email" name="email" class="profile-form__input" required>
+                </div>
+                <div class="profile-form__group">
+                  <label class="profile-form__label">Password</label>
+                  <input type="password" name="password" class="profile-form__input" required>
+                </div>
+                <button type="submit" class="profile-logout-btn" style="background: #0056b3; color: white; width: 100%;">Login</button>
+              </form>
+            </div>
+            
+            <div style="border-left: 1px solid #eee; padding-left: 2rem;">
+              <h3 class="profile-info-card__title">Daftar</h3>
+              <form action="/register" method="POST" class="profile-form">
+                <div class="profile-form__group">
+                  <label class="profile-form__label">Nama Lengkap</label>
+                  <input type="text" name="name" class="profile-form__input" required>
+                </div>
+                <div class="profile-form__group">
+                  <label class="profile-form__label">Email</label>
+                  <input type="email" name="email" class="profile-form__input" required>
+                </div>
+                <div class="profile-form__group">
+                  <label class="profile-form__label">Password</label>
+                  <input type="password" name="password" class="profile-form__input" required minlength="6">
+                </div>
+                <button type="submit" class="profile-logout-btn" style="background: #28a745; color: white; width: 100%;">Daftar</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endif %}
     </div>
 
   </div>
