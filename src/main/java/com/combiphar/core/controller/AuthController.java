@@ -24,11 +24,17 @@ public class AuthController {
      */
     public void showProfile(Context ctx) {
         User currentUser = ctx.sessionAttribute("currentUser");
-        ctx.render("customer/profile", Map.of(
-            "title", "Profil Saya",
-            "user", currentUser,
-            "activePage", "profile"
-        ));
+        
+        if (currentUser == null) {
+            ctx.redirect("/login");
+            return;
+        }
+
+        Map<String, Object> model = new java.util.HashMap<>();
+        model.put("title", "Profil Saya");
+        model.put("currentUser", currentUser);
+        model.put("activePage", "profile");
+        ctx.render("customer/profile", model);
     }
 
     /**
@@ -113,10 +119,14 @@ public class AuthController {
     }
 
     /**
-     * GET /logout - Handles logout.
+     * GET /logout - Handles logout with proper session cleanup.
+     * Uses GET redirect untuk simple logout tanpa form
      */
     public void handleLogout(Context ctx) {
-        ctx.consumeSessionAttribute("currentUser");
+        // Clear the current user from session
+        ctx.sessionAttribute("currentUser", null);
+        
+        // Redirect to home page
         ctx.redirect("/");
     }
 }

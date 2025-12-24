@@ -1,5 +1,5 @@
 {# ========================================================================== #}
-{# NAVBAR - Customer navigation partial                                       #}
+{# NAVBAR - Customer navigation partial with session-aware dropdown menu     #}
 {# ========================================================================== #}
 <header class="header">
   <nav class="navbar">
@@ -13,15 +13,36 @@
         </div>
       </a>
       
-      {# Navigation links and auth buttons #}
+      {# Navigation links and auth section #}
       <div class="navbar__nav">
         <a href="/catalog" class="navbar__link{% if activePage == 'catalog' %} navbar__link--active{% endif %}">Katalog</a>
-        {% if request.session.currentUser != null %}
-          <a href="/profile" class="navbar__link{% if activePage == 'profile' %} navbar__link--active{% endif %}">
-            Halo, {{ request.session.currentUser.name }}
-          </a>
-          <a href="/logout" class="btn btn--secondary btn--sm">Keluar</a>
+        
+        {% if currentUser != null %}
+          {# User is logged in - show dropdown menu #}
+          <div class="navbar__user-menu">
+            <button class="navbar__user-button" id="userMenuToggle" aria-expanded="false" aria-haspopup="true">
+              <span class="navbar__user-name">{{ currentUser.name }}</span>
+              {# Display avatar with user initial from User.getInitial() method #}
+              <span class="navbar__user-avatar">{{ currentUser.initial }}</span>
+            </button>
+            
+            {# Dropdown Menu #}
+            <div class="navbar__dropdown" id="userDropdown" role="menu">
+              {% if currentUser.role == 'ADMIN' %}
+              <a href="/admin/dashboard" class="navbar__dropdown-item" role="menuitem">Dashboard Admin</a>
+              <hr class="navbar__dropdown-divider">
+              {% endif %}
+              <a href="/profile" class="navbar__dropdown-item" role="menuitem">Profil Saya</a>
+              <a href="/cart" class="navbar__dropdown-item" role="menuitem">Keranjang Belanja</a>
+              <a href="/history" class="navbar__dropdown-item" role="menuitem">Riwayat Pembelian</a>
+              <hr class="navbar__dropdown-divider">
+              <form action="/logout" method="post" style="display: contents;">
+                <button type="submit" class="navbar__dropdown-item navbar__dropdown-item--danger" role="menuitem">Keluar</button>
+              </form>
+            </div>
+          </div>
         {% else %}
+          {# User is not logged in - show login/register buttons #}
           <a href="/login" class="btn btn--secondary btn--sm">Masuk</a>
           <a href="/register" class="btn btn--primary btn--sm">Daftar</a>
         {% endif %}
@@ -29,3 +50,27 @@
     </div>
   </nav>
 </header>
+
+<script>
+  {# Dropdown menu toggle handler #}
+  (function() {
+    const userMenuToggle = document.getElementById('userMenuToggle');
+    const userDropdown = document.getElementById('userDropdown');
+    
+    if (!userMenuToggle) return; // Skip if not logged in
+    
+    userMenuToggle.addEventListener('click', function() {
+      const isExpanded = this.getAttribute('aria-expanded') === 'true';
+      this.setAttribute('aria-expanded', !isExpanded);
+      userDropdown.classList.toggle('navbar__dropdown--open');
+    });
+    
+    {# Close dropdown when clicking outside #}
+    document.addEventListener('click', function(event) {
+      if (!event.target.closest('.navbar__user-menu')) {
+        userMenuToggle.setAttribute('aria-expanded', 'false');
+        userDropdown.classList.remove('navbar__dropdown--open');
+      }
+    });
+  })();
+</script>

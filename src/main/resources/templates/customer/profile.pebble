@@ -16,29 +16,30 @@
     {# Main Grid Layout #}
     <div class="profile-page__grid">
       
+      {% if currentUser is not null %}
       {# Left Sidebar - User Card #}
       <div class="profile-sidebar">
         <div class="profile-user-card">
           <div class="profile-user-card__avatar">
-            <img src="/static/images/avatar-placeholder.jpg" alt="{{ user.name }}" class="profile-user-card__img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-            <div class="profile-user-card__placeholder" style="display: none;">{{ user.name ? user.name.substring(0, 1) : 'U' }}</div>
+            <img src="/static/images/avatar-placeholder.jpg" alt="{{ currentUser.name }}" class="profile-user-card__img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="profile-user-card__placeholder" style="display: none;">{{ currentUser.initial }}</div>
           </div>
           
           <div class="profile-user-card__info">
             <p class="profile-user-card__label">Akun Terdaftar</p>
-            <h2 class="profile-user-card__name">{{ user.name }}</h2>
-            <p class="profile-user-card__email">{{ user.email }}</p>
+            <h2 class="profile-user-card__name">{{ currentUser.name | default('User') }}</h2>
+            <p class="profile-user-card__email">{{ currentUser.email | default('-') }}</p>
           </div>
 
           <div class="profile-user-card__stats">
             <div class="profile-stat-row">
               <span class="profile-stat-row__label">Status Keanggotaan</span>
-              <span class="profile-stat-badge profile-stat-badge--verified">{{ user.role }}</span>
+              <span class="profile-stat-badge profile-stat-badge--verified">{{ currentUser.role | default('CUSTOMER') }}</span>
             </div>
             
             <div class="profile-stat-row">
               <span class="profile-stat-row__label">Status Akun</span>
-              <span class="profile-stat-row__value">{{ user.status }}</span>
+              <span class="profile-stat-row__value">{{ currentUser.status | default('ACTIVE') }}</span>
             </div>
           </div>
 
@@ -64,7 +65,7 @@
                   type="text" 
                   id="fullName" 
                   class="profile-form__input" 
-                  value="{{ user.name }}"
+                  value="{{ currentUser.name | default('') }}"
                   readonly
                 >
               </div>
@@ -75,7 +76,7 @@
                   type="email" 
                   id="email" 
                   class="profile-form__input" 
-                  value="{{ user.email }}"
+                  value="{{ currentUser.email | default('') }}"
                   readonly
                 >
               </div>
@@ -87,18 +88,24 @@
                 type="tel" 
                 id="phone" 
                 class="profile-form__input" 
-                value="{{ user.phone }}"
+                value="{{ currentUser.phone | default('-') }}"
                 readonly
               >
             </div>
 
             <div class="profile-form__group">
               <label class="profile-form__label" for="address">Alamat</label>
-              <textarea id="address" class="profile-form__input" readonly>{{ user.address }}</textarea>
+              <textarea id="address" class="profile-form__input" readonly>{{ currentUser.address | default('-') }}</textarea>
             </div>
           </form>
         </div>
       </div>
+      {% else %}
+      <div class="profile-content" style="grid-column: span 2; text-align: center; padding: 4rem;">
+        <h3>Silakan login untuk melihat profil Anda</h3>
+        <a href="/login" class="btn btn--primary">Login Sekarang</a>
+      </div>
+      {% endif %}
     </div>
 
   </div>

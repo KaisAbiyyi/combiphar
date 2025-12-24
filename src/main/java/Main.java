@@ -9,6 +9,8 @@ import com.mitchellbosecke.pebble.PebbleEngine;
 import com.mitchellbosecke.pebble.loader.ClasspathLoader;
 
 import io.javalin.Javalin;
+import io.javalin.http.ForbiddenResponse;
+import io.javalin.http.RedirectResponse;
 import io.javalin.rendering.template.JavalinPebble;
 
 /**
@@ -50,10 +52,41 @@ public class Main {
      * Creates Javalin app with static files and template renderer.
      */
     private static Javalin createApp(PebbleEngine engine) {
-        return Javalin.create(config -> {
+        Javalin app = Javalin.create(config -> {
             config.fileRenderer(new JavalinPebble(engine));
             config.staticFiles.add("/static");
+            
+            // Session Configuration
+            config.jetty.modifyServletContextHandler(handler -> {
+                handler.getSessionHandler().setSessionCookie("COMBIPHAR_SESSION");
+                handler.getSessionHandler().setMaxInactiveInterval(3600); // 1 hour
+            });
         });
+
+        // Global Exception Handlers for cleaner redirects
+        app.exception(RedirectResponse.class, (e, ctx) -> {
+            // RedirectResponse message is the URL
+            ctx.redirect(e.getMessage());
+        });
+
+        app.exception(ForbiddenResponse.class, (e, ctx) -> {
+            // Redirect to home on forbidden access
+            ctx.redirect("/");
+        });
+
+        return app;
+    }
+
+    /**
+     * Builds template model with common attributes including current user.
+     * Defensive programming: uses HashMap to handle null values gracefully.
+     */
+    private static Map<String, Object> buildModel(String title, String activePage, Object currentUser) {
+        Map<String, Object> model = new java.util.HashMap<>();
+        model.put("title", title != null ? title : "Combiphar Used Goods");
+        model.put("activePage", activePage != null ? activePage : "");
+        model.put("currentUser", currentUser); // Can be null, that's fine for templates
+        return model;
     }
 
     /**
@@ -62,20 +95,23 @@ public class Main {
     private static void registerRoutes(Javalin app, AuthController authController) {
         // Home / Catalog page
         app.get("/", ctx -> {
-            Map<String, Object> model = Map.of(
-                    "title", "Katalog - Combiphar Used Goods",
-                    "activePage", "catalog");
+            Map<String, Object> model = buildModel(
+                    "Katalog - Combiphar Used Goods",
+                    "catalog",
+                    ctx.sessionAttribute("currentUser"));
             ctx.render("customer/catalog", model);
         });
 
         app.get("/catalog", ctx -> {
-            Map<String, Object> model = Map.of(
-                    "title", "Katalog - Combiphar Used Goods",
-                    "activePage", "catalog");
+            Map<String, Object> model = buildModel(
+                    "Katalog - Combiphar Used Goods",
+                    "catalog",
+                    ctx.sessionAttribute("currentUser"));
             ctx.render("customer/catalog", model);
         });
 
         // Auth Routes
+        app.post("/logout", authController::handleLogout);
         app.get("/login", authController::showLogin);
         app.post("/login", authController::handleLogin);
         app.get("/register", authController::showRegister);
@@ -100,61 +136,69 @@ public class Main {
         app.before("/admin/*", AuthMiddleware.adminOnly);
         app.before("/admin", AuthMiddleware.adminOnly);
 
-        // Product detail page (dummy for now)
+        // Product detail page
         app.get("/product/{id}", ctx -> {
             String productId = ctx.pathParam("id");
-            Map<String, Object> model = Map.of(
-                    "title", "Set Meja Rapat Glasium - Combiphar Used Goods",
-                    "productId", productId);
+            Map<String, Object> model = buildModel(
+                    "Set Meja Rapat Glasium - Combiphar Used Goods",
+                    "product",
+                    ctx.sessionAttribute("currentUser"));
+            model.put("productId", productId);
             ctx.render("customer/product-detail", model);
         });
 
         // Cart page
         app.get("/cart", ctx -> {
-            Map<String, Object> model = Map.of(
-                    "title", "Keranjang Saya - Combiphar Used Goods",
-                    "activePage", "cart");
+            Map<String, Object> model = buildModel(
+                    "Keranjang Saya - Combiphar Used Goods",
+                    "cart",
+                    ctx.sessionAttribute("currentUser"));
             ctx.render("customer/cart", model);
         });
 
         // Checkout page
         app.get("/checkout", ctx -> {
-            Map<String, Object> model = Map.of(
-                    "title", "Checkout Pesanan - Combiphar Used Goods",
-                    "activePage", "checkout");
+            Map<String, Object> model = buildModel(
+                    "Checkout Pesanan - Combiphar Used Goods",
+                    "checkout",
+                    ctx.sessionAttribute("currentUser"));
             ctx.render("customer/checkout", model);
         });
 
         // Payment page
         app.get("/payment", ctx -> {
-            Map<String, Object> model = Map.of(
-                    "title", "Pembayaran Pesanan - Combiphar Used Goods",
-                    "activePage", "payment");
+            Map<String, Object> model = buildModel(
+                    "Pembayaran Pesanan - Combiphar Used Goods",
+                    "payment",
+                    ctx.sessionAttribute("currentUser"));
             ctx.render("customer/payment", model);
         });
 
         app.get("/checkout/payment", ctx -> {
-            Map<String, Object> model = Map.of(
-                    "title", "Pembayaran Pesanan - Combiphar Used Goods",
-                    "activePage", "payment");
+            Map<String, Object> model = buildModel(
+                    "Pembayaran Pesanan - Combiphar Used Goods",
+                    "payment",
+                    ctx.sessionAttribute("currentUser"));
             ctx.render("customer/payment", model);
         });
 
         // History page
         app.get("/history", ctx -> {
-            Map<String, Object> model = Map.of(
-                    "title", "Riwayat Transaksi - Combiphar Used Goods",
-                    "activePage", "history");
+            Map<String, Object> model = buildModel(
+                    "Riwayat Transaksi - Combiphar Used Goods",
+                    "history",
+                    ctx.sessionAttribute("currentUser"));
             ctx.render("customer/history", model);
         });
 
         // Order tracking page
         app.get("/order/{id}", ctx -> {
             String orderId = ctx.pathParam("id");
-            Map<String, Object> model = Map.of(
-                    "title", "Detail Pesanan - Combiphar Used Goods",
-                    "orderId", orderId,
-                    "activePage", "history");
+            Map<String, Object> model = buildModel(
+                    "Detail Pesanan - Combiphar Used Goods",
+                    "history",
+                    ctx.sessionAttribute("currentUser"));
+            model.put("orderId", orderId);
             ctx.render("customer/order-tracking", model);
         });
 

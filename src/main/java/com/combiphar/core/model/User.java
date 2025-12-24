@@ -58,4 +58,15 @@ public class User {
 
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+
+    /**
+     * Returns the first character of the user's name in uppercase.
+     * Defaults to "U" if name is null or empty.
+     */
+    public String getInitial() {
+        if (name == null || name.isEmpty()) {
+            return "U";
+        }
+        return name.substring(0, 1).toUpperCase();
+    }
 }

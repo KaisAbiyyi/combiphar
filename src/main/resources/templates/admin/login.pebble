@@ -54,7 +54,7 @@
         </div>
 
         <form class="admin-login__form" action="/admin/login" method="POST">
-          {% if error %}
+          {% if error is not empty %}
             <div style="color: #dc3545; margin-bottom: 1rem; font-size: 0.875rem;">
               {{ error }}
             </div>

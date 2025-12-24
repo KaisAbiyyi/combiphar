@@ -38,7 +38,7 @@
       </div>
 
       <form action="/register" method="POST">
-        {% if error %}
+        {% if error is not empty %}
           <div class="auth-card__error">
             {{ error }}
           </div>

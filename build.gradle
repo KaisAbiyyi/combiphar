@@ -33,3 +33,11 @@ dependencies {
 application {
     mainClass = 'Main'
 }
+
+// Task to run admin seeder
+task seed(type: JavaExec) {
+    group = 'database'
+    description = 'Create admin account'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'com.combiphar.core.seeder.AdminSeeder'
+}
