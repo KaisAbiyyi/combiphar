@@ -4,12 +4,14 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import com.combiphar.core.model.Category;
 import com.combiphar.core.model.Item;
@@ -17,6 +19,7 @@ import com.combiphar.core.model.User;
 import com.combiphar.core.service.CategoryService;
 import com.combiphar.core.service.ItemService;
 import com.combiphar.core.service.QualityCheckService;
+import com.combiphar.core.util.CsvUtils;
 
 import io.javalin.http.Context;
 import io.javalin.http.UploadedFile;
@@ -51,6 +54,7 @@ public class ItemController {
             // Get filter parameters
             String statusFilter = ctx.queryParam("status");
             String stockFilter = ctx.queryParam("stock");
+            String categoryFilter = ctx.queryParam("categoryId");
 
             List<Item> items = itemService.getAllItems();
             List<Category> categories = categoryService.getAllCategories();
@@ -82,6 +86,12 @@ public class ItemController {
                 }
             }
 
+            if (categoryFilter != null && !categoryFilter.isEmpty() && !categoryFilter.equals("all")) {
+                items = items.stream()
+                        .filter(i -> categoryFilter.equals(i.getCategoryId()))
+                        .collect(java.util.stream.Collectors.toList());
+            }
+
             // Get all items for stats (before filtering)
             List<Item> allItems = itemService.getAllItems();
 
@@ -100,10 +110,14 @@ public class ItemController {
 
             // Calculate total inventory value (in millions)
             BigDecimal totalValue = allItems.stream()
-                    .map(i -> i.getPrice().multiply(new BigDecimal(i.getStock())))
+                    .map(i -> {
+                        BigDecimal price = i.getPrice() != null ? i.getPrice() : BigDecimal.ZERO;
+                        int stock = i.getStock() != null ? i.getStock() : 0;
+                        return price.multiply(BigDecimal.valueOf(stock));
+                    })
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
-            double totalValueInMillions = totalValue.divide(new BigDecimal(1000000), 2, java.math.RoundingMode.HALF_UP)
-                    .doubleValue();
+            DecimalFormat currencyFormat = new DecimalFormat("#,###");
+            String totalValueFormatted = currencyFormat.format(totalValue);
 
             // Calculate average rotation days (placeholder calculation)
             // In a real app, you'd calculate this based on actual sales data
@@ -182,7 +196,7 @@ public class ItemController {
             model.put("totalSKU", totalSKU);
             model.put("needsQCCount", needsQCCount);
             model.put("qcReviewCount", qcReviewCount);
-            model.put("totalValueInMillions", totalValueInMillions);
+            model.put("totalValueFormatted", totalValueFormatted);
             model.put("rotationDays", rotationDays);
 
             // Old stats (kept for compatibility)
@@ -191,6 +205,7 @@ public class ItemController {
             model.put("totalValue", totalValue);
 
             model.put("currentFilter", statusFilter != null ? statusFilter : "all");
+            model.put("currentCategoryFilter", categoryFilter != null ? categoryFilter : "all");
             model.put("currentStockFilter", stockFilter != null ? stockFilter : "all");
             model.put("qcPipeline", qcPipelineFormatted);
             model.put("qcCount", qcPipelineFormatted.size());
@@ -610,6 +625,163 @@ public class ItemController {
             ctx.json(Map.of(
                     "success", true,
                     "message", "Item berhasil dihapus"));
+        } catch (Exception e) {
+            ctx.status(400).json(Map.of(
+                    "success", false,
+                    "message", e.getMessage()));
+        }
+    }
+
+    /**
+     * GET /api/admin/items/export-csv - Export items to CSV.
+     */
+    public void exportItemsCsv(Context ctx) {
+        try {
+            List<Item> items = itemService.getAllItems();
+            Map<String, String> categoryMap = categoryService.getAllCategories().stream()
+                    .collect(Collectors.toMap(Category::getId, Category::getName));
+
+            String header = "id,name,category_id,category_name,price,stock,condition,eligibility_status,is_published,description,image_url";
+            String rows = items.stream()
+                    .map(item -> String.join(",",
+                            CsvUtils.escape(item.getId()),
+                            CsvUtils.escape(item.getName()),
+                            CsvUtils.escape(item.getCategoryId()),
+                            CsvUtils.escape(categoryMap.getOrDefault(item.getCategoryId(), "")),
+                            CsvUtils.escape(item.getPrice() != null ? item.getPrice().toPlainString() : ""),
+                            CsvUtils.escape(item.getStock() != null ? item.getStock().toString() : "0"),
+                            CsvUtils.escape(item.getCondition()),
+                            CsvUtils.escape(item.getEligibilityStatus()),
+                            CsvUtils.escape(item.getIsPublished() != null ? item.getIsPublished().toString() : "false"),
+                            CsvUtils.escape(item.getDescription()),
+                            CsvUtils.escape(item.getImageUrl())))
+                    .collect(Collectors.joining("\n"));
+
+            String csv = header + "\n" + rows;
+            ctx.contentType("text/csv");
+            ctx.header("Content-Disposition", "attachment; filename=items.csv");
+            ctx.result(csv);
+        } catch (Exception e) {
+            ctx.status(500).json(Map.of(
+                    "success", false,
+                    "message", e.getMessage()));
+        }
+    }
+
+    /**
+     * POST /api/admin/items/import-csv - Import items from CSV.
+     */
+    public void importItemsCsv(Context ctx) {
+        try {
+            UploadedFile file = ctx.uploadedFile("file");
+            if (file == null || file.size() == 0) {
+                ctx.status(400).json(Map.of(
+                        "success", false,
+                        "message", "File CSV tidak ditemukan"));
+                return;
+            }
+
+            List<List<String>> rows = CsvUtils.parse(file.content());
+            if (rows.isEmpty()) {
+                ctx.status(400).json(Map.of(
+                        "success", false,
+                        "message", "File CSV kosong"));
+                return;
+            }
+
+            Map<String, String> categoryNameMap = categoryService.getAllCategories().stream()
+                    .collect(Collectors.toMap(cat -> cat.getName().toLowerCase(), Category::getId, (a, b) -> a));
+
+            Map<String, Integer> headerIndex = CsvUtils.buildHeaderIndex(rows.get(0));
+            int imported = 0;
+            int updated = 0;
+            int skipped = 0;
+
+            for (int i = 1; i < rows.size(); i++) {
+                List<String> row = rows.get(i);
+                String id = CsvUtils.getCell(row, headerIndex, "id").trim();
+                String name = CsvUtils.getCell(row, headerIndex, "name").trim();
+                String categoryId = CsvUtils.getCell(row, headerIndex, "category_id").trim();
+                String categoryName = CsvUtils.getCell(row, headerIndex, "category_name", "category").trim();
+                String priceValue = CsvUtils.getCell(row, headerIndex, "price").trim();
+                String stockValue = CsvUtils.getCell(row, headerIndex, "stock").trim();
+                String condition = CsvUtils.getCell(row, headerIndex, "condition").trim();
+                String eligibilityStatus = CsvUtils.getCell(row, headerIndex, "eligibility_status", "status").trim();
+                String isPublishedValue = CsvUtils.getCell(row, headerIndex, "is_published").trim();
+                String description = CsvUtils.getCell(row, headerIndex, "description");
+                String imageUrl = CsvUtils.getCell(row, headerIndex, "image_url");
+
+                if (name.isEmpty() || priceValue.isEmpty() || stockValue.isEmpty() || condition.isEmpty()) {
+                    skipped++;
+                    continue;
+                }
+
+                if (categoryId.isEmpty() && !categoryName.isEmpty()) {
+                    categoryId = categoryNameMap.getOrDefault(categoryName.toLowerCase(), "");
+                }
+
+                if (categoryId.isEmpty()) {
+                    skipped++;
+                    continue;
+                }
+
+                BigDecimal price;
+                int stock;
+                try {
+                    price = new BigDecimal(priceValue);
+                    stock = Integer.parseInt(stockValue);
+                } catch (NumberFormatException e) {
+                    skipped++;
+                    continue;
+                }
+
+                if (eligibilityStatus.isEmpty()) {
+                    eligibilityStatus = "ELIGIBLE";
+                }
+
+                if (!eligibilityStatus.equals("ELIGIBLE") && !eligibilityStatus.equals("NEEDS_QC")
+                        && !eligibilityStatus.equals("NEEDS_REPAIR")) {
+                    skipped++;
+                    continue;
+                }
+
+                Boolean isPublished = null;
+                if (!isPublishedValue.isEmpty()) {
+                    isPublished = Boolean.parseBoolean(isPublishedValue);
+                } else {
+                    isPublished = "ELIGIBLE".equals(eligibilityStatus);
+                }
+
+                boolean exists = false;
+                if (!id.isEmpty()) {
+                    try {
+                        itemService.getItemById(id);
+                        exists = true;
+                    } catch (RuntimeException ignored) {
+                        exists = false;
+                    }
+                }
+
+                try {
+                    itemService.upsertItemFromImport(id.isEmpty() ? null : id, categoryId, name, condition,
+                            description, price, stock, eligibilityStatus, isPublished,
+                            imageUrl.isEmpty() ? null : imageUrl);
+                    if (exists) {
+                        updated++;
+                    } else {
+                        imported++;
+                    }
+                } catch (RuntimeException e) {
+                    skipped++;
+                }
+            }
+
+            ctx.json(Map.of(
+                    "success", true,
+                    "imported", imported,
+                    "updated", updated,
+                    "skipped", skipped,
+                    "message", "Import produk selesai"));
         } catch (Exception e) {
             ctx.status(400).json(Map.of(
                     "success", false,

@@ -146,6 +146,24 @@ public class ItemService {
     }
 
     /**
+     * Create or update item based on ID for CSV import.
+     */
+    public Item upsertItemFromImport(String id, String categoryId, String name, String condition,
+            String description, BigDecimal price, Integer stock,
+            String eligibilityStatus, Boolean isPublished, String imageUrl) {
+        if (id != null && !id.trim().isEmpty()) {
+            return itemRepository.findById(id)
+                    .map(existing -> updateItem(existing.getId(), categoryId, name, condition, description, price,
+                            stock, eligibilityStatus, isPublished, imageUrl))
+                    .orElseGet(() -> createItem(categoryId, name, condition, description, price, stock,
+                            eligibilityStatus, isPublished, imageUrl));
+        }
+
+        return createItem(categoryId, name, condition, description, price, stock, eligibilityStatus, isPublished,
+                imageUrl);
+    }
+
+    /**
      * Update item eligibility status (for QC)
      */
     public boolean updateEligibilityStatus(String id, String status) {

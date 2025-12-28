@@ -13,14 +13,12 @@
       <h1 class="page-header__title">Katalog Kategori</h1>
     </div>
     <div class="page-header__actions">
-      <button class="btn btn--outline" onclick="document.getElementById('csvImportFile').click()">
+      <button type="button" class="btn btn--outline" onclick="document.getElementById('csvImportFile').click()">
         Impor CSV
       </button>
       <input type="file" id="csvImportFile" accept=".csv" style="display:none" onchange="handleCSVImport(event)">
-      <button class="btn btn--outline" onclick="exportCSV()">
-        Ekspor CSV
-      </button>
-      <button class="btn btn--primary" onclick="openAddCategoryModal()">
+      <a class="btn btn--outline" href="/api/admin/categories/export-csv">Ekspor CSV</a>
+      <button type="button" class="btn btn--primary" id="addCategoryBtn" onclick="openAddCategoryModal()">
         Tambah Kategori
       </button>
     </div>
@@ -38,18 +36,6 @@
       <div class="stat-card__label">KATEGORI AKTIF</div>
       <div class="stat-card__value">{{ activeCategories }}</div>
       <div class="stat-card__subtitle">Siap digunakan</div>
-    </div>
-
-    <div class="stat-card">
-      <div class="stat-card__label">DATABASE</div>
-      <div class="stat-card__value">MySQL</div>
-      <div class="stat-card__subtitle">Connection active</div>
-    </div>
-
-    <div class="stat-card">
-      <div class="stat-card__label">TERAKHIR UPDATE</div>
-      <div class="stat-card__value">Hari Ini</div>
-      <div class="stat-card__subtitle">System updated</div>
     </div>
   </div>
 
@@ -74,7 +60,7 @@
                 </svg>
               </button>
               <div class="filter-dropdown__menu" id="filterDropdown" style="display: none;">
-                <a href="/admin/category" class="filter-dropdown__item {{ currentFilter == 'all' or currentFilter == null ? 'active' : '' }}">Semua Status</a>
+                <a href="/admin/category" class="filter-dropdown__item {{ (currentFilter == 'all' or currentFilter == null) ? 'active' : '' }}">Semua Status</a>
                 <a href="/admin/category?status=AKTIF" class="filter-dropdown__item {{ currentFilter == 'AKTIF' ? 'active' : '' }}">Aktif</a>
                 <a href="/admin/category?status=REVIEW" class="filter-dropdown__item {{ currentFilter == 'REVIEW' ? 'active' : '' }}">Perlu Review</a>
                 <a href="/admin/category?status=DRAFT" class="filter-dropdown__item {{ currentFilter == 'DRAFT' ? 'active' : '' }}">Draft</a>
@@ -137,52 +123,43 @@
         </div>
       </div>
     </div>
+  </div>
+</div>
 
-    {# Right Section - Form Sidebar #}
-    <div class="admin-category__sidebar">
-      <div class="sidebar-card">
-        <div class="sidebar-card__header">
-          <h3 class="sidebar-card__title" id="formTitle">Buat Kategori Baru</h3>
-          <p class="sidebar-card__subtitle">Isi form untuk menambah kategori</p>
-        </div>
-
-        <form class="category-form" id="categoryForm" onsubmit="handleFormSubmit(event)">
-          <div class="form-group">
-            <label class="form-label" for="categoryName">Nama Kategori *</label>
-            <input type="text" id="categoryName" class="form-input" placeholder="Contoh: Furnitur Premium" required>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="categoryDescription">Deskripsi</label>
-            <textarea id="categoryDescription" class="form-textarea" rows="3" placeholder="Tuliskan kriteria barang yang termasuk kategori ini"></textarea>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="categoryStatus">Status *</label>
-            <select id="categoryStatus" class="form-select" required>
-              <option value="AKTIF">Aktif</option>
-              <option value="REVIEW">Perlu Review</option>
-              <option value="DRAFT">Draft</option>
-            </select>
-          </div>
-
-          <div class="form-actions">
-            <button type="button" class="btn btn--outline" onclick="resetForm()">Batal</button>
-            <button type="submit" class="btn btn--primary" id="submitBtn">Simpan Kategori</button>
-          </div>
-        </form>
-      </div>
-
-      {# Info Box #}
-      <div class="sidebar-card sidebar-card--info">
-        <div class="sidebar-card__header">
-          <h3 class="sidebar-card__title">📋 Standardisasi Kategori</h3>
-        </div>
-        <p class="sidebar-card__text">
-          Pastikan nama kategori konsisten dengan sistem kategorisasi yang ada. Gunakan nama yang jelas dan mudah dipahami.
-        </p>
-      </div>
+{# Add/Edit Category Modal #}
+<div id="categoryModal" class="modal modal--category" style="display: none;">
+  <div class="modal__overlay" onclick="closeCategoryModal()"></div>
+  <div class="modal__content">
+    <div class="modal__header">
+      <h3 class="modal__title" id="modalTitle">Tambah Kategori</h3>
+      <button type="button" class="modal__close" onclick="closeCategoryModal()">&times;</button>
     </div>
+    <form id="categoryForm" class="modal__body" onsubmit="handleFormSubmit(event)">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="categoryName">Nama Kategori *</label>
+          <input type="text" id="categoryName" class="form-input" placeholder="Contoh: Furnitur Premium" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="categoryStatus">Status *</label>
+          <select id="categoryStatus" class="form-select" required>
+            <option value="AKTIF">Aktif</option>
+            <option value="REVIEW">Perlu Review</option>
+            <option value="DRAFT">Draft</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="categoryDescription">Deskripsi</label>
+        <textarea id="categoryDescription" class="form-textarea" rows="3" placeholder="Tuliskan kriteria barang yang termasuk kategori ini"></textarea>
+      </div>
+
+      <div class="modal__footer">
+        <button type="button" class="btn btn--outline" onclick="closeCategoryModal()">Batal</button>
+        <button type="submit" class="btn btn--primary" id="submitBtn">Simpan Kategori</button>
+      </div>
+    </form>
   </div>
 </div>
 
@@ -210,7 +187,19 @@ document.addEventListener('click', function(event) {
 // Open add category modal/form
 function openAddCategoryModal() {
   resetForm();
+  document.getElementById('modalTitle').textContent = 'Tambah Kategori';
+  document.getElementById('categoryModal').style.display = 'flex';
   document.getElementById('categoryName').focus();
+}
+
+function closeCategoryModal() {
+  document.getElementById('categoryModal').style.display = 'none';
+  resetForm();
+}
+
+const addCategoryButton = document.getElementById('addCategoryBtn');
+if (addCategoryButton) {
+  addCategoryButton.addEventListener('click', openAddCategoryModal);
 }
 
 // Handle form submission
@@ -249,6 +238,7 @@ async function handleFormSubmit(event) {
     
     if (result.success) {
       alert(result.message);
+      closeCategoryModal();
       window.location.reload();
     } else {
       alert('Error: ' + result.message);
@@ -275,11 +265,9 @@ async function editCategory(categoryId) {
       isEditMode = true;
       currentCategoryId = categoryId;
       
-      document.getElementById('formTitle').textContent = 'Edit Kategori';
+      document.getElementById('modalTitle').textContent = 'Edit Kategori';
       document.getElementById('submitBtn').textContent = 'Update Kategori';
-      
-      // Scroll to form
-      document.getElementById('categoryForm').scrollIntoView({ behavior: 'smooth' });
+      document.getElementById('categoryModal').style.display = 'flex';
     } else {
       alert('Error: ' + result.message);
     }
@@ -296,11 +284,13 @@ async function deleteCategory(categoryId, categoryName) {
     const countResponse = await fetch(`/api/admin/categories/${categoryId}/item-count`);
     const countResult = await countResponse.json();
     
-    let confirmMessage = `Apakah Anda yakin ingin menghapus kategori "${categoryName}"?`;
-    
-    if (countResult.success && countResult.count > 0) {
-      confirmMessage = `⚠️ PERINGATAN!\n\nKategori "${categoryName}" memiliki ${countResult.count} produk.\n\nDengan menghapus kategori ini, SEMUA ${countResult.count} produk yang terkait juga akan DIHAPUS secara permanen!\n\nApakah Anda yakin ingin melanjutkan?`;
-    }
+    let confirmMessage = `PERINGATAN!
+
+Kategori "${categoryName}" memiliki ${countResult.count} produk.
+
+Dengan menghapus kategori ini, SEMUA ${countResult.count} produk yang terkait juga akan DIHAPUS secara permanen!
+
+Apakah Anda yakin ingin melanjutkan?`;
     
     if (!confirm(confirmMessage)) {
       return;
@@ -331,21 +321,42 @@ function resetForm() {
   document.getElementById('categoryStatus').value = 'AKTIF';
   isEditMode = false;
   currentCategoryId = null;
-  document.getElementById('formTitle').textContent = 'Buat Kategori Baru';
   document.getElementById('submitBtn').textContent = 'Simpan Kategori';
-}
-
-// Export CSV function
-function exportCSV() {
-  alert('Fitur ekspor CSV akan segera tersedia');
 }
 
 // Handle CSV Import
 function handleCSVImport(event) {
   const file = event.target.files[0];
   if (file) {
-    alert('Fitur impor CSV akan segera tersedia');
+    if (!file.name.endsWith('.csv')) {
+      alert('File harus berformat CSV');
+      event.target.value = '';
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    fetch('/api/admin/categories/import-csv', {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => response.json())
+    .then(result => {
+      if (result.success) {
+        alert(`Import selesai.\nBaru: ${result.imported || 0}\nUpdate: ${result.updated || 0}\nLewati: ${result.skipped || 0}`);
+        window.location.reload();
+      } else {
+        alert('Error: ' + result.message);
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('Terjadi kesalahan saat mengimpor CSV');
+    });
   }
+
+  event.target.value = '';
 }
 </script>
 

@@ -77,6 +77,27 @@ public class CategoryService {
     }
 
     /**
+     * Find category by name (case-sensitive).
+     */
+    public Category findCategoryByName(String name) {
+        return categoryRepository.findByName(name)
+                .orElseThrow(() -> new RuntimeException("Kategori tidak ditemukan"));
+    }
+
+    /**
+     * Create or update category based on name for CSV import.
+     */
+    public Category upsertCategoryFromImport(String name, String description, String status) {
+        if (name == null || name.trim().isEmpty()) {
+            throw new RuntimeException("Nama kategori tidak boleh kosong");
+        }
+
+        return categoryRepository.findByName(name.trim())
+                .map(existing -> updateCategory(existing.getId(), name.trim(), description, status))
+                .orElseGet(() -> createCategory(name.trim(), description, status));
+    }
+
+    /**
      * Delete category
      */
     public void deleteCategory(String id) {

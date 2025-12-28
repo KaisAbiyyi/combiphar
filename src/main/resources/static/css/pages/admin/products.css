@@ -375,6 +375,38 @@
   gap: 8px;
 }
 
+/* Stock Control */
+.stock-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.stock-control__value {
+  font-weight: 600;
+  color: #111827;
+  min-width: 24px;
+  text-align: center;
+}
+
+.stock-control__unit {
+  font-size: 12px;
+  color: #6B7280;
+}
+
+.btn--stock {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border-radius: 999px;
+  background: #F3F4F6;
+  color: #374151;
+}
+
+.btn--stock:hover {
+  background: #E5E7EB;
+}
+
 /* Empty State */
 .empty-state {
   text-align: center;
@@ -478,61 +510,6 @@
   margin: 0;
 }
 
-/* Quick Update Form */
-.quick-update-form {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.form-label {
-  font-size: 12px;
-  font-weight: 500;
-  color: #6b7280;
-}
-
-.form-input,
-.form-select {
-  padding: 10px 12px;
-  font-size: 14px;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  background: white;
-  transition: border-color 0.2s;
-}
-
-.form-input:focus,
-.form-select:focus {
-  outline: none;
-  border-color: #c084fc;
-  box-shadow: 0 0 0 3px rgba(192, 132, 252, 0.1);
-}
-
-.form-input::placeholder {
-  color: #9ca3af;
-}
-
-.form-textarea {
-  padding: 10px 12px;
-  font-size: 14px;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  resize: vertical;
-  min-height: 80px;
-}
-
-.form-textarea:focus {
-  outline: none;
-  border-color: #c084fc;
-  box-shadow: 0 0 0 3px rgba(192, 132, 252, 0.1);
-}
-
 /* Modal Styles */
 .modal {
   position: fixed;
@@ -540,7 +517,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 1000;
+  z-index: 1100;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -613,6 +590,55 @@
   padding-top: 20px;
   margin-top: 8px;
   border-top: 1px solid #f3f4f6;
+}
+
+/* Form Fields */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #6b7280;
+}
+
+.form-input,
+.form-select {
+  padding: 10px 12px;
+  font-size: 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: white;
+  transition: border-color 0.2s;
+}
+
+.form-input:focus,
+.form-select:focus {
+  outline: none;
+  border-color: #c084fc;
+  box-shadow: 0 0 0 3px rgba(192, 132, 252, 0.1);
+}
+
+.form-input::placeholder {
+  color: #9ca3af;
+}
+
+.form-textarea {
+  padding: 10px 12px;
+  font-size: 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  resize: vertical;
+  min-height: 80px;
+}
+
+.form-textarea:focus {
+  outline: none;
+  border-color: #c084fc;
+  box-shadow: 0 0 0 3px rgba(192, 132, 252, 0.1);
 }
 
 .form-row {
@@ -744,86 +770,3 @@
   }
 }
 
-/* Category Management Modal */
-.modal__content--medium {
-  max-width: 500px;
-}
-
-.category-warning {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 16px;
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  border-radius: 8px;
-  margin-bottom: 20px;
-}
-
-.category-warning svg {
-  flex-shrink: 0;
-  margin-top: 2px;
-}
-
-.category-warning p {
-  margin: 0;
-  font-size: 14px;
-  color: #991b1b;
-  line-height: 1.5;
-}
-
-.category-warning strong {
-  font-weight: 600;
-}
-
-.category-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  max-height: 400px;
-  overflow-y: auto;
-}
-
-.category-list__item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px;
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  transition: all 0.2s;
-}
-
-.category-list__item:hover {
-  border-color: #d1d5db;
-  background: #f3f4f6;
-}
-
-.category-list__info {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.category-list__name {
-  font-size: 14px;
-  font-weight: 600;
-  color: #1f2937;
-}
-
-.category-list__count {
-  font-size: 12px;
-  color: #6b7280;
-}
-
-.category-list__count--warning {
-  color: #dc2626;
-  font-weight: 500;
-}
-
-.empty-message {
-  text-align: center;
-  color: #9ca3af;
-  padding: 24px;
-}

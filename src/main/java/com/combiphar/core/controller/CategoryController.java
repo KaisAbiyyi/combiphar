@@ -5,13 +5,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.combiphar.core.model.Category;
 import com.combiphar.core.model.User;
 import com.combiphar.core.service.CategoryService;
 import com.combiphar.core.service.ItemService;
+import com.combiphar.core.util.CsvUtils;
 
 import io.javalin.http.Context;
+import io.javalin.http.UploadedFile;
 
 /**
  * Controller for category management routes.
@@ -295,6 +298,107 @@ public class CategoryController {
             ctx.json(Map.of(
                     "success", true,
                     "count", count));
+        } catch (Exception e) {
+            ctx.status(400).json(Map.of(
+                    "success", false,
+                    "message", e.getMessage()));
+        }
+    }
+
+    /**
+     * GET /api/admin/categories/export-csv - Export categories to CSV.
+     */
+    public void exportCategoriesCsv(Context ctx) {
+        try {
+            List<Category> categories = categoryService.getAllCategories();
+            String header = "id,name,description,status,created_at,updated_at";
+            String rows = categories.stream()
+                    .map(category -> String.join(",",
+                            CsvUtils.escape(category.getId()),
+                            CsvUtils.escape(category.getName()),
+                            CsvUtils.escape(category.getDescription()),
+                            CsvUtils.escape(category.getStatus()),
+                            CsvUtils.escape(category.getCreatedAt() != null ? category.getCreatedAt().toString() : ""),
+                            CsvUtils.escape(category.getUpdatedAt() != null ? category.getUpdatedAt().toString() : "")))
+                    .collect(Collectors.joining("\n"));
+
+            String csv = header + "\n" + rows;
+            ctx.contentType("text/csv");
+            ctx.header("Content-Disposition", "attachment; filename=categories.csv");
+            ctx.result(csv);
+        } catch (Exception e) {
+            ctx.status(500).json(Map.of(
+                    "success", false,
+                    "message", e.getMessage()));
+        }
+    }
+
+    /**
+     * POST /api/admin/categories/import-csv - Import categories from CSV.
+     */
+    public void importCategoriesCsv(Context ctx) {
+        try {
+            UploadedFile file = ctx.uploadedFile("file");
+            if (file == null || file.size() == 0) {
+                ctx.status(400).json(Map.of(
+                        "success", false,
+                        "message", "File CSV tidak ditemukan"));
+                return;
+            }
+
+            List<List<String>> rows = CsvUtils.parse(file.content());
+            if (rows.isEmpty()) {
+                ctx.status(400).json(Map.of(
+                        "success", false,
+                        "message", "File CSV kosong"));
+                return;
+            }
+
+            Map<String, Integer> headerIndex = CsvUtils.buildHeaderIndex(rows.get(0));
+            int imported = 0;
+            int updated = 0;
+            int skipped = 0;
+
+            for (int i = 1; i < rows.size(); i++) {
+                List<String> row = rows.get(i);
+                String name = CsvUtils.getCell(row, headerIndex, "name", "category", "category_name").trim();
+                String description = CsvUtils.getCell(row, headerIndex, "description");
+                String status = CsvUtils.getCell(row, headerIndex, "status").trim();
+
+                if (name.isEmpty()) {
+                    skipped++;
+                    continue;
+                }
+
+                if (status.isEmpty()) {
+                    status = null;
+                }
+
+                Category existing = null;
+                try {
+                    existing = categoryService.findCategoryByName(name.trim());
+                } catch (RuntimeException ignored) {
+                    existing = null;
+                }
+
+                try {
+                    categoryService.upsertCategoryFromImport(name, description, status);
+                    if (existing == null) {
+                        imported++;
+                    } else {
+                        updated++;
+                    }
+                } catch (RuntimeException e) {
+                    skipped++;
+                }
+            }
+
+            ctx.json(Map.of(
+                    "success", true,
+                    "imported", imported,
+                    "updated", updated,
+                    "skipped", skipped,
+                    "message", "Import kategori selesai"));
         } catch (Exception e) {
             ctx.status(400).json(Map.of(
                     "success", false,

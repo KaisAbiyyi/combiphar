@@ -242,6 +242,8 @@ public class Main {
 
         // ====== PHASE 2: Category Management API ======
         app.get("/api/admin/categories", categoryController::getAllCategories);
+        app.get("/api/admin/categories/export-csv", categoryController::exportCategoriesCsv);
+        app.post("/api/admin/categories/import-csv", categoryController::importCategoriesCsv);
         app.get("/api/admin/categories/{id}", categoryController::getCategoryById);
         app.get("/api/admin/categories/{id}/item-count", categoryController::getCategoryItemCount);
         app.post("/api/admin/categories", categoryController::createCategory);
@@ -250,6 +252,8 @@ public class Main {
 
         // ====== PHASE 2: Item/Product Management API ======
         app.get("/api/admin/items", itemController::getAllItems);
+        app.get("/api/admin/items/export-csv", itemController::exportItemsCsv);
+        app.post("/api/admin/items/import-csv", itemController::importItemsCsv);
         app.get("/api/admin/items/{id}", itemController::getItemById);
         app.post("/api/admin/items", itemController::createItem);
         app.put("/api/admin/items/{id}", itemController::updateItem);
