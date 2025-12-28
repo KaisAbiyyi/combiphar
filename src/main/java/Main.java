@@ -243,6 +243,7 @@ public class Main {
         // ====== PHASE 2: Category Management API ======
         app.get("/api/admin/categories", categoryController::getAllCategories);
         app.get("/api/admin/categories/{id}", categoryController::getCategoryById);
+        app.get("/api/admin/categories/{id}/item-count", categoryController::getCategoryItemCount);
         app.post("/api/admin/categories", categoryController::createCategory);
         app.put("/api/admin/categories/{id}", categoryController::updateCategory);
         app.delete("/api/admin/categories/{id}", categoryController::deleteCategory);
@@ -255,7 +256,7 @@ public class Main {
         app.patch("/api/admin/items/{id}/status", itemController::updateItemStatus);
         app.patch("/api/admin/items/{id}/stock", itemController::updateItemStock);
         app.delete("/api/admin/items/{id}", itemController::deleteItem);
-        
+
         // New endpoints for updated UI features
         app.post("/api/admin/items/{id}/update-stock", itemController::quickUpdateStock);
         app.post("/api/admin/items/{id}/cancel-qc", itemController::cancelQC);

@@ -42,17 +42,22 @@ File `migrations.sql` berisi:
 ## Fitur yang Ditambahkan
 
 ### 1. Status Kelayakan NEEDS_QC
+
 Mendukung status baru untuk Quality Control Pipeline:
+
 - `ELIGIBLE` - Layak Jual
 - `NEEDS_QC` - Perlu QC ✨ (BARU)
 - `NEEDS_REPAIR` - Label Ulang
 - `NOT_ELIGIBLE` - Tidak Layak ✨ (BARU)
 
 ### 2. Upload Gambar Produk
+
 Kolom `image_url` untuk menyimpan path gambar produk yang diupload.
 
 ### 3. Data Dummy untuk Testing
+
 7 items otomatis ditambahkan dengan status `NEEDS_QC` untuk menguji:
+
 - Card "Pipeline QC Hari Ini"
 - Card "Perlu QC" count
 - Filter status kelayakan
@@ -60,12 +65,15 @@ Kolom `image_url` untuk menyimpan path gambar produk yang diupload.
 ## Troubleshooting
 
 ### Error: "Duplicate column name 'image_url'"
+
 Abaikan error ini. Kolom sudah ada dari migration sebelumnya.
 
 ### Error: "Check constraint 'chk_items_eligibility' is violated"
+
 Jalankan migrations.sql untuk menghapus constraint lama.
 
 ### Tidak muncul data di Pipeline QC
+
 1. Pastikan migrations.sql sudah dijalankan
 2. Cek di database: `SELECT * FROM items WHERE eligibility_status = 'NEEDS_QC'`
 3. Restart aplikasi setelah menjalankan migration
@@ -79,13 +87,13 @@ Setelah menjalankan migrations.sql, Anda bisa verifikasi dengan:
 DESCRIBE items;
 
 -- Cek jumlah items per status
-SELECT eligibility_status, COUNT(*) 
-FROM items 
+SELECT eligibility_status, COUNT(*)
+FROM items
 GROUP BY eligibility_status;
 
 -- Lihat items NEEDS_QC
-SELECT id, name, stock, price 
-FROM items 
+SELECT id, name, stock, price
+FROM items
 WHERE eligibility_status = 'NEEDS_QC';
 ```
 

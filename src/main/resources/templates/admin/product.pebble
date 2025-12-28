@@ -17,6 +17,9 @@
         Impor CSV
       </button>
       <input type="file" id="csvImportFile" accept=".csv" style="display:none" onchange="handleCSVImport(event)">
+      <button class="btn btn--outline btn--danger" onclick="openCategoryManageModal()">
+        Hapus Kategori
+      </button>
       <button class="btn btn--primary" onclick="openAddProductModal()">
         Tambah Barang
       </button>
@@ -63,21 +66,6 @@
           </div>
           
           <div class="product-table__filters">
-            <div class="filter-dropdown">
-              <button class="btn btn--filter" onclick="toggleCategoryFilter()">
-                Filter Kategori
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                  <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                </svg>
-              </button>
-              <div class="filter-dropdown__menu" id="categoryFilter" style="display: none;">
-                <a href="/admin/products" class="filter-dropdown__item {{ currentCategoryFilter == 'all' or currentCategoryFilter == null ? 'active' : '' }}">Semua Kategori</a>
-                {% for category in categories %}
-                <a href="/admin/products?category={{ category.id }}" class="filter-dropdown__item {{ currentCategoryFilter == category.id ? 'active' : '' }}">{{ category.name }}</a>
-                {% endfor %}
-              </div>
-            </div>
-            
             <div class="filter-dropdown">
               <button class="btn btn--filter" onclick="toggleStatusFilter()">
                 Status Kelayakan
@@ -297,36 +285,61 @@
   </div>
 </div>
 
+{# Category Management Modal #}
+<div id="categoryManageModal" class="modal" style="display: none;">
+  <div class="modal__overlay" onclick="closeCategoryManageModal()"></div>
+  <div class="modal__content modal__content--medium">
+    <div class="modal__header">
+      <h3 class="modal__title">Hapus Kategori</h3>
+      <button class="modal__close" onclick="closeCategoryManageModal()">&times;</button>
+    </div>
+    <div class="modal__body">
+      <div class="category-warning">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 9V13M12 17H12.01M5.07183 19H18.9282C20.4678 19 21.4301 17.3333 20.6603 16L13.7321 4C12.9623 2.66667 11.0377 2.66667 10.2679 4L3.33975 16C2.56995 17.3333 3.53223 19 5.07183 19Z" stroke="#DC2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <p>Menghapus kategori akan <strong>menghapus semua produk</strong> yang terkait dengan kategori tersebut secara permanen.</p>
+      </div>
+      
+      <div class="category-list" id="categoryList">
+        {% if categories is empty %}
+        <p class="empty-message">Tidak ada kategori yang tersedia.</p>
+        {% else %}
+        {% for category in categories %}
+        <div class="category-list__item" data-category-id="{{ category.id }}" data-category-name="{{ category.name }}">
+          <div class="category-list__info">
+            <span class="category-list__name">{{ category.name }}</span>
+            <span class="category-list__count" id="count-{{ category.id }}">Memuat jumlah produk...</span>
+          </div>
+          <button class="btn btn--action btn--delete" onclick="confirmDeleteCategory('{{ category.id }}', '{{ category.name }}')">
+            Hapus
+          </button>
+        </div>
+        {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+    <div class="modal__footer">
+      <button type="button" class="btn btn--outline" onclick="closeCategoryManageModal()">Tutup</button>
+    </div>
+  </div>
+</div>
+
 <script>
 let isEditMode = false;
 let currentProductId = null;
 
-// Toggle category filter dropdown
-function toggleCategoryFilter() {
-  const dropdown = document.getElementById('categoryFilter');
-  const statusFilter = document.getElementById('statusFilter');
-  statusFilter.style.display = 'none';
-  dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
-}
-
 // Toggle status filter dropdown
 function toggleStatusFilter() {
   const dropdown = document.getElementById('statusFilter');
-  const categoryFilter = document.getElementById('categoryFilter');
-  categoryFilter.style.display = 'none';
   dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
 }
 
 // Close dropdowns when clicking outside
 document.addEventListener('click', function(event) {
-  const categoryFilter = document.getElementById('categoryFilter');
   const statusFilter = document.getElementById('statusFilter');
-  const isCategoryClick = event.target.closest('#categoryFilter') || event.target.closest('[onclick="toggleCategoryFilter()"]');
   const isStatusClick = event.target.closest('#statusFilter') || event.target.closest('[onclick="toggleStatusFilter()"]');
   
-  if (!isCategoryClick && categoryFilter) {
-    categoryFilter.style.display = 'none';
-  }
   if (!isStatusClick && statusFilter) {
     statusFilter.style.display = 'none';
   }
@@ -617,6 +630,86 @@ function handleQuickUpdateStock(event) {
     console.error('Error:', error);
     alert('Terjadi kesalahan saat mengupdate stok');
   });
+}
+
+// ==================== Category Management Functions ====================
+
+// Open Category Management Modal
+function openCategoryManageModal() {
+  document.getElementById('categoryManageModal').style.display = 'flex';
+  loadCategoryCounts();
+}
+
+// Close Category Management Modal
+function closeCategoryManageModal() {
+  document.getElementById('categoryManageModal').style.display = 'none';
+}
+
+// Load product counts for each category
+async function loadCategoryCounts() {
+  const categoryItems = document.querySelectorAll('.category-list__item');
+  
+  for (const item of categoryItems) {
+    const categoryId = item.dataset.categoryId;
+    const countElement = document.getElementById(`count-${categoryId}`);
+    
+    try {
+      const response = await fetch(`/api/admin/categories/${categoryId}/item-count`);
+      const result = await response.json();
+      
+      if (result.success) {
+        const count = result.count;
+        countElement.textContent = count > 0 
+          ? `${count} produk akan dihapus` 
+          : 'Tidak ada produk';
+        countElement.className = count > 0 
+          ? 'category-list__count category-list__count--warning' 
+          : 'category-list__count';
+      } else {
+        countElement.textContent = 'Gagal memuat';
+      }
+    } catch (error) {
+      console.error('Error loading count for category:', categoryId, error);
+      countElement.textContent = 'Gagal memuat';
+    }
+  }
+}
+
+// Confirm and delete category
+async function confirmDeleteCategory(categoryId, categoryName) {
+  try {
+    // First get the item count
+    const countResponse = await fetch(`/api/admin/categories/${categoryId}/item-count`);
+    const countResult = await countResponse.json();
+    
+    let confirmMessage = `Apakah Anda yakin ingin menghapus kategori "${categoryName}"?`;
+    
+    if (countResult.success && countResult.count > 0) {
+      confirmMessage = `⚠️ PERINGATAN!\n\nKategori "${categoryName}" memiliki ${countResult.count} produk.\n\nDengan menghapus kategori ini, SEMUA ${countResult.count} PRODUK yang terkait juga akan DIHAPUS secara permanen!\n\nTindakan ini TIDAK DAPAT dibatalkan.\n\nApakah Anda yakin ingin melanjutkan?`;
+    }
+    
+    if (!confirm(confirmMessage)) {
+      return;
+    }
+    
+    // Delete the category
+    const response = await fetch(`/api/admin/categories/${categoryId}`, {
+      method: 'DELETE'
+    });
+    
+    const result = await response.json();
+    
+    if (result.success) {
+      alert(result.message);
+      closeCategoryManageModal();
+      window.location.reload();
+    } else {
+      alert('Error: ' + result.message);
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    alert('Terjadi kesalahan saat menghapus kategori');
+  }
 }
 </script>
 {% endblock %}

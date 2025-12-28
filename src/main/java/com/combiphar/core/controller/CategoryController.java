@@ -9,6 +9,7 @@ import java.util.Map;
 import com.combiphar.core.model.Category;
 import com.combiphar.core.model.User;
 import com.combiphar.core.service.CategoryService;
+import com.combiphar.core.service.ItemService;
 
 import io.javalin.http.Context;
 
@@ -18,9 +19,11 @@ import io.javalin.http.Context;
 public class CategoryController {
 
     private final CategoryService categoryService;
+    private final ItemService itemService;
 
     public CategoryController() {
         this.categoryService = new CategoryService();
+        this.itemService = new ItemService();
     }
 
     /**
@@ -263,11 +266,35 @@ public class CategoryController {
     public void deleteCategory(Context ctx) {
         try {
             String id = ctx.pathParam("id");
+
+            // Delete all items in this category first
+            int deletedItems = itemService.deleteItemsByCategoryId(id);
+
+            // Then delete the category
             categoryService.deleteCategory(id);
 
             ctx.json(Map.of(
                     "success", true,
-                    "message", "Kategori berhasil dihapus"));
+                    "message",
+                    "Kategori berhasil dihapus" + (deletedItems > 0 ? " beserta " + deletedItems + " produk" : "")));
+        } catch (Exception e) {
+            ctx.status(400).json(Map.of(
+                    "success", false,
+                    "message", e.getMessage()));
+        }
+    }
+
+    /**
+     * GET /api/admin/categories/:id/item-count - Get item count for category (API)
+     */
+    public void getCategoryItemCount(Context ctx) {
+        try {
+            String id = ctx.pathParam("id");
+            int count = itemService.countItemsByCategoryId(id);
+
+            ctx.json(Map.of(
+                    "success", true,
+                    "count", count));
         } catch (Exception e) {
             ctx.status(400).json(Map.of(
                     "success", false,

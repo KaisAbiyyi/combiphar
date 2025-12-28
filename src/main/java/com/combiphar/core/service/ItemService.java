@@ -188,6 +188,20 @@ public class ItemService {
     }
 
     /**
+     * Delete all items by category ID
+     */
+    public int deleteItemsByCategoryId(String categoryId) {
+        return itemRepository.deleteByCategoryId(categoryId);
+    }
+
+    /**
+     * Count items by category ID
+     */
+    public int countItemsByCategoryId(String categoryId) {
+        return itemRepository.countByCategoryId(categoryId);
+    }
+
+    /**
      * Validate eligibility status
      */
     private boolean isValidEligibilityStatus(String status) {

@@ -105,6 +105,25 @@
   background: #e5e7eb;
 }
 
+.btn--delete {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.btn--delete:hover {
+  background: #fee2e2;
+}
+
+.btn--danger {
+  color: #dc2626;
+  border-color: #fecaca;
+}
+
+.btn--danger:hover {
+  background: #fef2f2;
+  border-color: #f87171;
+}
+
 .btn--secondary {
   background: transparent;
   color: #6b7280;
@@ -723,4 +742,88 @@
   .action-buttons {
     flex-direction: column;
   }
+}
+
+/* Category Management Modal */
+.modal__content--medium {
+  max-width: 500px;
+}
+
+.category-warning {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.category-warning svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.category-warning p {
+  margin: 0;
+  font-size: 14px;
+  color: #991b1b;
+  line-height: 1.5;
+}
+
+.category-warning strong {
+  font-weight: 600;
+}
+
+.category-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.category-list__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.category-list__item:hover {
+  border-color: #d1d5db;
+  background: #f3f4f6;
+}
+
+.category-list__info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.category-list__name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.category-list__count {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.category-list__count--warning {
+  color: #dc2626;
+  font-weight: 500;
+}
+
+.empty-message {
+  text-align: center;
+  color: #9ca3af;
+  padding: 24px;
 }

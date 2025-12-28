@@ -243,6 +243,43 @@ public class ItemRepository {
     }
 
     /**
+     * Delete all items by category ID
+     */
+    public int deleteByCategoryId(String categoryId) {
+        String sql = "DELETE FROM items WHERE category_id = ?";
+
+        try (Connection conn = DatabaseConfig.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, categoryId);
+            return stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Error deleting items by category", e);
+        }
+    }
+
+    /**
+     * Count items by category ID
+     */
+    public int countByCategoryId(String categoryId) {
+        String sql = "SELECT COUNT(*) FROM items WHERE category_id = ?";
+
+        try (Connection conn = DatabaseConfig.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, categoryId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error counting items by category", e);
+        }
+        return 0;
+    }
+
+    /**
      * Map ResultSet to Item object
      */
     private Item mapResultSetToItem(ResultSet rs) throws SQLException {
