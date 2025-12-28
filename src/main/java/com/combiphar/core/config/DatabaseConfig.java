@@ -22,11 +22,25 @@ public class DatabaseConfig {
         String dbUser = System.getenv("DB_USER");
         String dbPass = System.getenv("DB_PASS");
 
-        // Fallback to defaults if env vars are not set
-        config.setJdbcUrl(dbUrl != null ? dbUrl : "jdbc:mysql://localhost:3306/combiphar_db");
-        config.setUsername(dbUser != null ? dbUser : "root");
-        config.setPassword(dbPass != null ? dbPass : "");
+        // Debugging to make sure env vars are read
+        System.out.println("--- Database Configuration Debug ---");
+        System.out.println("DB_URL: " + (dbUrl != null ? dbUrl : "MISSING"));
+        System.out.println("DB_USER: " + (dbUser != null ? dbUser : "MISSING"));
+        System.out.println("DB_PASS: " + (dbPass != null ? "********" : "MISSING"));
+        System.out.println("------------------------------------");
+
+        // Force environment variables (no fallback)
+        if (dbUrl == null || dbUrl.trim().isEmpty()) {
+            throw new IllegalStateException("CRITICAL: Environment variable DB_URL is not set!");
+        }
+        if (dbUser == null || dbUser.trim().isEmpty()) {
+            throw new IllegalStateException("CRITICAL: Environment variable DB_USER is not set!");
+        }
+
         config.setDriverClassName("com.mysql.cj.jdbc.Driver");
+        config.setJdbcUrl(dbUrl);
+        config.setUsername(dbUser);
+        config.setPassword(dbPass);
 
         // Optimization settings
         config.addDataSourceProperty("cachePrepStmts", "true");

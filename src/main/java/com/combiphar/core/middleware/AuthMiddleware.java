@@ -3,7 +3,6 @@ package com.combiphar.core.middleware;
 import com.combiphar.core.model.Role;
 import com.combiphar.core.model.User;
 
-import io.javalin.http.ForbiddenResponse;
 import io.javalin.http.Handler;
 import io.javalin.http.HttpStatus;
 import io.javalin.http.RedirectResponse;
