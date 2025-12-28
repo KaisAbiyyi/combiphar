@@ -21,6 +21,10 @@ dependencies {
     // Pebble "old coordinates" yang masih punya package com.mitchellbosecke.pebble.*
     implementation 'com.mitchellbosecke:pebble:2.4.0'
 
+    // Jackson for JSON serialization
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.2'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.17.2'
+
     implementation 'com.zaxxer:HikariCP:5.1.0'
     implementation 'com.mysql:mysql-connector-j:8.3.0'
     implementation 'org.mindrot:jbcrypt:0.4'
@@ -40,4 +44,28 @@ task seed(type: JavaExec) {
     description = 'Create admin account'
     classpath = sourceSets.main.runtimeClasspath
     mainClass = 'com.combiphar.core.seeder.AdminSeeder'
+}
+
+// Task to run category seeder
+task seedCategories(type: JavaExec) {
+    group = 'database'
+    description = 'Seed sample categories'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'com.combiphar.core.seeder.CategorySeeder'
+}
+
+// Task to run product seeder
+task seedProducts(type: JavaExec) {
+    group = 'database'
+    description = 'Seed sample products with dummy data'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'com.combiphar.core.seeder.ProductSeeder'
+}
+
+// Task to run QC items seeder
+task seedQCItems(type: JavaExec) {
+    group = 'database'
+    description = 'Seed sample items with NEEDS_QC status for QC Pipeline'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'com.combiphar.core.seeder.QCItemSeeder'
 }

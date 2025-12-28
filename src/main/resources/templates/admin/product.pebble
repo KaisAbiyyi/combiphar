@@ -1,35 +1,52 @@
 {% extends "admin/layout" %}
 
+{% block styles %}
+<link rel="stylesheet" href="/css/pages/admin/products.css">
+{% endblock %}
+
 {% block content %}
 <div class="admin-product">
-  {# Header Section with Stats #}
-  <div class="admin-product__header">
-    {# Stat Card 1 #}
-    <div class="stat-card stat-card--compact">
-      <div class="stat-card__label">TOTAL PRODUK</div>
-      <div class="stat-card__value">156</div>
-      <div class="stat-card__description">Di berbagai kategori</div>
+  {# Page Title and Action Buttons #}
+  <div class="page-header">
+    <div class="page-header__info">
+      <div class="page-header__label">Manajemen Inventaris</div>
+      <h1 class="page-header__title">Katalog Produk</h1>
+    </div>
+    <div class="page-header__actions">
+      <button class="btn btn--outline" onclick="document.getElementById('csvImportFile').click()">
+        Impor CSV
+      </button>
+      <input type="file" id="csvImportFile" accept=".csv" style="display:none" onchange="handleCSVImport(event)">
+      <button class="btn btn--primary" onclick="openAddProductModal()">
+        Tambah Barang
+      </button>
+    </div>
+  </div>
+
+  {# Stats Cards #}
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-card__label">TOTAL SKU</div>
+      <div class="stat-card__value">{{ totalSKU }}</div>
+      <div class="stat-card__subtitle">+12 unit dibanding minggu lalu</div>
     </div>
 
-    {# Stat Card 2 #}
-    <div class="stat-card stat-card--compact">
-      <div class="stat-card__label">STOK RENDAH</div>
-      <div class="stat-card__value">12</div>
-      <div class="stat-card__description">Perlu restock segera</div>
+    <div class="stat-card stat-card--warning">
+      <div class="stat-card__label">PERLU QC</div>
+      <div class="stat-card__value">{{ needsQCCount }}</div>
+      <div class="stat-card__subtitle">{{ qcReviewCount }} butuh penjadwalan ulang QC</div>
     </div>
 
-    {# Stat Card 3 #}
-    <div class="stat-card stat-card--compact">
-      <div class="stat-card__label">NILAI INVENTORI</div>
-      <div class="stat-card__value">Rp 2.4M</div>
-      <div class="stat-card__description">Total nilai aset</div>
+    <div class="stat-card">
+      <div class="stat-card__label">NILAI INVENTARIS</div>
+      <div class="stat-card__value">Rp {{ totalValueInMillions }},{{ ((totalValue / 100000) % 10) | numberformat("0") }} M</div>
+      <div class="stat-card__subtitle">Estimasi harga layak jual</div>
     </div>
 
-    {# Stat Card 4 #}
-    <div class="stat-card stat-card--compact">
-      <div class="stat-card__label">PRODUK TERJUAL</div>
-      <div class="stat-card__value">48</div>
-      <div class="stat-card__description">Bulan ini</div>
+    <div class="stat-card">
+      <div class="stat-card__label">ROTASI SKU</div>
+      <div class="stat-card__value">{{ rotationDays }} hari</div>
+      <div class="stat-card__subtitle">Rata-rata siklus restock</div>
     </div>
   </div>
 
@@ -40,47 +57,41 @@
       <div class="product-table">
         {# Table Header #}
         <div class="product-table__header">
-          <div class="product-table__header-top">
-            <div>
-              <h3 class="product-table__title">Daftar Produk</h3>
-              <p class="product-table__subtitle">Kelola inventori dan informasi produk</p>
-            </div>
-            <button class="btn btn--primary">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M8 3V13M3 8H13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              <span>Tambah Produk</span>
-            </button>
+          <div class="product-table__header-info">
+            <h3 class="product-table__title">Daftar Produk Aktif</h3>
+            <p class="product-table__subtitle">Utamakan SKU dengan status QC</p>
           </div>
           
-          <div class="product-table__actions">
-            <div class="search-box">
-              <svg class="search-box__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M7 12C9.76142 12 12 9.76142 12 7C12 4.23858 9.76142 2 7 2C4.23858 2 2 4.23858 2 7C2 9.76142 4.23858 12 7 12Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M14 14L10.65 10.65" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              <input type="text" class="search-box__input" placeholder="Cari produk...">
+          <div class="product-table__filters">
+            <div class="filter-dropdown">
+              <button class="btn btn--filter" onclick="toggleCategoryFilter()">
+                Filter Kategori
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                  <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+              </button>
+              <div class="filter-dropdown__menu" id="categoryFilter" style="display: none;">
+                <a href="/admin/products" class="filter-dropdown__item {{ currentCategoryFilter == 'all' or currentCategoryFilter == null ? 'active' : '' }}">Semua Kategori</a>
+                {% for category in categories %}
+                <a href="/admin/products?category={{ category.id }}" class="filter-dropdown__item {{ currentCategoryFilter == category.id ? 'active' : '' }}">{{ category.name }}</a>
+                {% endfor %}
+              </div>
             </div>
-            <button class="btn btn--secondary">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M2 4H14M4 4V2H12V4M4 6L5 14H11L12 6H4Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              <span>Filter</span>
-            </button>
-            <button class="btn btn--secondary">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M8 2V10M8 10L11 7M8 10L5 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M2 14H14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              </svg>
-              <span>Ekspor</span>
-            </button>
-            <button class="btn btn--secondary">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M8 3V13M5 6L8 3L11 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M3 13H13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              <span>Import</span>
-            </button>
+            
+            <div class="filter-dropdown">
+              <button class="btn btn--filter" onclick="toggleStatusFilter()">
+                Status Kelayakan
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                  <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+              </button>
+              <div class="filter-dropdown__menu" id="statusFilter" style="display: none;">
+                <a href="/admin/products" class="filter-dropdown__item {{ currentFilter == 'all' or currentFilter == null ? 'active' : '' }}">Semua Status</a>
+                <a href="/admin/products?status=ELIGIBLE" class="filter-dropdown__item {{ currentFilter == 'ELIGIBLE' ? 'active' : '' }}">Layak Jual</a>
+                <a href="/admin/products?status=NEEDS_QC" class="filter-dropdown__item {{ currentFilter == 'NEEDS_QC' ? 'active' : '' }}">Perlu QC</a>
+                <a href="/admin/products?status=NEEDS_REPAIR" class="filter-dropdown__item {{ currentFilter == 'NEEDS_REPAIR' ? 'active' : '' }}">Label Ulang</a>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -89,10 +100,8 @@
           <table class="data-table">
             <thead>
               <tr>
-                <th>
-                  <input type="checkbox" class="data-table__checkbox">
-                </th>
-                <th>PRODUK</th>
+                <th>SKU</th>
+                <th>NAMA BARANG</th>
                 <th>KATEGORI</th>
                 <th>HARGA</th>
                 <th>STOK</th>
@@ -101,241 +110,45 @@
               </tr>
             </thead>
             <tbody>
-              {# Row 1 #}
+              {% if items is empty %}
+              <tr>
+                <td colspan="7" class="empty-state">
+                  <p>Belum ada produk.</p>
+                </td>
+              </tr>
+              {% else %}
+              {% for item in items %}
               <tr>
                 <td>
-                  <input type="checkbox" class="data-table__checkbox">
+                  <span class="product-sku">SKU-{{ item.id | slice(0, 4) }}</span>
                 </td>
                 <td>
-                  <div class="product-info">
-                  
-                    <div class="product-info__details">
-                      <div class="product-info__name">Set Meja Rapat Glasium Premium</div>
-                      <div class="product-info__sku">SKU: FUR-001</div>
-                    </div>
-                  </div>
+                  <span class="product-name">{{ item.name }}</span>
                 </td>
-                <td>Furnitur Eksekutif</td>
-                <td class="data-table__price">Rp 15.500.000</td>
+                <td>{{ item.categoryName }}</td>
+                <td>Rp {{ item.price | numberformat("#,###") }}</td>
+                <td>{{ item.stock }} unit</td>
                 <td>
-                  <span class="stock-badge stock-badge--available">8 unit</span>
+                  {% if item.eligibilityStatus == 'ELIGIBLE' %}
+                    <span class="status-badge status-badge--success">Layak Jual</span>
+                  {% elseif item.eligibilityStatus == 'NEEDS_QC' %}
+                    <span class="status-badge status-badge--warning">Perlu QC</span>
+                  {% elseif item.eligibilityStatus == 'NEEDS_REPAIR' %}
+                    <span class="status-badge status-badge--purple">Label Ulang</span>
+                  {% else %}
+                    <span class="status-badge status-badge--secondary">{{ item.eligibilityStatus }}</span>
+                  {% endif %}
                 </td>
-                <td><span class="badge badge--success">LAYAK JUAL</span></td>
                 <td>
-                  <div class="data-table__actions">
-                    <button class="btn-icon btn-icon--edit" title="Edit">
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                        <path d="M11.3 2.3L13.7 4.7L5 13.4L2 14L2.6 11L11.3 2.3Z" stroke="currentColor" stroke-width="1.5"/>
-                      </svg>
-                    </button>
-                    <button class="btn-icon btn-icon--view" title="Lihat">
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                        <path d="M1 8C1 8 3 3 8 3C13 3 15 8 15 8C15 8 13 13 8 13C3 13 1 8 1 8Z" stroke="currentColor" stroke-width="1.5"/>
-                        <circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.5"/>
-                      </svg>
-                    </button>
-                    <button class="btn-icon btn-icon--delete" title="Hapus">
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                        <path d="M3 4H13M5 4V3H11V4M6 7V11M10 7V11" stroke="currentColor" stroke-width="1.5"/>
-                      </svg>
-                    </button>
+                  <div class="action-buttons">
+                    <button class="btn btn--action btn--edit" onclick="editProduct('{{ item.id }}')">Edit</button>
                   </div>
                 </td>
               </tr>
-
-              {# Row 2 #}
-              <tr>
-                <td>
-                  <input type="checkbox" class="data-table__checkbox">
-                </td>
-                <td>
-                  <div class="product-info">
-                    
-                    <div class="product-info__details">
-                      <div class="product-info__name">Laptop ThinkPad X1 Carbon</div>
-                      <div class="product-info__sku">SKU: ELE-002</div>
-                    </div>
-                  </div>
-                </td>
-                <td>Elektronik Refurbished</td>
-                <td class="data-table__price">Rp 12.000.000</td>
-                <td>
-                  <span class="stock-badge stock-badge--low">3 unit</span>
-                </td>
-                <td><span class="badge badge--warning">PERLU QC</span></td>
-                <td>
-                  <div class="data-table__actions">
-                    <button class="btn-icon btn-icon--edit" title="Edit">
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                        <path d="M11.3 2.3L13.7 4.7L5 13.4L2 14L2.6 11L11.3 2.3Z" stroke="currentColor" stroke-width="1.5"/>
-                      </svg>
-                    </button>
-                    <button class="btn-icon btn-icon--view" title="Lihat">
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                        <path d="M1 8C1 8 3 3 8 3C13 3 15 8 15 8C15 8 13 13 8 13C3 13 1 8 1 8Z" stroke="currentColor" stroke-width="1.5"/>
-                        <circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.5"/>
-                      </svg>
-                    </button>
-                    <button class="btn-icon btn-icon--delete" title="Hapus">
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                        <path d="M3 4H13M5 4V3H11V4M6 7V11M10 7V11" stroke="currentColor" stroke-width="1.5"/>
-                      </svg>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-
-              {# Row 3 #}
-              <tr>
-                <td>
-                  <input type="checkbox" class="data-table__checkbox">
-                </td>
-                <td>
-                  <div class="product-info">
-                    
-                    <div class="product-info__details">
-                      <div class="product-info__name">Proyektor Epson EB-2250U</div>
-                      <div class="product-info__sku">SKU: MTG-003</div>
-                    </div>
-                  </div>
-                </td>
-                <td>Perangkat Meeting</td>
-                <td class="data-table__price">Rp 8.750.000</td>
-                <td>
-                  <span class="stock-badge stock-badge--available">5 unit</span>
-                </td>
-                <td><span class="badge badge--proses">LABEL ULANG</span></td>
-                <td>
-                  <div class="data-table__actions">
-                    <button class="btn-icon btn-icon--edit" title="Edit">
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                        <path d="M11.3 2.3L13.7 4.7L5 13.4L2 14L2.6 11L11.3 2.3Z" stroke="currentColor" stroke-width="1.5"/>
-                      </svg>
-                    </button>
-                    <button class="btn-icon btn-icon--view" title="Lihat">
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                        <path d="M1 8C1 8 3 3 8 3C13 3 15 8 15 8C15 8 13 13 8 13C3 13 1 8 1 8Z" stroke="currentColor" stroke-width="1.5"/>
-                        <circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.5"/>
-                      </svg>
-                    </button>
-                    <button class="btn-icon btn-icon--delete" title="Hapus">
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                        <path d="M3 4H13M5 4V3H11V4M6 7V11M10 7V11" stroke="currentColor" stroke-width="1.5"/>
-                      </svg>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-
-              {# Row 4 #}
-              <tr>
-                <td>
-                  <input type="checkbox" class="data-table__checkbox">
-                </td>
-                <td>
-                  <div class="product-info">
-                    
-                    <div class="product-info__details">
-                      <div class="product-info__name">Kursi Ergonomis Herman Miller</div>
-                      <div class="product-info__sku">SKU: FUR-004</div>
-                    </div>
-                  </div>
-                </td>
-                <td>Aksesoris Kerja</td>
-                <td class="data-table__price">Rp 6.500.000</td>
-                <td>
-                  <span class="stock-badge stock-badge--out">Habis</span>
-                </td>
-                <td><span class="badge badge--warning">PERLU QC</span></td>
-                <td>
-                  <div class="data-table__actions">
-                    <button class="btn-icon btn-icon--edit" title="Edit">
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                        <path d="M11.3 2.3L13.7 4.7L5 13.4L2 14L2.6 11L11.3 2.3Z" stroke="currentColor" stroke-width="1.5"/>
-                      </svg>
-                    </button>
-                    <button class="btn-icon btn-icon--view" title="Lihat">
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                        <path d="M1 8C1 8 3 3 8 3C13 3 15 8 15 8C15 8 13 13 8 13C3 13 1 8 1 8Z" stroke="currentColor" stroke-width="1.5"/>
-                        <circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.5"/>
-                      </svg>
-                    </button>
-                    <button class="btn-icon btn-icon--delete" title="Hapus">
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                        <path d="M3 4H13M5 4V3H11V4M6 7V11M10 7V11" stroke="currentColor" stroke-width="1.5"/>
-                      </svg>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-
-              {# Row 5 #}
-              <tr>
-                <td>
-                  <input type="checkbox" class="data-table__checkbox">
-                </td>
-                <td>
-                  <div class="product-info">
-                    
-                    <div class="product-info__details">
-                      <div class="product-info__name">Monitor Dell UltraSharp 27"</div>
-                      <div class="product-info__sku">SKU: ELE-005</div>
-                    </div>
-                  </div>
-                </td>
-                <td>Stok Lelang Bulk</td>
-                <td class="data-table__price">Rp 4.200.000</td>
-                <td>
-                  <span class="stock-badge stock-badge--available">15 unit</span>
-                </td>
-                <td><span class="badge badge--success">LAYAK JUAL</span></td>
-                <td>
-                  <div class="data-table__actions">
-                    <button class="btn-icon btn-icon--edit" title="Edit">
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                        <path d="M11.3 2.3L13.7 4.7L5 13.4L2 14L2.6 11L11.3 2.3Z" stroke="currentColor" stroke-width="1.5"/>
-                      </svg>
-                    </button>
-                    <button class="btn-icon btn-icon--view" title="Lihat">
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                        <path d="M1 8C1 8 3 3 8 3C13 3 15 8 15 8C15 8 13 13 8 13C3 13 1 8 1 8Z" stroke="currentColor" stroke-width="1.5"/>
-                        <circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.5"/>
-                      </svg>
-                    </button>
-                    <button class="btn-icon btn-icon--delete" title="Hapus">
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                        <path d="M3 4H13M5 4V3H11V4M6 7V11M10 7V11" stroke="currentColor" stroke-width="1.5"/>
-                      </svg>
-                    </button>
-                  </div>
-                </td>
-              </tr>
+              {% endfor %}
+              {% endif %}
             </tbody>
           </table>
-        </div>
-
-        {# Pagination #}
-        <div class="product-table__footer">
-          <div class="pagination-info">
-            Menampilkan <strong>1-5</strong> dari <strong>156</strong> produk
-          </div>
-          <div class="pagination">
-            <button class="pagination__btn pagination__btn--disabled">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <path d="M10 12L6 8L10 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </button>
-            <button class="pagination__btn pagination__btn--active">1</button>
-            <button class="pagination__btn">2</button>
-            <button class="pagination__btn">3</button>
-            <span class="pagination__dots">...</span>
-            <button class="pagination__btn">31</button>
-            <button class="pagination__btn">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <path d="M6 4L10 8L6 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </button>
-          </div>
         </div>
       </div>
     </div>
@@ -343,40 +156,467 @@
     {# Right Section - Sidebar #}
     <div class="admin-product__sidebar">
       {# Pipeline QC Card #}
-      <div class="pipeline-card">
-        <h3 class="pipeline-card__title">Pipeline QC Hari Ini</h3>
-        <p class="pipeline-card__subtitle">3 sesi QC terjadwal oleh tim warehouse.</p>
+      <div class="sidebar-card">
+        <div class="sidebar-card__header">
+          <h3 class="sidebar-card__title">Pipeline QC Hari ini</h3>
+          <p class="sidebar-card__subtitle">{{ qcCount }} sesi QC terjadwal oleh tim warehouse</p>
+        </div>
 
         <div class="pipeline-list">
+          {% if qcPipeline is empty %}
+          <div class="pipeline-empty">
+            <p>Tidak ada sesi QC yang dijadwalkan hari ini.</p>
+          </div>
+          {% else %}
+          {% for qc in qcPipeline %}
           <div class="pipeline-item">
-            <div class="pipeline-item__time">08.30</div>
+            <div class="pipeline-item__time">{{ qc.time }}</div>
             <div class="pipeline-item__content">
-              <div class="pipeline-item__title">Set Meja Rapat Glasium</div>
-              <div class="pipeline-item__meta">Gudang Bekasi · PIC: Vina</div>
-              <div class="pipeline-item__note pipeline-item__note--alert">Catatan: butuh spare screw</div>
+              <div class="pipeline-item__title">{{ qc.productName }}</div>
+              <div class="pipeline-item__location">{{ qc.location }}</div>
+              <div class="pipeline-item__note {% if qc.isAlert %}pipeline-item__note--alert{% endif %}">{{ qc.note }}</div>
             </div>
           </div>
-
-          <div class="pipeline-item">
-            <div class="pipeline-item__time">11.00</div>
-            <div class="pipeline-item__content">
-              <div class="pipeline-item__title">Lemari Arsip Besi Tactical</div>
-              <div class="pipeline-item__meta">Gudang Cikarang · PIC: Yudha</div>
-              <div class="pipeline-item__note">Status: Label baru sudah dicetak.</div>
-            </div>
-          </div>
-
-          <div class="pipeline-item">
-            <div class="pipeline-item__time">15.30</div>
-            <div class="pipeline-item__content">
-              <div class="pipeline-item__title">Monitor LCD 24"</div>
-              <div class="pipeline-item__meta">Gudang Sunter · PIC: Rio</div>
-              <div class="pipeline-item__note">Perlu cek brightness & pixel.</div>
-            </div>
-          </div>
+          {% endfor %}
+          {% endif %}
         </div>
+      </div>
+
+      {# Quick Update Stock Card #}
+      <div class="sidebar-card">
+        <div class="sidebar-card__header">
+          <h3 class="sidebar-card__title">Quick Update Stok</h3>
+          <p class="sidebar-card__subtitle">Gunakan ketika ada penyesuaian mendadak.</p>
+        </div>
+
+        <form class="quick-update-form" onsubmit="handleQuickUpdateStock(event)">
+          <div class="form-group">
+            <label class="form-label">Pilih Produk</label>
+            <select class="form-select" id="quickUpdateProduct" required>
+              <option value="">Pilih produk</option>
+              {% for item in items %}
+              <option value="{{ item.id }}">SKU-{{ item.id | slice(0, 4) }} - {{ item.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Penyesuaian</label>
+            <select class="form-select" id="quickUpdateAction" required>
+              <option value="add">Tambah stok</option>
+              <option value="reduce">Kurangi stok</option>
+              <option value="set">Set stok baru</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Jumlah</label>
+            <input type="number" class="form-input" id="quickUpdateQty" placeholder="Contoh: 5" min="0" required>
+          </div>
+
+          <button type="submit" class="btn btn--primary btn--block">Simpan Perubahan</button>
+        </form>
       </div>
     </div>
   </div>
 </div>
+
+{# Add Product Modal #}
+<div id="productModal" class="modal" style="display: none;">
+  <div class="modal__overlay" onclick="closeProductModal()"></div>
+  <div class="modal__content">
+    <div class="modal__header">
+      <h3 class="modal__title" id="modalTitle">Tambah Barang</h3>
+      <button class="modal__close" onclick="closeProductModal()">&times;</button>
+    </div>
+    <form id="productForm" class="modal__body">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="productName">Nama Barang *</label>
+          <input type="text" id="productName" class="form-input" placeholder="Contoh: Meja Kantor Eksekutif" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="productCategory">Kategori *</label>
+          <select id="productCategory" class="form-select" required>
+            <option value="">Pilih kategori</option>
+            {% for category in categories %}
+            <option value="{{ category.id }}">{{ category.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="productPrice">Harga *</label>
+          <input type="number" id="productPrice" class="form-input" min="0" step="1000" placeholder="0" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="productStock">Stok *</label>
+          <input type="number" id="productStock" class="form-input" min="0" placeholder="0" required>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="productCondition">Kondisi *</label>
+          <select id="productCondition" class="form-select" required>
+            <option value="">Pilih kondisi</option>
+            <option value="NEW">Baru</option>
+            <option value="USED_GOOD">Bekas - Baik</option>
+            <option value="USED_FAIR">Bekas - Cukup</option>
+            <option value="DAMAGED">Rusak</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="productStatus">Status Kelayakan *</label>
+          <select id="productStatus" class="form-select" required>
+            <option value="">Pilih status</option>
+            <option value="ELIGIBLE">Layak Jual</option>
+            <option value="NEEDS_QC">Perlu QC</option>
+            <option value="NEEDS_REPAIR">Label Ulang</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="productDescription">Deskripsi</label>
+        <textarea id="productDescription" class="form-textarea" rows="3" placeholder="Deskripsikan kondisi dan detail barang..."></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="productImage">Gambar Produk</label>
+        <input type="file" id="productImage" class="form-input" accept="image/*">
+        <small class="form-hint">Format: JPG, PNG. Maksimal 2MB</small>
+        <div id="imagePreview" class="image-preview" style="display: none;">
+          <img id="previewImg" src="" alt="Preview">
+          <button type="button" class="btn-remove-image" onclick="removeImage()">&times;</button>
+        </div>
+      </div>
+      <div class="modal__footer">
+        <button type="button" class="btn btn--outline" onclick="closeProductModal()">Batal</button>
+        <button type="submit" class="btn btn--primary">Simpan</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+let isEditMode = false;
+let currentProductId = null;
+
+// Toggle category filter dropdown
+function toggleCategoryFilter() {
+  const dropdown = document.getElementById('categoryFilter');
+  const statusFilter = document.getElementById('statusFilter');
+  statusFilter.style.display = 'none';
+  dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+}
+
+// Toggle status filter dropdown
+function toggleStatusFilter() {
+  const dropdown = document.getElementById('statusFilter');
+  const categoryFilter = document.getElementById('categoryFilter');
+  categoryFilter.style.display = 'none';
+  dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+}
+
+// Close dropdowns when clicking outside
+document.addEventListener('click', function(event) {
+  const categoryFilter = document.getElementById('categoryFilter');
+  const statusFilter = document.getElementById('statusFilter');
+  const isCategoryClick = event.target.closest('#categoryFilter') || event.target.closest('[onclick="toggleCategoryFilter()"]');
+  const isStatusClick = event.target.closest('#statusFilter') || event.target.closest('[onclick="toggleStatusFilter()"]');
+  
+  if (!isCategoryClick && categoryFilter) {
+    categoryFilter.style.display = 'none';
+  }
+  if (!isStatusClick && statusFilter) {
+    statusFilter.style.display = 'none';
+  }
+});
+
+// Open Add Product Modal
+function openAddProductModal() {
+  isEditMode = false;
+  currentProductId = null;
+  document.getElementById('modalTitle').textContent = 'Tambah Barang';
+  document.getElementById('productForm').reset();
+  document.getElementById('imagePreview').style.display = 'none';
+  document.getElementById('productModal').style.display = 'flex';
+}
+
+// Close Product Modal
+function closeProductModal() {
+  document.getElementById('productModal').style.display = 'none';
+  document.getElementById('productForm').reset();
+  document.getElementById('imagePreview').style.display = 'none';
+  isEditMode = false;
+  currentProductId = null;
+}
+
+// Image preview handling
+document.getElementById('productImage').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (file) {
+    if (file.size > 2 * 1024 * 1024) {
+      alert('Ukuran file maksimal 2MB');
+      this.value = '';
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = function(event) {
+      document.getElementById('previewImg').src = event.target.result;
+      document.getElementById('imagePreview').style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  }
+});
+
+function removeImage() {
+  document.getElementById('productImage').value = '';
+  document.getElementById('imagePreview').style.display = 'none';
+}
+
+// Edit product
+async function editProduct(productId) {
+  try {
+    const response = await fetch(`/api/admin/items/${productId}`);
+    const result = await response.json();
+    
+    if (result.success) {
+      const product = result.data;
+      isEditMode = true;
+      currentProductId = productId;
+      
+      document.getElementById('modalTitle').textContent = 'Edit Barang';
+      document.getElementById('productName').value = product.name;
+      document.getElementById('productCategory').value = product.categoryId;
+      document.getElementById('productPrice').value = product.price;
+      document.getElementById('productStock').value = product.stock;
+      document.getElementById('productCondition').value = product.condition;
+      document.getElementById('productStatus').value = product.eligibilityStatus;
+      document.getElementById('productDescription').value = product.description || '';
+      
+      // Show existing image if any
+      if (product.imageUrl) {
+        document.getElementById('previewImg').src = product.imageUrl;
+        document.getElementById('imagePreview').style.display = 'block';
+      } else {
+        document.getElementById('imagePreview').style.display = 'none';
+      }
+      
+      document.getElementById('productModal').style.display = 'flex';
+    } else {
+      alert('Error: ' + result.message);
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    alert('Terjadi kesalahan saat mengambil data produk');
+  }
+}
+
+// Handle Form Submission
+document.getElementById('productForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  
+  const name = document.getElementById('productName').value.trim();
+  const categoryId = document.getElementById('productCategory').value;
+  const price = document.getElementById('productPrice').value;
+  const stock = document.getElementById('productStock').value;
+  const condition = document.getElementById('productCondition').value;
+  const status = document.getElementById('productStatus').value;
+  const description = document.getElementById('productDescription').value;
+  const imageFile = document.getElementById('productImage').files[0];
+  
+  if (!name || !categoryId || !price || !stock || !condition || !status) {
+    alert('Mohon lengkapi semua field yang wajib diisi (*)');
+    return;
+  }
+  
+  const formData = new FormData();
+  formData.append('name', name);
+  formData.append('categoryId', categoryId);
+  formData.append('price', price);
+  formData.append('stock', stock);
+  formData.append('condition', condition);
+  formData.append('eligibilityStatus', status);
+  formData.append('description', description);
+  formData.append('isPublished', status === 'ELIGIBLE' ? 'true' : 'false');
+  
+  // Add image if selected
+  if (imageFile) {
+    formData.append('image', imageFile);
+  }
+  
+  try {
+    let response;
+    if (isEditMode && currentProductId) {
+      response = await fetch(`/api/admin/items/${currentProductId}`, {
+        method: 'PUT',
+        body: formData
+      });
+    } else {
+      response = await fetch('/api/admin/items', {
+        method: 'POST',
+        body: formData
+      });
+    }
+    
+    const result = await response.json();
+    
+    if (result.success) {
+      alert(result.message);
+      closeProductModal();
+      window.location.reload();
+    } else {
+      alert('Error: ' + result.message);
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    alert('Terjadi kesalahan saat menyimpan barang');
+  }
+});
+
+// Bundle product
+function bundleProduct(productId) {
+  alert('Bundle Product\nFitur bundling untuk produk SKU-' + productId.substring(0, 4) + ' akan segera tersedia.');
+}
+
+// Open QC Notes
+function openQCNotes(productId) {
+  alert('Catatan QC\nFitur catatan QC untuk produk SKU-' + productId.substring(0, 4) + ' akan segera tersedia.');
+}
+
+// Archive product
+async function archiveProduct(productId) {
+  if (!confirm('Apakah Anda yakin ingin mengarsipkan produk ini?')) {
+    return;
+  }
+  
+  try {
+    const response = await fetch(`/api/admin/items/${productId}`, {
+      method: 'DELETE'
+    });
+    
+    const result = await response.json();
+    
+    if (result.success) {
+      alert('Produk berhasil diarsipkan');
+      window.location.reload();
+    } else {
+      alert('Error: ' + result.message);
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    alert('Terjadi kesalahan saat mengarsipkan produk');
+  }
+}
+
+// Prioritize product
+async function prioritizeProduct(productId) {
+  if (!confirm('Apakah Anda yakin ingin memprioritaskan produk ini untuk labeling ulang?')) {
+    return;
+  }
+  
+  try {
+    const formData = new FormData();
+    formData.append('status', 'NEEDS_QC');
+    
+    const response = await fetch(`/api/admin/items/${productId}/status`, {
+      method: 'PATCH',
+      body: formData
+    });
+    
+    const result = await response.json();
+    
+    if (result.success) {
+      alert('Produk berhasil diprioritaskan untuk QC');
+      window.location.reload();
+    } else {
+      alert('Error: ' + result.message);
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    alert('Terjadi kesalahan');
+  }
+}
+
+// View product details
+function viewProduct(productId) {
+  alert('Detail Produk\nFitur detail produk untuk SKU-' + productId.substring(0, 4) + ' akan segera tersedia.');
+}
+
+// Handle CSV import
+function handleCSVImport(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  
+  if (!file.name.endsWith('.csv')) {
+    alert('File harus berformat CSV');
+    return;
+  }
+  
+  alert('Mengimpor data dari CSV...\nProses ini mungkin memakan waktu beberapa saat.');
+  
+  const formData = new FormData();
+  formData.append('file', file);
+  
+  fetch('/api/admin/items/import-csv', {
+    method: 'POST',
+    body: formData
+  })
+  .then(response => response.json())
+  .then(result => {
+    if (result.success) {
+      alert(`Import berhasil!\n${result.imported || 0} produk diimpor.`);
+      window.location.reload();
+    } else {
+      alert('Error: ' + result.message);
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('Terjadi kesalahan saat mengimpor CSV');
+  });
+  
+  event.target.value = '';
+}
+
+// Handle Quick Update Stock
+function handleQuickUpdateStock(event) {
+  event.preventDefault();
+  
+  const itemId = document.getElementById('quickUpdateProduct').value;
+  const action = document.getElementById('quickUpdateAction').value;
+  const qty = parseInt(document.getElementById('quickUpdateQty').value);
+  
+  if (!itemId || !action || isNaN(qty) || qty < 0) {
+    alert('Mohon lengkapi semua field dengan benar');
+    return;
+  }
+  
+  fetch(`/api/admin/items/${itemId}/update-stock`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      action: action,
+      quantity: qty
+    })
+  })
+  .then(response => response.json())
+  .then(result => {
+    if (result.success) {
+      alert(result.message || 'Stok berhasil diupdate');
+      document.getElementById('quickUpdateProduct').value = '';
+      document.getElementById('quickUpdateQty').value = '';
+      window.location.reload();
+    } else {
+      alert('Error: ' + result.message);
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('Terjadi kesalahan saat mengupdate stok');
+  });
+}
+</script>
 {% endblock %}

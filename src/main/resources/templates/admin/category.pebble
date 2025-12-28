@@ -7,29 +7,29 @@
     {# Stat Card 1 #}
     <div class="stat-card stat-card--compact">
       <div class="stat-card__label">KATEGORI AKTIF</div>
-      <div class="stat-card__value">18</div>
-      <div class="stat-card__description">Organisasi di existing produk</div>
+      <div class="stat-card__value">{{ totalCategories }}</div>
+      <div class="stat-card__description">Total kategori di sistem</div>
     </div>
 
     {# Stat Card 2 #}
     <div class="stat-card stat-card--compact">
-      <div class="stat-card__label">BUTUH REVIEW</div>
-      <div class="stat-card__value">4</div>
-      <div class="stat-card__description">3 Kategori dieditkan</div>
+      <div class="stat-card__label">SIAP DIGUNAKAN</div>
+      <div class="stat-card__value">{{ activeCategories }}</div>
+      <div class="stat-card__description">Kategori aktif</div>
     </div>
 
     {# Stat Card 3 #}
     <div class="stat-card stat-card--compact">
-      <div class="stat-card__label">PRODUK PER KATEGORI</div>
-      <div class="stat-card__value">12</div>
-      <div class="stat-card__description">Rata-rata existing saat ini</div>
+      <div class="stat-card__label">DATABASE</div>
+      <div class="stat-card__value">MySQL</div>
+      <div class="stat-card__description">Connection active</div>
     </div>
 
     {# Stat Card 4 #}
     <div class="stat-card stat-card--compact">
       <div class="stat-card__label">TERAKHIR DIPERBARUI</div>
-      <div class="stat-card__value">25 Sep</div>
-      <div class="stat-card__description">1456 Visits - Uniqly</div>
+      <div class="stat-card__value">Hari Ini</div>
+      <div class="stat-card__description">System updated</div>
     </div>
   </div>
 
@@ -44,12 +44,20 @@
           <p class="category-table__subtitle">Pengeloaan isi data warehouse, dan user meeting</p>
           
           <div class="category-table__actions">
-            <button class="btn btn--secondary">
-              <span>Filter Status</span>
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </button>
+            <div class="filter-dropdown">
+              <button class="btn btn--secondary" onclick="toggleFilterDropdown()">
+                <span>Filter Status</span>
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+              <div class="filter-dropdown__menu" id="filterDropdown" style="display: none;">
+                <a href="/admin/category" class="filter-dropdown__item {{ currentFilter == 'all' ? 'active' : '' }}">Semua Status</a>
+                <a href="/admin/category?status=AKTIF" class="filter-dropdown__item {{ currentFilter == 'AKTIF' ? 'active' : '' }}">Aktif</a>
+                <a href="/admin/category?status=REVIEW" class="filter-dropdown__item {{ currentFilter == 'REVIEW' ? 'active' : '' }}">Perlu Review</a>
+                <a href="/admin/category?status=DRAFT" class="filter-dropdown__item {{ currentFilter == 'DRAFT' ? 'active' : '' }}">Draft</a>
+              </div>
+            </div>
             <button class="btn btn--secondary">
               <span>Ekspor CSV</span>
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -66,121 +74,46 @@
             <thead>
               <tr>
                 <th>NAMA KATEGORI</th>
-                <th>SEGMENT</th>
-                <th>PRODUK AKTIF</th>
+                <th>DESKRIPSI</th>
+                <th>ID</th>
                 <th>TERAKHIR UPDATE</th>
                 <th>STATUS</th>
                 <th>AKSI</th>
               </tr>
             </thead>
             <tbody>
-              {# Row 1 #}
+              {% if categories is empty %}
               <tr>
-                <td class="data-table__name">Furnitur Eksekutif</td>
-                <td>Office</td>
-                <td>24 barang</td>
-                <td>25 Sep 2025</td>
-                <td><span class="badge badge--success">Aktif</span></td>
+                <td colspan="6" style="text-align: center; padding: 2rem;">
+                  <p style="color: #666;">Belum ada kategori. Klik "Tambah Kategori" untuk membuat kategori baru.</p>
+                </td>
+              </tr>
+              {% else %}
+              {% for category in categories %}
+              <tr>
+                <td class="data-table__name">{{ category.name }}</td>
+                <td>{{ category.description | default('N/A') }}</td>
+                <td>{{ category.id | slice(0, 8) }}...</td>
+                <td>{{ category.updatedAt }}</td>
+                <td>
+                  {% if category.status == 'AKTIF' %}
+                    <span class="badge badge--success">Aktif</span>
+                  {% elseif category.status == 'REVIEW' %}
+                    <span class="badge badge--warning">Perlu Review</span>
+                  {% elseif category.status == 'DRAFT' %}
+                    <span class="badge badge--secondary">Draft</span>
+                  {% else %}
+                    <span class="badge badge--success">{{ category.status }}</span>
+                  {% endif %}
+                </td>
                 <td>
                   <div class="data-table__actions">
-                    <button class="btn-icon btn-icon--edit" title="Edit">
+                    <button class="btn-icon btn-icon--edit" title="Edit" onclick="editCategory('{{ category.id }}')">
                       <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                         <path d="M11.3 2.3L13.7 4.7L5 13.4L2 14L2.6 11L11.3 2.3Z" stroke="currentColor" stroke-width="1.5"/>
                       </svg>
                     </button>
-                    <button class="btn-icon btn-icon--archive" title="Arsip">
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                        <path d="M2 5H14M4 5V13H12V5M6 8H10" stroke="currentColor" stroke-width="1.5"/>
-                      </svg>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-
-              {# Row 2 #}
-              <tr>
-                <td class="data-table__name">Elektronik Refurbished</td>
-                <td>Device</td>
-                <td>32 barang</td>
-                <td>24 Sep 2025</td>
-                <td><span class="badge badge--success">Aktif</span></td>
-                <td>
-                  <div class="data-table__actions">
-                    <button class="btn-icon btn-icon--edit" title="Edit">
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                        <path d="M11.3 2.3L13.7 4.7L5 13.4L2 14L2.6 11L11.3 2.3Z" stroke="currentColor" stroke-width="1.5"/>
-                      </svg>
-                    </button>
-                    <button class="btn-icon btn-icon--archive" title="Arsip">
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                        <path d="M2 5H14M4 5V13H12V5M6 8H10" stroke="currentColor" stroke-width="1.5"/>
-                      </svg>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-
-              {# Row 3 #}
-              <tr>
-                <td class="data-table__name">Perangkat Meeting</td>
-                <td>Collaboration</td>
-                <td>11 barang</td>
-                <td>24 Sep 2025</td>
-                <td><span class="badge badge--warning">Perlu Review</span></td>
-                <td>
-                  <div class="data-table__actions">
-                    <button class="btn-icon btn-icon--edit" title="Edit">
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                        <path d="M11.3 2.3L13.7 4.7L5 13.4L2 14L2.6 11L11.3 2.3Z" stroke="currentColor" stroke-width="1.5"/>
-                      </svg>
-                    </button>
-                    <button class="btn-icon btn-icon--disable" title="Alat Ulang">
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                        <path d="M13 6L11 4M11 4L9 6M11 4V9C11 10.6569 9.65685 12 8 12C6.34315 12 5 10.6569 5 9V3" stroke="currentColor" stroke-width="1.5"/>
-                      </svg>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-
-              {# Row 4 #}
-              <tr>
-                <td class="data-table__name">Aksesoris Kerja</td>
-                <td>Support</td>
-                <td>18 barang</td>
-                <td>22 Nov 2025</td>
-                <td><span class="badge badge--success">Aktif</span></td>
-                <td>
-                  <div class="data-table__actions">
-                    <button class="btn-icon btn-icon--edit" title="Edit">
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                        <path d="M11.3 2.3L13.7 4.7L5 13.4L2 14L2.6 11L11.3 2.3Z" stroke="currentColor" stroke-width="1.5"/>
-                      </svg>
-                    </button>
-                    <button class="btn-icon btn-icon--archive" title="Arsip">
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                        <path d="M2 5H14M4 5V13H12V5M6 8H10" stroke="currentColor" stroke-width="1.5"/>
-                      </svg>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-
-              {# Row 5 #}
-              <tr>
-                <td class="data-table__name">Stok Lebong Bulk</td>
-                <td>Wholesale</td>
-                <td>7 barang</td>
-                <td>21 Sep 2025</td>
-                <td><span class="badge badge--draft">Draft</span></td>
-                <td>
-                  <div class="data-table__actions">
-                    <button class="btn-icon btn-icon--confirm" title="Akhir dan Hapus">
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                        <path d="M4 8L7 11L12 5" stroke="currentColor" stroke-width="1.5"/>
-                      </svg>
-                    </button>
-                    <button class="btn-icon btn-icon--delete" title="Hapus">
+                    <button class="btn-icon btn-icon--delete" title="Hapus" onclick="deleteCategory('{{ category.id }}', '{{ category.name }}')">
                       <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                         <path d="M3 4H13M5 4V3H11V4M6 7V11M10 7V11" stroke="currentColor" stroke-width="1.5"/>
                       </svg>
@@ -188,6 +121,8 @@
                   </div>
                 </td>
               </tr>
+              {% endfor %}
+              {% endif %}
             </tbody>
           </table>
         </div>
@@ -239,17 +174,10 @@
           <div class="form-group">
             <label class="form-label" for="status">Status</label>
             <select id="status" class="form-select">
-              <option value="aktif">Aktif</option>
-              <option value="review">Perlu Review</option>
-              <option value="draft">Draft</option>
+              <option value="AKTIF">Aktif</option>
+              <option value="REVIEW">Perlu Review</option>
+              <option value="DRAFT">Draft</option>
             </select>
-            <div class="form-checkbox">
-              <input type="checkbox" id="unpublishCategory" class="form-checkbox__input">
-              <label for="unpublishCategory" class="form-checkbox__label">
-                Tambah sebagai kategori-categoria
-              </label>
-            </div>
-            <p class="form-help">Reset otam</p>
           </div>
 
           {# Action Buttons #}
@@ -265,11 +193,205 @@
       <div class="info-box">
         <h4 class="info-box__title">Standardisasi Kategori</h4>
         <p class="info-box__text">
-          Pastikan nama kategori kematangan dengan kesatuan di e-commerce
-          arsitektur.
+          Pastikan nama kategori konsisten dengan sistem kategorisasi yang ada.
         </p>
       </div>
     </div>
   </div>
 </div>
+
+<script>
+// Category Management JavaScript
+let isEditMode = false;
+let currentCategoryId = null;
+
+// Toggle filter dropdown
+function toggleFilterDropdown() {
+  const dropdown = document.getElementById('filterDropdown');
+  dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function(event) {
+  const dropdown = document.getElementById('filterDropdown');
+  const isClickInside = event.target.closest('.filter-dropdown');
+  
+  if (!isClickInside && dropdown) {
+    dropdown.style.display = 'none';
+  }
+});
+
+// Handle form submission
+document.querySelector('.form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  
+  const name = document.getElementById('categoryName').value;
+  const description = document.getElementById('description').value;
+  const status = document.getElementById('status').value;
+  
+  if (!name) {
+    alert('Nama kategori wajib diisi!');
+    return;
+  }
+  
+  try {
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('description', description || '');
+    formData.append('status', status || 'AKTIF');
+    
+    let response;
+    if (isEditMode && currentCategoryId) {
+      // Update existing category
+      response = await fetch(`/api/admin/categories/${currentCategoryId}`, {
+        method: 'PUT',
+        body: formData
+      });
+    } else {
+      // Create new category
+      response = await fetch('/api/admin/categories', {
+        method: 'POST',
+        body: formData
+      });
+    }
+    
+    const result = await response.json();
+    
+    if (result.success) {
+      alert(result.message);
+      window.location.reload(); // Refresh page to show new/updated category
+    } else {
+      alert('Error: ' + result.message);
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    alert('Terjadi kesalahan saat menyimpan kategori');
+  }
+});
+
+// Edit category function
+async function editCategory(categoryId) {
+  try {
+    const response = await fetch(`/api/admin/categories/${categoryId}`);
+    const result = await response.json();
+    
+    if (result.success) {
+      const category = result.data;
+      
+      // Fill form with category data
+      document.getElementById('categoryName').value = category.name;
+      document.getElementById('description').value = category.description || '';
+      document.getElementById('status').value = category.status || 'AKTIF';
+      
+      // Set edit mode
+      isEditMode = true;
+      currentCategoryId = categoryId;
+      
+      // Update form title
+      document.querySelector('.category-form__title').textContent = 'Edit Kategori';
+      
+      // Update button text
+      document.querySelector('.btn--primary').textContent = 'Update Kategori';
+    } else {
+      alert('Error: ' + result.message);
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    alert('Terjadi kesalahan saat mengambil data kategori');
+  }
+}
+
+// Delete category function
+async function deleteCategory(categoryId, categoryName) {
+  if (!confirm(`Apakah Anda yakin ingin menghapus kategori "${categoryName}"?`)) {
+    return;
+  }
+  
+  try {
+    const response = await fetch(`/api/admin/categories/${categoryId}`, {
+      method: 'DELETE'
+    });
+    
+    const result = await response.json();
+    
+    if (result.success) {
+      alert(result.message);
+      window.location.reload();
+    } else {
+      alert('Error: ' + result.message);
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    alert('Terjadi kesalahan saat menghapus kategori');
+  }
+}
+
+// Reset form to create mode
+function resetForm() {
+  document.getElementById('categoryName').value = '';
+  document.getElementById('description').value = '';
+  document.getElementById('status').value = 'AKTIF';
+  isEditMode = false;
+  currentCategoryId = null;
+  document.querySelector('.category-form__title').textContent = 'Buat / Edit Kategori';
+  document.querySelector('.btn--primary').textContent = 'Simpan Kategori';
+}
+</script>
+
+<style>
+.filter-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.filter-dropdown__menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  min-width: 200px;
+  margin-top: 8px;
+  z-index: 1000;
+}
+
+.filter-dropdown__item {
+  display: block;
+  padding: 12px 16px;
+  color: #333;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.filter-dropdown__item:hover {
+  background-color: #f5f5f5;
+}
+
+.filter-dropdown__item.active {
+  background-color: #e3f2fd;
+  color: #1976d2;
+  font-weight: 500;
+}
+
+.filter-dropdown__item:first-child {
+  border-radius: 8px 8px 0 0;
+}
+
+.filter-dropdown__item:last-child {
+  border-radius: 0 0 8px 8px;
+}
+
+.badge--warning {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.badge--secondary {
+  background-color: #e2e3e5;
+  color: #6c757d;
+}
+</style>
+
 {% endblock %}

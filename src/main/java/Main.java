@@ -2,6 +2,9 @@
 import java.util.Map;
 
 import com.combiphar.core.controller.AuthController;
+import com.combiphar.core.controller.CategoryController;
+import com.combiphar.core.controller.ItemController;
+import com.combiphar.core.controller.QualityCheckController;
 import com.combiphar.core.middleware.AuthMiddleware;
 import com.combiphar.core.repository.UserRepository;
 import com.combiphar.core.service.AuthService;
@@ -27,11 +30,16 @@ public class Main {
         AuthService authService = new AuthService(userRepository);
         AuthController authController = new AuthController(authService);
 
+        // Initialize Phase 2 controllers
+        CategoryController categoryController = new CategoryController();
+        ItemController itemController = new ItemController();
+        QualityCheckController qcController = new QualityCheckController();
+
         PebbleEngine engine = createPebbleEngine();
         Javalin app = createApp(engine);
-        
-        registerRoutes(app, authController);
-        
+
+        registerRoutes(app, authController, categoryController, itemController, qcController);
+
         app.start(PORT);
     }
 
@@ -55,7 +63,7 @@ public class Main {
         Javalin app = Javalin.create(config -> {
             config.fileRenderer(new JavalinPebble(engine));
             config.staticFiles.add("/static");
-            
+
             // Session Configuration
             config.jetty.modifyServletContextHandler(handler -> {
                 handler.getSessionHandler().setSessionCookie("COMBIPHAR_SESSION");
@@ -92,7 +100,10 @@ public class Main {
     /**
      * Registers all application routes.
      */
-    private static void registerRoutes(Javalin app, AuthController authController) {
+    private static void registerRoutes(Javalin app, AuthController authController,
+            CategoryController categoryController,
+            ItemController itemController,
+            QualityCheckController qcController) {
         // Home / Catalog page
         app.get("/", ctx -> {
             Map<String, Object> model = buildModel(
@@ -117,7 +128,7 @@ public class Main {
         app.get("/register", authController::showRegister);
         app.post("/register", authController::handleRegister);
         app.get("/logout", authController::handleLogout);
-        
+
         // Protected Customer Routes
         app.before("/profile", AuthMiddleware.authenticated);
         app.before("/cart", AuthMiddleware.authenticated);
@@ -125,7 +136,7 @@ public class Main {
         app.before("/payment", AuthMiddleware.authenticated);
         app.before("/history", AuthMiddleware.authenticated);
         app.before("/order/*", AuthMiddleware.authenticated);
-        
+
         app.get("/profile", authController::showProfile);
 
         // Admin Auth
@@ -224,94 +235,112 @@ public class Main {
         });
 
         // Admin category page (English route)
-        app.get("/admin/category", ctx -> {
-            Map<String, Object> model = Map.of(
-                "title", "Kategori Produk",
-                "pageTitle", "Kategori Produk",
-                "userName", "Nashya Putri",
-                "userRole", "Admin Warehouse Jakarta",
-                "activePage", "category");
-            ctx.render("admin/category", model);
-        });
+        app.get("/admin/category", categoryController::showCategoryPage);
 
         // Admin product page (English route)
-        app.get("/admin/products", ctx -> {
-            Map<String, Object> model = Map.of(
-                "title", "Manajemen Produk",
-                "pageTitle", "Manajemen Produk",
-                "userName", "Nashya Putri",
-                "userRole", "Admin Warehouse Jakarta",
-                "activePage", "products");
-            ctx.render("admin/product", model);
-        });
+        app.get("/admin/products", itemController::showProductPage);
+
+        // ====== PHASE 2: Category Management API ======
+        app.get("/api/admin/categories", categoryController::getAllCategories);
+        app.get("/api/admin/categories/{id}", categoryController::getCategoryById);
+        app.post("/api/admin/categories", categoryController::createCategory);
+        app.put("/api/admin/categories/{id}", categoryController::updateCategory);
+        app.delete("/api/admin/categories/{id}", categoryController::deleteCategory);
+
+        // ====== PHASE 2: Item/Product Management API ======
+        app.get("/api/admin/items", itemController::getAllItems);
+        app.get("/api/admin/items/{id}", itemController::getItemById);
+        app.post("/api/admin/items", itemController::createItem);
+        app.put("/api/admin/items/{id}", itemController::updateItem);
+        app.patch("/api/admin/items/{id}/status", itemController::updateItemStatus);
+        app.patch("/api/admin/items/{id}/stock", itemController::updateItemStock);
+        app.delete("/api/admin/items/{id}", itemController::deleteItem);
+        
+        // New endpoints for updated UI features
+        app.post("/api/admin/items/{id}/update-stock", itemController::quickUpdateStock);
+        app.post("/api/admin/items/{id}/cancel-qc", itemController::cancelQC);
+
+        // ====== PHASE 2: Quality Control API ======
+        app.get("/admin/qc", qcController::showQCDashboard);
+        app.get("/api/admin/qc/pipeline", qcController::getQCPipeline);
+        app.get("/api/admin/qc/needs-repair", qcController::getItemsNeedingRepair);
+        app.get("/api/admin/qc/eligible", qcController::getEligibleItems);
+        app.get("/api/admin/qc/statistics", qcController::getQCStatistics);
+        app.get("/api/admin/qc/summary", qcController::getDailyQCSummary);
+        app.post("/api/admin/qc/check", qcController::performQualityCheck);
+        app.post("/api/admin/qc/batch-approve", qcController::batchApprove);
+        app.post("/api/admin/qc/batch-reject", qcController::batchReject);
+
+        // ====== Customer API - Published Items ======
+        app.get("/api/items/published", itemController::getPublishedItems);
 
         // Admin order page (English route)
         app.get("/admin/orders", ctx -> {
             Map<String, Object> model = Map.of(
-                "title", "Monitoring Pesanan",
-                "pageTitle", "Monitoring Pesanan",
-                "userName", "Nashya Putri",
-                "userRole", "Admin Warehouse Jakarta",
-                "activePage", "orders");
+                    "title", "Monitoring Pesanan",
+                    "pageTitle", "Monitoring Pesanan",
+                    "userName", "Nashya Putri",
+                    "userRole", "Admin Warehouse Jakarta",
+                    "activePage", "orders");
             ctx.render("admin/order", model);
         });
 
         // Admin transaction page (English route)
         app.get("/admin/transactions", ctx -> {
             Map<String, Object> model = Map.of(
-                "title", "Daftar Transaksi",
-                "pageTitle", "Daftar Transaksi",
-                "userName", "Nashya Putri",
-                "userRole", "Admin Warehouse Jakarta",
-                "activePage", "transactions");
+                    "title", "Daftar Transaksi",
+                    "pageTitle", "Daftar Transaksi",
+                    "userName", "Nashya Putri",
+                    "userRole", "Admin Warehouse Jakarta",
+                    "activePage", "transactions");
             ctx.render("admin/transaction", model);
         });
 
         // Admin payment page (English route)
         app.get("/admin/payments", ctx -> {
             Map<String, Object> model = Map.of(
-                "title", "Verifikasi Pembayaran",
-                "pageTitle", "Verifikasi Pembayaran",
-                "userName", "Nashya Putri",
-                "userRole", "Admin Keuangan",
-                "activePage", "payments");
+                    "title", "Verifikasi Pembayaran",
+                    "pageTitle", "Verifikasi Pembayaran",
+                    "userName", "Nashya Putri",
+                    "userRole", "Admin Keuangan",
+                    "activePage", "payments");
             ctx.render("admin/payment", model);
         });
 
         // Admin shipping page (English route)
         app.get("/admin/shipping", ctx -> {
             Map<String, Object> model = Map.of(
-                "title", "Monitoring Pengiriman",
-                "pageTitle", "Monitoring Pengiriman",
-                "userName", "Nashya Putri",
-                "userRole", "Admin Warehouse Jakarta",
-                "activePage", "shipping");
+                    "title", "Monitoring Pengiriman",
+                    "pageTitle", "Monitoring Pengiriman",
+                    "userName", "Nashya Putri",
+                    "userRole", "Admin Warehouse Jakarta",
+                    "activePage", "shipping");
             ctx.render("admin/shipping", model);
         });
 
         // Admin user page (English route)
         app.get("/admin/users", ctx -> {
             Map<String, Object> model = Map.of(
-                "title", "Manajemen Pengguna",
-                "pageTitle", "Manajemen Pengguna",
-                "userName", "Nashya Putri",
-                "userRole", "Admin Warehouse Jakarta",
-                "activePage", "users",
-                "totalUsers", 128,
-                "customerCount", 102,
-                "adminCount", 6,
-                "activeToday", 5);
+                    "title", "Manajemen Pengguna",
+                    "pageTitle", "Manajemen Pengguna",
+                    "userName", "Nashya Putri",
+                    "userRole", "Admin Warehouse Jakarta",
+                    "activePage", "users",
+                    "totalUsers", 128,
+                    "customerCount", 102,
+                    "adminCount", 6,
+                    "activeToday", 5);
             ctx.render("admin/user", model);
         });
 
         // Admin reports page (English route)
         app.get("/admin/reports", ctx -> {
             Map<String, Object> model = Map.of(
-                "title", "Laporan Kinerja",
-                "pageTitle", "Laporan Kinerja",
-                "userName", "Nashya Putri",
-                "userRole", "Admin Warehouse Jakarta",
-                "activePage", "reports");
+                    "title", "Laporan Kinerja",
+                    "pageTitle", "Laporan Kinerja",
+                    "userName", "Nashya Putri",
+                    "userRole", "Admin Warehouse Jakarta",
+                    "activePage", "reports");
             ctx.render("admin/laporan", model);
         });
     }

@@ -17,7 +17,7 @@ public class DatabaseConfig {
 
     static {
         HikariConfig config = new HikariConfig();
-        
+
         String dbUrl = System.getenv("DB_URL");
         String dbUser = System.getenv("DB_USER");
         String dbPass = System.getenv("DB_PASS");
@@ -25,9 +25,9 @@ public class DatabaseConfig {
         // Fallback to defaults if env vars are not set
         config.setJdbcUrl(dbUrl != null ? dbUrl : "jdbc:mysql://localhost:3306/combiphar_db");
         config.setUsername(dbUser != null ? dbUser : "root");
-        config.setPassword(dbPass != null ? dbPass : "515250");
+        config.setPassword(dbPass != null ? dbPass : "");
         config.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        
+
         // Optimization settings
         config.addDataSourceProperty("cachePrepStmts", "true");
         config.addDataSourceProperty("prepStmtCacheSize", "250");

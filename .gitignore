@@ -43,7 +43,8 @@ Desktop.ini
 
 # --- Local env / secrets (optional) ---
 .env
-.env.*
+.env.local
+.env.*.local
 
 # --- Common generated folders in this repo ---
 /bin/
