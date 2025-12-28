@@ -15,7 +15,7 @@ build/
 *.ipr
 out/
 
-src/main/resources/static/images
+src/main/resources/static/images/
 
 # --- Eclipse ---
 .classpath
