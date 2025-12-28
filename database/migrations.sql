@@ -11,7 +11,9 @@
 -- 3. File ini aman dijalankan berulang kali (idempotent)
 -- ========================================
 
-USE combiphar_db;
+-- Pastikan database ada dan digunakan
+CREATE DATABASE IF NOT EXISTS combiphar_db;
+USE combiphar_db; 
 
 -- ========================================
 -- STEP 1: Hapus CHECK Constraint yang Membatasi
@@ -19,10 +21,12 @@ USE combiphar_db;
 -- Constraint ini mencegah penggunaan status NEEDS_QC
 -- Jika tidak ada constraint, query ini akan diabaikan
 
+SET @current_db = DATABASE();
+
 SET @constraint_exists = (
     SELECT COUNT(*) 
     FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS 
-    WHERE TABLE_SCHEMA = 'combiphar_db' 
+    WHERE TABLE_SCHEMA = @current_db 
     AND TABLE_NAME = 'items' 
     AND CONSTRAINT_NAME = 'chk_items_eligibility'
 );
@@ -45,7 +49,7 @@ DEALLOCATE PREPARE stmt;
 SET @column_exists = (
     SELECT COUNT(*) 
     FROM INFORMATION_SCHEMA.COLUMNS 
-    WHERE TABLE_SCHEMA = 'combiphar_db' 
+    WHERE TABLE_SCHEMA = @current_db 
     AND TABLE_NAME = 'items' 
     AND COLUMN_NAME = 'image_url'
 );
@@ -57,6 +61,31 @@ SET @add_column = IF(@column_exists = 0,
 PREPARE stmt FROM @add_column;
 EXECUTE stmt;
 DEALLOCATE PREPARE stmt;
+
+
+-- ========================================
+-- STEP 2.1: Tambah Kolom status ke Categories
+-- ========================================
+-- Menambahkan kolom status ke tabel categories jika belum ada
+
+SET @cat_status_exists = (
+    SELECT COUNT(*) 
+    FROM INFORMATION_SCHEMA.COLUMNS 
+    WHERE TABLE_SCHEMA = @current_db 
+    AND TABLE_NAME = 'categories' 
+    AND COLUMN_NAME = 'status'
+);
+
+SET @add_cat_status = IF(@cat_status_exists = 0,
+    'ALTER TABLE categories ADD COLUMN status ENUM("AKTIF", "REVIEW", "DRAFT") DEFAULT "AKTIF" AFTER description',
+    'SELECT "Column status in categories already exists" AS info');
+
+PREPARE stmt FROM @add_cat_status;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+-- Update existing categories to have 'AKTIF' status if they were NULL
+UPDATE categories SET status = 'AKTIF' WHERE status IS NULL;
 
 
 -- ========================================
@@ -74,10 +103,14 @@ DEFAULT 'ELIGIBLE';
 -- ========================================
 -- Menambahkan beberapa item dengan status NEEDS_QC untuk testing
 
--- Ambil category_id yang ada
-SET @cat_id = (SELECT id FROM categories LIMIT 1);
+-- Pastikan ada minimal satu kategori
+INSERT IGNORE INTO categories (id, name, description, status)
+VALUES ('cat-default-001', 'General', 'Kategori default untuk migrasi', 'AKTIF');
 
--- Hanya insert jika belum ada data QC
+-- Ambil category_id yang ada (prioritaskan yang baru dibuat jika tidak ada yang lain)
+SET @cat_id = (SELECT id FROM categories ORDER BY (id = 'cat-default-001') DESC LIMIT 1);
+
+-- Hanya insert jika belum ada data QC demo
 INSERT IGNORE INTO items (id, category_id, name, `condition`, description, image_url, price, stock, eligibility_status, is_published) 
 SELECT * FROM (
     SELECT 'qc-demo-001' AS id, @cat_id AS category_id, 'Lemari Besi Bekas Gudang' AS name, 'USED_GOOD' AS `condition`, 
