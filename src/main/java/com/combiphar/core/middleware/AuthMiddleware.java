@@ -8,45 +8,58 @@ import io.javalin.http.HttpStatus;
 import io.javalin.http.RedirectResponse;
 
 /**
- * Middleware for Role-Based Access Control (RBAC).
+ * Middleware for Role-Based Access Control (RBAC). Ensures only authorized
+ * users can access specific routes.
  */
 public class AuthMiddleware {
 
+    private static final String SESSION_USER = "currentUser";
+
     /**
-     * Ensures the user is logged in.
+     * Middleware to ensure the user is authenticated. Redirects to login if no
+     * session is found.
      */
     public static Handler authenticated = ctx -> {
-        if (ctx.sessionAttribute("currentUser") == null) {
+        if (ctx.sessionAttribute(SESSION_USER) == null) {
             throw new RedirectResponse(HttpStatus.FOUND, "/login");
         }
     };
 
     /**
-     * Ensures the user has ADMIN or OWNER role.
+     * Middleware to ensure the user has ADMIN or OWNER privileges. Handles
+     * redirection based on the user's role and target path.
      */
     public static Handler adminOnly = ctx -> {
-        User user = ctx.sessionAttribute("currentUser");
-        String path = ctx.path().replaceAll("/$", ""); // Remove trailing slash for comparison
+        User user = ctx.sessionAttribute(SESSION_USER);
+        String path = ctx.path().replaceAll("/$", "");
 
-        // If accessing admin login page
+        // Special handling for admin login page to prevent infinite loops
         if (path.equals("/admin/login")) {
-            if (user != null) {
-                if (user.getRole() == Role.ADMIN || user.getRole() == Role.OWNER) {
-                    throw new RedirectResponse(HttpStatus.FOUND, "/admin/dashboard");
-                } else {
-                    // Customer trying to access admin login -> redirect to home
-                    throw new RedirectResponse(HttpStatus.FOUND, "/");
-                }
-            }
+            handleAdminLoginRedirect(ctx, user);
             return;
         }
 
-        // For all other admin routes
+        // General admin route protection
         if (user == null) {
             throw new RedirectResponse(HttpStatus.FOUND, "/admin/login");
-        } else if (user.getRole() != Role.ADMIN && user.getRole() != Role.OWNER) {
-            // Customer trying to access admin routes -> redirect to home
+        }
+
+        if (user.getRole() != Role.ADMIN && user.getRole() != Role.OWNER) {
             throw new RedirectResponse(HttpStatus.FOUND, "/");
         }
     };
+
+    /**
+     * Helper to handle redirects when an already logged-in user hits
+     * /admin/login.
+     */
+    private static void handleAdminLoginRedirect(io.javalin.http.Context ctx, User user) {
+        if (user != null) {
+            if (user.getRole() == Role.ADMIN || user.getRole() == Role.OWNER) {
+                throw new RedirectResponse(HttpStatus.FOUND, "/admin/dashboard");
+            } else {
+                throw new RedirectResponse(HttpStatus.FOUND, "/");
+            }
+        }
+    }
 }

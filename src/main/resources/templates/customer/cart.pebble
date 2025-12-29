@@ -14,105 +14,55 @@
       <div class="cart-section__header">
         <div class="cart-section__heading">
           <h1 class="cart-section__title">Keranjang Saya</h1>
-          <p class="cart-section__subtitle">3 barang siap ditambah. Update qty sebelum checkout</p>
+          <p class="cart-section__subtitle">{{ cart.itemCount }} barang siap ditambah. Update qty sebelum checkout</p>
         </div>
-        <button class="cart-section__clear">Hapus Semua</button>
+        <button class="cart-section__clear" id="clearCartButton">Hapus Semua</button>
       </div>
       
       {# Cart Items #}
       <div class="cart-items">
-        {# Item 1: Meja Eksekutif Alto #}
-        <article class="cart-item">
-          <div class="cart-item__image">
-            <img src="https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=200&h=200&fit=crop" alt="Meja Eksekutif Alto">
+        {% if cart == null or cart.items is empty %}
+          <div class="cart-empty">
+            <p>Keranjang Anda kosong.</p>
+            <a href="/catalog" class="btn btn--primary">Kembali ke Katalog</a>
           </div>
-          
-          <div class="cart-item__details">
-            <div class="cart-item__meta">
-              <span class="cart-item__meta-item">Furniture</span>
-              <span class="cart-item__meta-item">Lemari</span>
-              <span class="cart-item__meta-item">Jadi</span>
-            </div>
-            <h3 class="cart-item__name">Meja Eksekutif Alto</h3>
-            <p class="cart-item__sku">SKU: KE-01-2025</p>
-          </div>
-          
-          <div class="cart-item__actions-wrapper">
-            <div class="cart-item__quantity">
-              <span class="cart-item__quantity-label">Qty</span>
-              <button class="cart-item__quantity-control" aria-label="Kurangi jumlah">-</button>
-              <span class="cart-item__quantity-value">1</span>
-              <button class="cart-item__quantity-control" aria-label="Tambah jumlah">+</button>
-            </div>
-            
-            <div class="cart-item__price-section">
-              <div class="cart-item__price">Rp 7.500.000</div>
-              <button class="cart-item__remove">Hapus</button>
-            </div>
-          </div>
-        </article>
-        
-        {# Item 2: Kursi Lumbar+ (4) #}
-        <article class="cart-item">
-          <div class="cart-item__image">
-            <img src="https://images.unsplash.com/photo-1580480055273-228ff5388ef8?w=200&h=200&fit=crop" alt="Kursi Lumbar+">
-          </div>
-          
-          <div class="cart-item__details">
-            <div class="cart-item__meta">
-              <span class="cart-item__meta-item">Furniture</span>
-              <span class="cart-item__meta-item">Lemari</span>
-              <span class="cart-item__meta-item">Jadi</span>
-            </div>
-            <h3 class="cart-item__name">Kursi Lumbar+ (4)</h3>
-            <p class="cart-item__sku">SKU: KL-04-2025</p>
-          </div>
-          
-          <div class="cart-item__actions-wrapper">
-            <div class="cart-item__quantity">
-              <span class="cart-item__quantity-label">Qty</span>
-              <button class="cart-item__quantity-control" aria-label="Kurangi jumlah">-</button>
-              <span class="cart-item__quantity-value">4</span>
-              <button class="cart-item__quantity-control" aria-label="Tambah jumlah">+</button>
-            </div>
-            
-            <div class="cart-item__price-section">
-              <div class="cart-item__price">Rp 13.000.000</div>
-              <button class="cart-item__remove">Hapus</button>
-            </div>
-          </div>
-        </article>
-        
-        {# Item 3: Monitor Aurora 24" (6) #}
-        <article class="cart-item">
-          <div class="cart-item__image">
-            <img src="https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=200&h=200&fit=crop" alt="Monitor Aurora 24">
-          </div>
-          
-          <div class="cart-item__details">
-            <div class="cart-item__meta">
-              <span class="cart-item__meta-item">Furniture</span>
-              <span class="cart-item__meta-item">Lemari</span>
-              <span class="cart-item__meta-item">Jadi</span>
-            </div>
-            <h3 class="cart-item__name">Monitor Aurora 24" (6)</h3>
-            <p class="cart-item__sku">SKU: MT-24-2025</p>
-          </div>
-          
-          <div class="cart-item__actions-wrapper">
-            <div class="cart-item__quantity">
-              <span class="cart-item__quantity-label">Qty</span>
-              <button class="cart-item__quantity-control" aria-label="Kurangi jumlah">-</button>
-              <span class="cart-item__quantity-value">6</span>
-              <button class="cart-item__quantity-control" aria-label="Tambah jumlah">+</button>
-            </div>
-            
-            <div class="cart-item__price-section">
-              <div class="cart-item__price">Rp 11.100.000</div>
-              <button class="cart-item__remove">Hapus</button>
-            </div>
-          </div>
-        </article>
+        {% else %}
+          {% for item in cart.items %}
+            <article class="cart-item">
+              <div class="cart-item__image">
+                {% if item.itemImage is defined and item.itemImage is not empty %}
+                  <img src="{{ item.itemImage }}" alt="{{ item.itemName }}">
+                {% else %}
+                  <img src="/static/images/products/placeholder.png" alt="{{ item.itemName }}">
+                {% endif %}
+              </div>
+
+              <div class="cart-item__details">
+                <div class="cart-item__meta">
+                </div>
+                <h3 class="cart-item__name">{{ item.itemName }}</h3>
+                <p class="cart-item__sku">ID: {{ item.itemId }}</p>
+              </div>
+
+              <div class="cart-item__actions-wrapper">
+                <div class="cart-item__quantity">
+                  <span class="cart-item__quantity-label">Qty</span>
+                  <button class="cart-item__quantity-control" data-itemid="{{ item.itemId }}" data-action="decrease">-</button>
+                  <span class="cart-item__quantity-value">{{ item.quantity }}</span>
+                  <button class="cart-item__quantity-control" data-itemid="{{ item.itemId }}" data-action="increase">+</button>
+                </div>
+
+                <div class="cart-item__price-section">
+                  <div class="cart-item__price">Rp {{ item.itemPrice | numberformat("#,###") }}</div>
+                  <form action="/api/cart/remove" method="post" style="display:inline">
+                    <input type="hidden" name="itemId" value="{{ item.itemId }}" />
+                    <button type="submit" class="cart-item__remove">Hapus</button>
+                  </form>
+                </div>
+              </div>
+            </article>
+          {% endfor %}
+        {% endif %}
       </div>
     </div>
     
@@ -127,23 +77,19 @@
         <div class="cart-summary__items">
           <div class="cart-summary__item">
             <span class="cart-summary__item-label">Subtotal</span>
-            <span class="cart-summary__item-value">Rp 31.600.000</span>
-          </div>
-          <div class="cart-summary__item">
-            <span class="cart-summary__item-label">Diskon korporat</span>
-            <span class="cart-summary__item-value cart-summary__item-value--discount">-Rp 2.500.000</span>
+            <span class="cart-summary__item-value">Rp {{ cart.totalPrice | numberformat("#,###") }}</span>
           </div>
           <div class="cart-summary__item">
             <span class="cart-summary__item-label">Estimasi logistik</span>
-            <span class="cart-summary__item-value">Rp 1.200.000</span>
+            <span class="cart-summary__item-value">Rp 0</span>
           </div>
         </div>
-        
+
         <div class="cart-summary__total">
           <span class="cart-summary__total-label">Total</span>
-          <span class="cart-summary__total-value">Rp 30.300.000</span>
+          <span class="cart-summary__total-value">Rp {{ cart.totalPrice | numberformat("#,###") }}</span>
         </div>
-        
+
         <a href="/checkout" class="btn btn--primary btn--lg cart-summary__cta">Lanjut Checkout</a>
         
         <p class="cart-summary__note">
@@ -169,4 +115,8 @@
     </aside>
   </div>
 </section>
+{% endblock %}
+
+{% block scripts %}
+<script src="/js/pages/cart.js"></script>
 {% endblock %}

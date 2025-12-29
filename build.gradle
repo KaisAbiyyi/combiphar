@@ -92,3 +92,11 @@ task seedQCItems(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     mainClass = 'com.combiphar.core.seeder.QCItemSeeder'
 }
+
+// Demo task to validate cart persistence
+task demoCart(type: JavaExec) {
+    group = 'database'
+    description = 'Run a small demo that saves and loads a cart for a demo user'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'com.combiphar.core.seeder.CartDemoSeeder'
+}

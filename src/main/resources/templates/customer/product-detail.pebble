@@ -39,6 +39,12 @@
       </div>
 
       <div class="product-hero__actions">
+        <form id="addToCartForm" class="inline-form" action="/api/cart/add" method="post">
+          <input type="hidden" name="itemId" value="{{ product.id }}" />
+          <label class="sr-only" for="quantity">Kuantitas</label>
+          <input id="quantity" name="quantity" type="number" min="1" value="1" class="input input--sm" />
+          <button type="submit" class="btn btn--secondary">Tambah ke Keranjang</button>
+        </form>
         <a href="/checkout?productId={{ product.id }}" class="btn btn--primary">Checkout Sekarang</a>
         <a href="/catalog" class="btn btn--secondary">Kembali ke Katalog</a>
       </div>
@@ -120,7 +126,14 @@
           <li class="product-sidebar__list-item">✅ Siap untuk pengiriman</li>
         </ul>
         {% if product.stock > 0 %}
-        <a href="/checkout?productId={{ product.id }}" class="btn btn--primary btn--lg product-sidebar__cta">Pesan Sekarang</a>
+        <div class="product-sidebar__actions">
+          <form id="sidebarAddToCartForm" action="/api/cart/add" method="post">
+            <input type="hidden" name="itemId" value="{{ product.id }}" />
+            <input name="quantity" type="hidden" value="1" />
+            <button type="submit" class="btn btn--secondary btn--lg">Tambah ke Keranjang</button>
+          </form>
+          <a href="/checkout?productId={{ product.id }}" class="btn btn--primary btn--lg product-sidebar__cta">Pesan Sekarang</a>
+        </div>
         {% else %}
         <button class="btn btn--secondary btn--lg product-sidebar__cta" disabled>Stok Habis</button>
         {% endif %}
@@ -139,3 +152,43 @@
   </div>
 </section>
 {% endblock %}
+
+<script>
+  // Ajax add-to-cart handler for product-detail page with toast notifications
+  (function(){
+    function handleForm(form) {
+      if (!form) return;
+      form.addEventListener('submit', function(e){
+        e.preventDefault();
+        var data = new FormData(form);
+        fetch(form.action, {
+          method: 'POST',
+          body: data,
+          credentials: 'same-origin'
+        }).then(function(res){
+          return res.json();
+        }).then(function(json){
+          if (json && json.success) {
+            // Show success toast
+            var message = json.message || 'Produk ditambahkan ke keranjang';
+            window.showToast && showToast(message, 'success');
+            
+            // Update cart badge
+            if (json.cartItemCount != null) {
+              window.updateCartBadge && updateCartBadge(json.cartItemCount);
+            }
+          } else {
+            var errorMsg = json && json.message ? json.message : 'Gagal menambahkan produk';
+            window.showToast && showToast(errorMsg, 'error');
+          }
+        }).catch(function(err){
+          console.error(err);
+          window.showToast && showToast('Terjadi kesalahan saat menambahkan ke keranjang', 'error');
+        });
+      });
+    }
+
+    handleForm(document.getElementById('addToCartForm'));
+    handleForm(document.getElementById('sidebarAddToCartForm'));
+  })();
+</script>

@@ -1,6 +1,7 @@
 package com.combiphar.core.controller;
 
 import java.util.Map;
+import java.util.Objects;
 
 import com.combiphar.core.model.Role;
 import com.combiphar.core.model.User;
@@ -9,39 +10,23 @@ import com.combiphar.core.service.AuthService;
 import io.javalin.http.Context;
 
 /**
- * Controller for authentication routes.
+ * Controller for handling authentication-related HTTP requests. Follows MVC
+ * pattern by acting as the glue between View and Service.
  */
 public class AuthController {
 
     private final AuthService authService;
+    private static final String SESSION_USER = "currentUser";
 
     public AuthController(AuthService authService) {
-        this.authService = authService;
+        this.authService = Objects.requireNonNull(authService, "AuthService cannot be null");
     }
 
     /**
-     * GET /profile - Shows user profile.
-     */
-    public void showProfile(Context ctx) {
-        User currentUser = ctx.sessionAttribute("currentUser");
-        
-        if (currentUser == null) {
-            ctx.redirect("/login");
-            return;
-        }
-
-        Map<String, Object> model = new java.util.HashMap<>();
-        model.put("title", "Profil Saya");
-        model.put("currentUser", currentUser);
-        model.put("activePage", "profile");
-        ctx.render("customer/profile", model);
-    }
-
-    /**
-     * GET /login - Shows customer login page.
+     * GET /login - Displays the customer login page.
      */
     public void showLogin(Context ctx) {
-        if (ctx.sessionAttribute("currentUser") != null) {
+        if (ctx.sessionAttribute(SESSION_USER) != null) {
             ctx.redirect("/profile");
             return;
         }
@@ -49,10 +34,25 @@ public class AuthController {
     }
 
     /**
-     * GET /register - Shows customer registration page.
+     * POST /login - Processes customer login.
+     */
+    public void handleLogin(Context ctx) {
+        String email = ctx.formParam("email");
+        String password = ctx.formParam("password");
+
+        authService.login(email, password).ifPresentOrElse(user -> {
+            ctx.sessionAttribute(SESSION_USER, user);
+            ctx.redirect("/profile");
+        }, () -> {
+            ctx.render("customer/login", Map.of("error", "Email atau password salah"));
+        });
+    }
+
+    /**
+     * GET /register - Displays the registration page.
      */
     public void showRegister(Context ctx) {
-        if (ctx.sessionAttribute("currentUser") != null) {
+        if (ctx.sessionAttribute(SESSION_USER) != null) {
             ctx.redirect("/profile");
             return;
         }
@@ -60,24 +60,7 @@ public class AuthController {
     }
 
     /**
-     * POST /login - Handles customer login.
-     */
-    public void handleLogin(Context ctx) {
-        String email = ctx.formParam("email");
-        String password = ctx.formParam("password");
-
-        authService.login(email, password).ifPresentOrElse(user -> {
-            ctx.sessionAttribute("currentUser", user);
-            ctx.redirect("/profile");
-        }, () -> {
-            ctx.render("customer/login", Map.of(
-                "error", "Email atau password salah"
-            ));
-        });
-    }
-
-    /**
-     * POST /register - Handles customer registration.
+     * POST /register - Processes customer registration.
      */
     public void handleRegister(Context ctx) {
         String name = ctx.formParam("name");
@@ -88,45 +71,60 @@ public class AuthController {
             authService.registerCustomer(name, email, password);
             ctx.redirect("/login?registered=true");
         } catch (IllegalArgumentException e) {
-            ctx.render("customer/register", Map.of(
-                "error", e.getMessage()
-            ));
+            ctx.render("customer/register", Map.of("error", e.getMessage()));
         }
     }
 
     /**
-     * GET /admin/login - Shows admin login page.
+     * GET /admin/login - Displays the admin login page.
      */
     public void showAdminLogin(Context ctx) {
+        if (ctx.sessionAttribute(SESSION_USER) != null) {
+            ctx.redirect("/admin/dashboard");
+            return;
+        }
         ctx.render("admin/login");
     }
 
     /**
-     * POST /admin/login - Handles admin login.
+     * POST /admin/login - Processes admin login.
      */
     public void handleAdminLogin(Context ctx) {
         String email = ctx.formParam("email");
         String password = ctx.formParam("password");
 
         authService.login(email, password)
-            .filter(user -> user.getRole() == Role.ADMIN || user.getRole() == Role.OWNER)
-            .ifPresentOrElse(user -> {
-                ctx.sessionAttribute("currentUser", user);
-                ctx.redirect("/admin/dashboard");
-            }, () -> {
-                ctx.render("admin/login", Map.of("error", "Akses ditolak atau kredensial salah"));
-            });
+                .filter(user -> user.getRole() == Role.ADMIN || user.getRole() == Role.OWNER)
+                .ifPresentOrElse(user -> {
+                    ctx.sessionAttribute(SESSION_USER, user);
+                    ctx.redirect("/admin/dashboard");
+                }, () -> {
+                    ctx.render("admin/login", Map.of("error", "Akses ditolak atau kredensial salah"));
+                });
     }
 
     /**
-     * GET /logout - Handles logout with proper session cleanup.
-     * Uses GET redirect untuk simple logout tanpa form
+     * GET /profile - Displays the user profile page.
+     */
+    public void showProfile(Context ctx) {
+        User user = ctx.sessionAttribute(SESSION_USER);
+        if (user == null) {
+            ctx.redirect("/login");
+            return;
+        }
+
+        ctx.render("customer/profile", Map.of(
+                "title", "Profil Saya",
+                "currentUser", user,
+                "activePage", "profile"
+        ));
+    }
+
+    /**
+     * GET /logout - Clears session and redirects to home.
      */
     public void handleLogout(Context ctx) {
-        // Clear the current user from session
-        ctx.sessionAttribute("currentUser", null);
-        
-        // Redirect to home page
+        ctx.req().getSession().invalidate();
         ctx.redirect("/");
     }
 }

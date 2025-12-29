@@ -31,6 +31,21 @@
   {# Footer #}
   {% include "customer/partials/footer" %}
   
+  {# Toast notification system #}
+  <script src="/css/components/toast.js"></script>
+  
+  {# Initialize cart badge on page load if cart exists #}
+  <script>
+    (function() {
+      {% if cart is defined and cart != null %}
+      var itemCount = {{ cart.itemCount | default(0) }};
+      if (itemCount > 0 && window.updateCartBadge) {
+        updateCartBadge(itemCount);
+      }
+      {% endif %}
+    })();
+  </script>
+  
   {# Scripts #}
   {% block scripts %}{% endblock %}
 </body>

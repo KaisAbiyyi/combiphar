@@ -2,13 +2,19 @@
 import java.util.Map;
 
 import com.combiphar.core.controller.AuthController;
+import com.combiphar.core.controller.CartController;
 import com.combiphar.core.controller.CatalogController;
 import com.combiphar.core.controller.CategoryController;
+import com.combiphar.core.controller.CheckoutController;
 import com.combiphar.core.controller.ItemController;
 import com.combiphar.core.controller.QualityCheckController;
 import com.combiphar.core.middleware.AuthMiddleware;
+import com.combiphar.core.repository.CartRepository;
+import com.combiphar.core.repository.ItemRepository;
 import com.combiphar.core.repository.UserRepository;
 import com.combiphar.core.service.AuthService;
+import com.combiphar.core.service.CartService;
+import com.combiphar.core.service.OrderService;
 import com.mitchellbosecke.pebble.PebbleEngine;
 import com.mitchellbosecke.pebble.loader.ClasspathLoader;
 
@@ -26,9 +32,17 @@ public class Main {
     private static final int PORT = 7070;
 
     public static void main(String[] args) {
-        // Initialize dependencies
+        // Initialize repositories
         UserRepository userRepository = new UserRepository();
+        ItemRepository itemRepository = new ItemRepository();
+        CartRepository cartRepository = new CartRepository();
+
+        // Initialize services
         AuthService authService = new AuthService(userRepository);
+        CartService cartService = new CartService(itemRepository);
+        OrderService orderService = new OrderService();
+
+        // Initialize controllers - Phase 1: Auth
         AuthController authController = new AuthController(authService);
 
         // Initialize Phase 2 controllers
@@ -39,10 +53,20 @@ public class Main {
         // Initialize Phase 3 controllers (Customer Catalog)
         CatalogController catalogController = new CatalogController();
 
+        // Initialize Phase 4 controllers (Transaction Flow)
+        CartController cartController = new CartController(cartService, cartRepository);
+
+        CheckoutController checkoutController = new CheckoutController(orderService);
+
         PebbleEngine engine = createPebbleEngine();
         Javalin app = createApp(engine);
 
-        registerRoutes(app, authController, categoryController, itemController, qcController, catalogController);
+        registerRoutes(app, authController, categoryController,
+                itemController, qcController, catalogController, cartController,
+                checkoutController, cartRepository);
+
+        // Run DB migrations (best-effort). This will create carts/cart_items if missing.
+        com.combiphar.core.migration.MigrationRunner.runMigrations();
 
         app.start(PORT);
     }
@@ -108,7 +132,10 @@ public class Main {
             CategoryController categoryController,
             ItemController itemController,
             QualityCheckController qcController,
-            CatalogController catalogController) {
+            CatalogController catalogController,
+            CartController cartController,
+            CheckoutController checkoutController,
+            CartRepository cartRepository) {
         // ====== PHASE 3: Customer Catalog Routes ======
         // Home / Catalog page - delegated to CatalogController
         app.get("/", catalogController::showCatalogPage);
@@ -124,12 +151,31 @@ public class Main {
         app.post("/logout", authController::handleLogout);
         app.get("/login", authController::showLogin);
         app.post("/login", authController::handleLogin);
+        // After successful login, sync session cart with persisted cart (non-blocking)
+        app.after("/login", ctx -> {
+            com.combiphar.core.model.User user = ctx.sessionAttribute("currentUser");
+            if (user != null) {
+                try {
+                    com.combiphar.core.model.Cart cart = ctx.sessionAttribute("cart");
+                    if (cart != null && !cart.isEmpty()) {
+                        cartRepository.saveCartForUser(user.getId(), cart);
+                    } else {
+                        cartRepository.findByUserId(user.getId()).ifPresent(loaded -> {
+                            ctx.sessionAttribute("cart", loaded);
+                        });
+                    }
+                } catch (Exception e) {
+                    System.err.println("[Main] failed to load persisted cart after login: " + e.getMessage());
+                }
+            }
+        });
         app.get("/register", authController::showRegister);
         app.post("/register", authController::handleRegister);
         app.get("/logout", authController::handleLogout);
 
         // Protected Customer Routes
         app.before("/profile", AuthMiddleware.authenticated);
+        // address-settings page removed
         app.before("/cart", AuthMiddleware.authenticated);
         app.before("/checkout", AuthMiddleware.authenticated);
         app.before("/payment", AuthMiddleware.authenticated);
@@ -137,6 +183,24 @@ public class Main {
         app.before("/order/*", AuthMiddleware.authenticated);
 
         app.get("/profile", authController::showProfile);
+        // address-settings route removed
+
+        // ====== PHASE 4: Cart & Checkout Routes ======
+        // Cart management
+        app.get("/cart", cartController::showCart);
+        app.post("/api/cart/add", cartController::addToCart);
+        app.post("/api/cart/update", cartController::updateCartItem);
+        app.post("/api/cart/remove", cartController::removeFromCart);
+        app.post("/api/cart/clear", cartController::clearCart);
+        app.put("/api/cart/update", cartController::updateCartItem);
+        app.delete("/api/cart/remove", cartController::removeFromCart);
+        // address-settings save endpoint removed
+
+        // Checkout flow
+        app.get("/checkout", checkoutController::showCheckout);
+        app.post("/api/checkout/calculate", checkoutController::calculateOrder);
+        app.post("/api/checkout/validate-address", checkoutController::validateAddress);
+        app.get("/checkout/summary", checkoutController::showOrderSummary);
 
         // Admin Auth
         app.get("/admin/login", authController::showAdminLogin);
@@ -146,25 +210,7 @@ public class Main {
         app.before("/admin/*", AuthMiddleware.adminOnly);
         app.before("/admin", AuthMiddleware.adminOnly);
 
-        // Cart page
-        app.get("/cart", ctx -> {
-            Map<String, Object> model = buildModel(
-                    "Keranjang Saya - Combiphar Used Goods",
-                    "cart",
-                    ctx.sessionAttribute("currentUser"));
-            ctx.render("customer/cart", model);
-        });
-
-        // Checkout page
-        app.get("/checkout", ctx -> {
-            Map<String, Object> model = buildModel(
-                    "Checkout Pesanan - Combiphar Used Goods",
-                    "checkout",
-                    ctx.sessionAttribute("currentUser"));
-            ctx.render("customer/checkout", model);
-        });
-
-        // Payment page
+        // Payment page (legacy route support)
         app.get("/payment", ctx -> {
             Map<String, Object> model = buildModel(
                     "Pembayaran Pesanan - Combiphar Used Goods",

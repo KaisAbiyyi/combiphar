@@ -1,118 +1,120 @@
 {% extends "customer/layout" %}
 
-{% block title %}Checkout Pesanan - Combiphar Used Goods{% endblock %}
+{% block styles %}
+<link rel="stylesheet" href="/css/pages/customer/checkout.css">
+{% endblock %}
 
 {% block content %}
 <div class="checkout-page">
   <div class="checkout-page__container">
     <div class="checkout-page__header">
       <h1>Checkout Pesanan</h1>
-      <p>Periksa kembali alamat pengiriman dan ringkasan barang sebelum menyelesaikan pembayaran.</p>
+      <p>Lengkapi alamat pengiriman dan periksa ringkasan pesanan sebelum pembayaran.</p>
     </div>
 
     <div class="checkout-page__content">
-      <!-- Shipping Address Form -->
       <div class="shipping-section">
         <div class="shipping-section__header">
           <h2>Alamat Pengiriman</h2>
           <span class="badge">Customer</span>
         </div>
 
-        <form class="shipping-section__form">
-          <!-- Full Name -->
+        <form id="checkoutForm" class="shipping-section__form" action="/api/checkout/validate-address" method="post">
           <div class="shipping-section__field">
-            <label for="fullName">Nama Lengkap Penerima</label>
-            <input 
-              type="text" 
-              id="fullName" 
-              name="fullName" 
-              value="Buka Purnama"
-              placeholder="Masukkan nama lengkap"
+            <label for="recipientName">Nama Lengkap Penerima</label>
+            <input
+              type="text"
+              id="recipientName"
+              name="recipientName"
+              value="{{ shippingAddress is not null ? shippingAddress.recipientName : '' }}"
+              placeholder="Nama lengkap"
+              required
             >
           </div>
 
-          <!-- Phone Number & Company Name -->
           <div class="shipping-section__row">
             <div class="shipping-section__field">
               <label for="phone">Nomor Telepon</label>
-              <input 
-                type="tel" 
-                id="phone" 
-                name="phone" 
-                value="0812 3456 7890"
-                placeholder="0812 3456 7890"
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                value="{{ shippingAddress is not null ? shippingAddress.phone : '' }}"
+                placeholder="08xx xxxx xxxx"
+                required
               >
             </div>
             <div class="shipping-section__field">
-              <label for="company">Nama Perusahaan</label>
-              <input 
-                type="text" 
-                id="company" 
-                name="company" 
-                value="PT Sirna Digital"
+              <label for="companyName">Nama Perusahaan</label>
+              <input
+                type="text"
+                id="companyName"
+                name="companyName"
+                value="{{ addressSettings is not null ? addressSettings.companyName : '' }}"
                 placeholder="Nama perusahaan"
               >
             </div>
           </div>
 
-          <!-- Full Address -->
           <div class="shipping-section__field">
             <label for="address">Alamat Lengkap</label>
-            <textarea 
-              id="address" 
-              name="address" 
-              placeholder="Jl. Mekah No. 45, Cluster Harmoni, Kabupaten Baru"
-            >Jl. Mekah No. 45, Cluster Harmoni, Kabupaten Baru</textarea>
+            <textarea
+              id="address"
+              name="address"
+              placeholder="Jl. Melati No. 45, Cluster Harmoni"
+              required
+            >{{ shippingAddress is not null ? shippingAddress.address : '' }}</textarea>
           </div>
 
-          <!-- City & Postal Code -->
           <div class="shipping-section__row">
             <div class="shipping-section__field">
               <label for="city">Kota</label>
-              <input 
-                type="text" 
-                id="city" 
-                name="city" 
-                value="Jakarta Selatan"
+              <input
+                type="text"
+                id="city"
+                name="city"
+                value="{{ shippingAddress is not null ? shippingAddress.city : '' }}"
                 placeholder="Nama kota"
+                required
               >
             </div>
             <div class="shipping-section__field">
               <label for="postalCode">Kode Pos</label>
-              <input 
-                type="text" 
-                id="postalCode" 
-                name="postalCode" 
-                value="12130"
-                placeholder="12130"
+              <input
+                type="text"
+                id="postalCode"
+                name="postalCode"
+                value="{{ shippingAddress is not null ? shippingAddress.postalCode : '' }}"
+                placeholder="12345"
+                required
               >
             </div>
           </div>
 
-          <!-- Shipping Method -->
           <div class="shipping-section__field">
-            <label for="shippingMethod">Metode Pengiriman</label>
-            <select id="shippingMethod" name="shippingMethod">
-              <option value="premium-2-3">Premium Logistics (2-3 hari)</option>
-              <option value="standard-5-7">Standard Logistics (5-7 hari)</option>
-              <option value="express-1">Express Logistics (1 hari)</option>
+            <label for="courier">Metode Pengiriman</label>
+            <select id="courier" name="courier" required>
+              {% for courier in courierOptions %}
+              <option value="{{ courier.name }}" {{ courier.name == selectedCourier ? 'selected' : '' }}>
+                {{ courier.name }}
+              </option>
+              {% endfor %}
             </select>
           </div>
 
-          <!-- Courier Notes -->
           <div class="shipping-section__field">
             <label for="courierNotes">Catatan Kurir</label>
-            <input 
-              type="text" 
-              id="courierNotes" 
-              name="courierNotes" 
+            <input
+              type="text"
+              id="courierNotes"
+              name="courierNotes"
+              value="{{ addressSettings is not null ? addressSettings.courierNotes : '' }}"
               placeholder="Hubungi penerima sebelum datang (opsional)"
             >
           </div>
 
-          <!-- Terms Agreement -->
           <div class="shipping-section__note">
-            <input type="checkbox" id="terms" name="terms" checked>
+            <input type="checkbox" id="terms" name="terms" checked required>
             <label for="terms">
               Saya menyetujui ketentuan pembeli dari setiap kebijakan resmi Combiphar Used Goods.
             </label>
@@ -120,69 +122,48 @@
         </form>
       </div>
 
-      <!-- Order Summary Sidebar -->
       <aside>
         <div class="order-summary">
           <div class="order-summary__header">
             <h3>Ringkasan Pesanan</h3>
-            <span class="item-count">3 barang</span>
+            <span class="item-count">{{ cart.itemCount }} barang</span>
           </div>
 
           <div class="order-summary__items">
+            {% for item in cart.items %}
             <div class="order-summary__item">
-              <img src="https://images.unsplash.com/photo-1565891741441-64926e441838?w=200&h=200&fit=crop" alt="Meja Kantor Eksekutif">
+              <img src="/static/images/products/placeholder.png" alt="{{ item.itemName }}">
               <div class="order-summary__item-details">
-                <h4>Meja Kantor Eksekutif</h4>
-                <p class="qty">Qty: 1 Unit</p>
+                <h4>{{ item.itemName }}</h4>
+                <p class="qty">Qty: {{ item.quantity }} unit</p>
               </div>
-              <div class="order-summary__item-price">Rp 7.500.000</div>
+              <div class="order-summary__item-price">Rp {{ item.subtotal | numberformat("#,###") }}</div>
             </div>
-
-            <div class="order-summary__item">
-              <img src="https://images.unsplash.com/photo-1580480055273-228ff5388ef8?w=200&h=200&fit=crop" alt="Kursi Ergonomis Lumbar+">
-              <div class="order-summary__item-details">
-                <h4>Kursi Ergonomis Lumbar+</h4>
-                <p class="qty">Qty: 4 Unit</p>
-              </div>
-              <div class="order-summary__item-price">Rp 13.000.000</div>
-            </div>
-
-            <div class="order-summary__item">
-              <img src="https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=200&h=200&fit=crop" alt="Monitor LCD 24 inch">
-              <div class="order-summary__item-details">
-                <h4>Monitor LCD 24 inch</h4>
-                <p class="qty">Qty: 6 Unit</p>
-              </div>
-              <div class="order-summary__item-price">Rp 11.100.000</div>
-            </div>
+            {% endfor %}
           </div>
 
           <div class="order-summary__breakdown">
             <div class="order-summary__row">
               <span class="label">Subtotal</span>
-              <span class="value">Rp 31.600.000</span>
-            </div>
-            <div class="order-summary__row">
-              <span class="label">Diskon karyawan</span>
-              <span class="value discount">-Rp 2.500.000</span>
+              <span class="value" data-summary="subtotal">Rp {{ orderSummary.subtotal | numberformat("#,###") }}</span>
             </div>
             <div class="order-summary__row">
               <span class="label">Biaya logistik</span>
-              <span class="value">Rp 1.200.000</span>
+              <span class="value" data-summary="shipping">Rp {{ orderSummary.shippingCost | numberformat("#,###") }}</span>
             </div>
           </div>
 
           <div class="order-summary__total">
             <span class="label">Total</span>
-            <span class="value">Rp 30.300.000</span>
+            <span class="value" data-summary="total">Rp {{ orderSummary.totalPrice | numberformat("#,###") }}</span>
           </div>
 
           <div class="order-summary__cta">
-            <button type="button">Bayar Sekarang</button>
+            <button type="submit" form="checkoutForm">Bayar Sekarang</button>
           </div>
 
           <p class="order-summary__note">
-            Pembayaran dikirimkan melalui Combiphar Finance Network. Bank transfer dan sistem kami akan otomatis auto-approved.
+            Total akan diperbarui otomatis setelah memilih kurir.
           </p>
         </div>
 
@@ -191,12 +172,16 @@
             Catatan Kebijakan Barang
           </div>
           <div class="checkout-notes__content">
-            Pastikan alamat dikirimkan ke PT sesuai saat melalui IT.
-            Lihat <a href="#">kebijakan lebih lanjut</a> →
+            Pastikan alamat sudah benar sebelum melanjutkan pembayaran.
+            Lihat <a href="#">kebijakan lebih lanjut</a>.
           </div>
         </div>
       </aside>
     </div>
   </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/js/pages/checkout.js"></script>
 {% endblock %}

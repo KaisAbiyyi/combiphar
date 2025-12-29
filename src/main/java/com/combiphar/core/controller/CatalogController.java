@@ -13,8 +13,8 @@ import com.combiphar.core.service.ItemService;
 import io.javalin.http.Context;
 
 /**
- * Controller for customer-facing catalog pages.
- * Handles search, category filtering, and product listing.
+ * Controller for customer-facing catalog pages. Handles search, category
+ * filtering, and product listing.
  */
 public class CatalogController {
 
@@ -73,6 +73,7 @@ public class CatalogController {
             model.put("title", "Katalog Produk - Combiphar Used Goods");
             model.put("activePage", "catalog");
             model.put("currentUser", ctx.sessionAttribute("currentUser"));
+            model.put("cart", ctx.sessionAttribute("cart"));
             model.put("items", formattedItems);
             model.put("categories", categories);
             model.put("totalItems", formattedItems.size());
@@ -141,6 +142,7 @@ public class CatalogController {
             model.put("title", item.getName() + " - Combiphar Used Goods");
             model.put("activePage", "product");
             model.put("currentUser", ctx.sessionAttribute("currentUser"));
+            model.put("cart", ctx.sessionAttribute("cart"));
             model.put("product", product);
 
             ctx.render("customer/product-detail", model);
@@ -196,8 +198,9 @@ public class CatalogController {
      * Helper method to get human-readable condition label
      */
     private String getConditionLabel(String condition) {
-        if (condition == null)
+        if (condition == null) {
             return "Tidak Diketahui";
+        }
 
         switch (condition) {
             case "NEW":
@@ -217,8 +220,9 @@ public class CatalogController {
      * Helper method to get condition grade percentage
      */
     private String getConditionGrade(String condition) {
-        if (condition == null)
+        if (condition == null) {
             return "N/A";
+        }
 
         switch (condition) {
             case "NEW":

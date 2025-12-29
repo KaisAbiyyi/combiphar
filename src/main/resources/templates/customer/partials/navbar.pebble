@@ -15,6 +15,7 @@
       
       {# Navigation links and auth section #}
       <div class="navbar__nav">
+        <a href="/cart" class="navbar__link{% if activePage == 'cart' %} navbar__link--active{% endif %}">Keranjang</a>
         <a href="/catalog" class="navbar__link{% if activePage == 'catalog' %} navbar__link--active{% endif %}">Katalog</a>
         
         {% if currentUser != null %}
@@ -33,7 +34,6 @@
               <hr class="navbar__dropdown-divider">
               {% endif %}
               <a href="/profile" class="navbar__dropdown-item" role="menuitem">Profil Saya</a>
-              <a href="/cart" class="navbar__dropdown-item" role="menuitem">Keranjang Belanja</a>
               <a href="/history" class="navbar__dropdown-item" role="menuitem">Riwayat Pembelian</a>
               <hr class="navbar__dropdown-divider">
               <form action="/logout" method="post" style="display: contents;">
