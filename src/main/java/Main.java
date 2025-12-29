@@ -203,22 +203,20 @@ public class Main {
 
         // Admin dashboard page
         app.get("/admin", ctx -> {
-            Map<String, Object> model = Map.of(
-                    "title", "Dashboard Admin",
-                    "pageTitle", "Dashboard Admin",
-                    "userName", "Nashya Putri",
-                    "userRole", "Admin Warehouse Jakarta",
-                    "activePage", "dashboard");
+            Map<String, Object> model = buildModel(
+                    "Dashboard Admin",
+                    "dashboard",
+                    ctx.sessionAttribute("currentUser"));
+            model.put("pageTitle", "Dashboard Admin");
             ctx.render("admin/dashboard", model);
         });
 
         app.get("/admin/dashboard", ctx -> {
-            Map<String, Object> model = Map.of(
-                    "title", "Dashboard Admin",
-                    "pageTitle", "Dashboard Admin",
-                    "userName", "Nashya Putri",
-                    "userRole", "Admin Warehouse Jakarta",
-                    "activePage", "dashboard");
+            Map<String, Object> model = buildModel(
+                    "Dashboard Admin",
+                    "dashboard",
+                    ctx.sessionAttribute("currentUser"));
+            model.put("pageTitle", "Dashboard Admin");
             ctx.render("admin/dashboard", model);
         });
 
@@ -269,71 +267,65 @@ public class Main {
 
         // Admin order page (English route)
         app.get("/admin/orders", ctx -> {
-            Map<String, Object> model = Map.of(
-                    "title", "Monitoring Pesanan",
-                    "pageTitle", "Monitoring Pesanan",
-                    "userName", "Nashya Putri",
-                    "userRole", "Admin Warehouse Jakarta",
-                    "activePage", "orders");
+            Map<String, Object> model = buildModel(
+                    "Monitoring Pesanan",
+                    "orders",
+                    ctx.sessionAttribute("currentUser"));
+            model.put("pageTitle", "Monitoring Pesanan");
             ctx.render("admin/order", model);
         });
 
         // Admin transaction page (English route)
         app.get("/admin/transactions", ctx -> {
-            Map<String, Object> model = Map.of(
-                    "title", "Daftar Transaksi",
-                    "pageTitle", "Daftar Transaksi",
-                    "userName", "Nashya Putri",
-                    "userRole", "Admin Warehouse Jakarta",
-                    "activePage", "transactions");
+            Map<String, Object> model = buildModel(
+                    "Daftar Transaksi",
+                    "transactions",
+                    ctx.sessionAttribute("currentUser"));
+            model.put("pageTitle", "Daftar Transaksi");
             ctx.render("admin/transaction", model);
         });
 
         // Admin payment page (English route)
         app.get("/admin/payments", ctx -> {
-            Map<String, Object> model = Map.of(
-                    "title", "Verifikasi Pembayaran",
-                    "pageTitle", "Verifikasi Pembayaran",
-                    "userName", "Nashya Putri",
-                    "userRole", "Admin Keuangan",
-                    "activePage", "payments");
+            Map<String, Object> model = buildModel(
+                    "Verifikasi Pembayaran",
+                    "payments",
+                    ctx.sessionAttribute("currentUser"));
+            model.put("pageTitle", "Verifikasi Pembayaran");
             ctx.render("admin/payment", model);
         });
 
         // Admin shipping page (English route)
         app.get("/admin/shipping", ctx -> {
-            Map<String, Object> model = Map.of(
-                    "title", "Monitoring Pengiriman",
-                    "pageTitle", "Monitoring Pengiriman",
-                    "userName", "Nashya Putri",
-                    "userRole", "Admin Warehouse Jakarta",
-                    "activePage", "shipping");
+            Map<String, Object> model = buildModel(
+                    "Monitoring Pengiriman",
+                    "shipping",
+                    ctx.sessionAttribute("currentUser"));
+            model.put("pageTitle", "Monitoring Pengiriman");
             ctx.render("admin/shipping", model);
         });
 
         // Admin user page (English route)
         app.get("/admin/users", ctx -> {
-            Map<String, Object> model = Map.of(
-                    "title", "Manajemen Pengguna",
-                    "pageTitle", "Manajemen Pengguna",
-                    "userName", "Nashya Putri",
-                    "userRole", "Admin Warehouse Jakarta",
-                    "activePage", "users",
-                    "totalUsers", 128,
-                    "customerCount", 102,
-                    "adminCount", 6,
-                    "activeToday", 5);
+            Map<String, Object> model = buildModel(
+                    "Manajemen Pengguna",
+                    "users",
+                    ctx.sessionAttribute("currentUser"));
+            model.put("pageTitle", "Manajemen Pengguna");
+            model.put("totalUsers", 128);
+            model.put("customerCount", 102);
+            model.put("adminCount", 6);
+            model.put("activeToday", 5);
             ctx.render("admin/user", model);
         });
 
         // Admin reports page (English route)
         app.get("/admin/reports", ctx -> {
-            Map<String, Object> model = Map.of(
-                    "title", "Laporan Kinerja",
-                    "pageTitle", "Laporan Kinerja",
-                    "userName", "Nashya Putri",
-                    "userRole", "Admin Warehouse Jakarta",
-                    "activePage", "reports");
+            Map<String, Object> model = buildModel(
+                    "Laporan Kinerja",
+                    "reports",
+                    ctx.sessionAttribute("currentUser"));
+            model.put("pageTitle", "Laporan Kinerja");
             ctx.render("admin/laporan", model);
         });
     }

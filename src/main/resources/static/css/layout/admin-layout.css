@@ -152,6 +152,19 @@
   align-items: center;
   gap: 0.75rem;
 }
+.admin-navbar__user-button {
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+.admin-navbar__user-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.25);
+  border-radius: 9999px;
+}
 .admin-navbar__user-info {
   text-align: right;
 }

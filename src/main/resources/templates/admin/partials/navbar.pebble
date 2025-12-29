@@ -32,21 +32,74 @@
 
     {# Right section - User profile #}
     <div class="admin-navbar__right">
-      <div class="admin-navbar__user">
+      <div class="admin-navbar__user navbar__user-menu">
         <div class="admin-navbar__user-info">
-          <p class="admin-navbar__user-name">{{ userName | default('Nashya Putri') }}</p>
-          <p class="admin-navbar__user-role">{{ userRole | default('Admin Warehouse Jakarta') }}</p>
+          <p class="admin-navbar__user-name">
+            {% if currentUser != null %}
+              {{ currentUser.name }}
+            {% else %}
+              {{ userName | default('Admin') }}
+            {% endif %}
+          </p>
+          <p class="admin-navbar__user-role">
+            {% if currentUser != null %}
+              {% if currentUser.role == 'OWNER' %}
+                Owner
+              {% elseif currentUser.role == 'ADMIN' %}
+                Admin
+              {% else %}
+                User
+              {% endif %}
+            {% else %}
+              {{ userRole | default('Admin') }}
+            {% endif %}
+          </p>
         </div>
-        <div class="admin-navbar__user-avatar">
-          {% if userAvatar %}
-            <img src="{{ userAvatar }}" alt="{{ userName }}" class="admin-navbar__avatar-img">
-          {% else %}
-            <div class="admin-navbar__avatar-placeholder">
-              <span>{{ userName | default('NP') | slice(0, 2) | upper }}</span>
-            </div>
-          {% endif %}
+        <button class="admin-navbar__user-button" id="adminUserMenuToggle" type="button" aria-expanded="false" aria-haspopup="true">
+          <div class="admin-navbar__user-avatar">
+            {% if userAvatar %}
+              <img src="{{ userAvatar }}" alt="{% if currentUser != null %}{{ currentUser.name }}{% else %}{{ userName | default('Admin') }}{% endif %}" class="admin-navbar__avatar-img">
+            {% else %}
+              <div class="admin-navbar__avatar-placeholder">
+                <span>
+                  {% if currentUser != null %}
+                    {{ currentUser.name | default('U') | slice(0, 2) | upper }}
+                  {% else %}
+                    {{ userName | default('U') | slice(0, 2) | upper }}
+                  {% endif %}
+                </span>
+              </div>
+            {% endif %}
+          </div>
+        </button>
+        <div class="navbar__dropdown" id="adminUserDropdown" role="menu">
+          <form action="/logout" method="post" style="display: contents;">
+            <button type="submit" class="navbar__dropdown-item navbar__dropdown-item--danger" role="menuitem">Keluar</button>
+          </form>
         </div>
       </div>
     </div>
   </div>
 </nav>
+
+<script>
+  (function() {
+    const userMenuToggle = document.getElementById('adminUserMenuToggle');
+    const userDropdown = document.getElementById('adminUserDropdown');
+
+    if (!userMenuToggle || !userDropdown) return;
+
+    userMenuToggle.addEventListener('click', function() {
+      const isExpanded = this.getAttribute('aria-expanded') === 'true';
+      this.setAttribute('aria-expanded', !isExpanded);
+      userDropdown.classList.toggle('navbar__dropdown--open');
+    });
+
+    document.addEventListener('click', function(event) {
+      if (!event.target.closest('.navbar__user-menu')) {
+        userMenuToggle.setAttribute('aria-expanded', 'false');
+        userDropdown.classList.remove('navbar__dropdown--open');
+      }
+    });
+  })();
+</script>
