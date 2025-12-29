@@ -1,136 +1,109 @@
 {# ========================================================================== #}
-{# PRODUCT DETAIL PAGE - Single product view for customers #} {#
-========================================================================== #} {%
-extends "customer/layout" %} {% block content %} {#
-============================================================================ #}
-{# PRODUCT HERO SECTION #} {#
-============================================================================ #}
+{# PRODUCT DETAIL PAGE - Dynamic single product view for customers           #}
+{# ========================================================================== #}
+{% extends "customer/layout" %}
+
+{% block content %}
+{# ============================================================================ #}
+{# PRODUCT HERO SECTION                                                        #}
+{# ============================================================================ #}
 <section class="product-hero">
   <div class="product-hero__container">
     {# Product hero content (left) #}
     <div class="product-hero__content">
-      <span class="product-hero__badge badge badge--bundle">BUNDLE</span>
+      {% if product.categoryName is not empty %}
+      <span class="product-hero__badge badge badge--primary">{{ product.categoryName }}</span>
+      {% endif %}
 
-      <h1 class="product-hero__title">Set Meja Rapat Glasium</h1>
+      <h1 class="product-hero__title">{{ product.name }}</h1>
 
       <p class="product-hero__description">
-        Meja rapat kaca tempered 12mm dengan 10 kursi kulit vegan ergonomis.
-        Dilengkapi panel power dan USB di tengah meja untuk mendukung rapat
-        hybrid terkinian.
+        {{ product.description | default('Deskripsi produk tidak tersedia.') }}
       </p>
 
       <div class="product-hero__meta">
         <div class="product-hero__meta-item">
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-          >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
             <circle cx="12" cy="10" r="3" />
           </svg>
-          Bekasi Dry Port
+          {{ product.location | default('Combiphar Warehouse') }}
         </div>
         <div class="product-hero__meta-item">
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-          >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
             <circle cx="12" cy="7" r="4" />
           </svg>
-          Stok 3 set
+          Stok {{ product.stock }} unit
         </div>
       </div>
 
       <div class="product-hero__actions">
-        <a href="/checkout" class="btn btn--primary">Checkout Sekarang</a>
+        <a href="/checkout?productId={{ product.id }}" class="btn btn--primary">Checkout Sekarang</a>
         <a href="/catalog" class="btn btn--secondary">Kembali ke Katalog</a>
       </div>
     </div>
 
     {# Pricing card (right) #}
     <div class="pricing-card">
-      <div class="pricing-card__label">Harga Kurasi</div>
-      <div class="pricing-card__price">Rp 15.900.000</div>
-      <p class="pricing-card__note">Dapatkan paket lengkap meja + kursi + karpet
-        akustik.</p>
+      <div class="pricing-card__label">Harga</div>
+      <div class="pricing-card__price">Rp {{ product.price | numberformat("#,###") }}</div>
+      <p class="pricing-card__note">Harga sudah termasuk kurasi dan pemeriksaan kualitas.</p>
 
       <div class="pricing-card__details">
         <div>
           <div class="pricing-card__detail-label">Kondisi</div>
-          <div class="pricing-card__detail-value">Grade A - 92%</div>
+          <div class="pricing-card__detail-value">{{ conditionLabel }} - {{ conditionGrade }}%</div>
         </div>
         <div>
-          <div class="pricing-card__detail-label">Garansi</div>
-          <div class="pricing-card__detail-value">45 hari servis</div>
+          <div class="pricing-card__detail-label">Status</div>
+          <div class="pricing-card__detail-value">{{ product.eligibilityStatus }}</div>
         </div>
+        {% if product.location is not empty %}
         <div>
-          <div class="pricing-card__detail-label">Material</div>
-          <div class="pricing-card__detail-value">Kaca tempered & aluminium</div>
+          <div class="pricing-card__detail-label">Lokasi</div>
+          <div class="pricing-card__detail-value">{{ product.location }}</div>
         </div>
+        {% endif %}
         <div>
-          <div class="pricing-card__detail-label">Konfigurasi</div>
-          <div class="pricing-card__detail-value">10 kursi kulit vegan</div>
+          <div class="pricing-card__detail-label">Ketersediaan</div>
+          <div class="pricing-card__detail-value">{% if product.stock > 0 %}Tersedia{% else %}Habis{% endif %}</div>
         </div>
       </div>
 
+      {% if product.physicalCondition is not empty %}
       <div class="pricing-card__highlights">
-        <div class="pricing-card__highlights-title">Highlight Produk</div>
-        <div class="pricing-card__highlight-item">Panel power & USB terintegrasi
-          di tengah meja.</div>
-        <div class="pricing-card__highlight-item">Kursi hydraulic lift dengan
-          mekanisme tilt sunyi.</div>
-        <div class="pricing-card__highlight-item">Termasuk karpet akustik 3x5 m
-          untuk meredam bising.</div>
+        <div class="pricing-card__highlights-title">Detail Kondisi Fisik</div>
+        <div class="pricing-card__highlight-item">{{ product.physicalCondition }}</div>
       </div>
+      {% endif %}
     </div>
   </div>
 </section>
 
-{# ============================================================================
-#} {# PRODUCT DETAILS SECTION #} {#
-============================================================================ #}
+{# ============================================================================ #}
+{# PRODUCT DETAILS SECTION                                                     #}
+{# ============================================================================ #}
 <section class="product-details">
   <div class="product-details__container">
     {# Features (left column) #}
     <div class="product-features">
       <div class="feature-card">
-        <h2 class="product-features__title">Pengalaman rapat terbaik</h2>
+        <h2 class="product-features__title">Informasi Produk</h2>
         <p class="product-features__content">
-          Ruang rapat Anda siap menyambut klien penting dengan setup
-          profesional.
-        </p>
-        <p class="product-features__content">
-          Set Meja Rapat Glasium menghadirkan perpaduan estetika modern dan
-          fungsi. Permukaan kaca tempered 12mm tahan panas dan anti gores,
-          sementara struktur aluminium matte memastikan stabilitas tinggi.
-        </p>
-        <p class="product-features__content">
-          Kursi kulit vegan dengan mekanisme tilt halus mendukung kenyamanan
-          rapat panjang. Setiap kursi memiliki hydraulic lift silent dan armrest
-          ergonomis sehingga peserta tetap fokus sepanjang sesi.
+          {{ product.description | default('Deskripsi lengkap produk tidak tersedia.') }}
         </p>
 
         <div class="product-features__specs">
           <div class="product-features__spec">
-            <div class="product-features__spec-label">Dimensi</div>
-            <div class="product-features__spec-value">400 x 120 x 75 cm</div>
-            <p class="product-card__description">Cocok untuk ruang meeting
-              menengah hingga besar.</p>
+            <div class="product-features__spec-label">Kategori</div>
+            <div class="product-features__spec-value">{{ product.categoryName | default('Tidak Dikategorikan') }}</div>
+            <p class="product-card__description">Klasifikasi produk dalam katalog.</p>
           </div>
           <div class="product-features__spec">
-            <div class="product-features__spec-label">Fitur Tambahan</div>
-            <div class="product-features__spec-value">Karpet akustik</div>
-            <p class="product-card__description">Meningkatkan akustik ruangan
-              rapat Anda.</p>
+            <div class="product-features__spec-label">Kondisi Fisik</div>
+            <div class="product-features__spec-value">{{ conditionLabel }}</div>
+            <p class="product-card__description">Grade {{ conditionGrade }}% berdasarkan pemeriksaan kualitas.</p>
           </div>
         </div>
       </div>
@@ -139,27 +112,25 @@ extends "customer/layout" %} {% block content %} {#
     {# Sidebar (right column) #}
     <div class="product-sidebar">
       <div class="product-sidebar__card">
-        <h3 class="product-sidebar__title">Dalam paket ini</h3>
+        <h3 class="product-sidebar__title">Detail Pembelian</h3>
         <ul class="product-sidebar__list">
-          <li class="product-sidebar__list-item">Meja rapat kaca tempered</li>
-          <li class="product-sidebar__list-item">10 kursi kulit vegan tilt &
-            lift</li>
-          <li class="product-sidebar__list-item">Karpet akustik premium</li>
-          <li class="product-sidebar__list-item">Layanan instalasi dan balancing</li>
+          <li class="product-sidebar__list-item">✅ Produk telah dikurasi</li>
+          <li class="product-sidebar__list-item">✅ Kondisi sudah diperiksa</li>
+          <li class="product-sidebar__list-item">✅ Stok tersedia: {{ product.stock }} unit</li>
+          <li class="product-sidebar__list-item">✅ Siap untuk pengiriman</li>
         </ul>
-        <button class="btn btn--primary btn--lg product-sidebar__cta">Pesan
-          Sekarang</button>
+        {% if product.stock > 0 %}
+        <a href="/checkout?productId={{ product.id }}" class="btn btn--primary btn--lg product-sidebar__cta">Pesan Sekarang</a>
+        {% else %}
+        <button class="btn btn--secondary btn--lg product-sidebar__cta" disabled>Stok Habis</button>
+        {% endif %}
 
         <div class="product-sidebar__demo">
-          <div class="product-sidebar__demo-title">Butuh demo?</div>
+          <div class="product-sidebar__demo-title">Butuh informasi lebih?</div>
           <p class="product-sidebar__demo-text">
-            Tim showroom kami siap melakukan virtual tour atau penjadwalan
-            kunjungan langsung.
+            Tim kami siap membantu menjawab pertanyaan Anda tentang produk ini.
           </p>
-          <a
-            href="mailto:curator@combipharusedgoods.id"
-            class="product-sidebar__demo-link"
-          >
+          <a href="mailto:curator@combipharusedgoods.id" class="product-sidebar__demo-link">
             curator@combipharusedgoods.id
           </a>
         </div>

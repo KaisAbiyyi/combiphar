@@ -57,6 +57,17 @@ public class ItemService {
     }
 
     /**
+     * Search published items with filters for customer catalog
+     * 
+     * @param searchQuery search term for name (can be null)
+     * @param categoryId  filter by category (can be null)
+     * @return list of matching published items
+     */
+    public List<Item> searchPublishedItems(String searchQuery, String categoryId) {
+        return itemRepository.searchPublishedItems(searchQuery, categoryId);
+    }
+
+    /**
      * Create new item
      */
     public Item createItem(String categoryId, String name, String condition,

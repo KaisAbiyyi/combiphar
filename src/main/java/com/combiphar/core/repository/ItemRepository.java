@@ -280,6 +280,51 @@ public class ItemRepository {
     }
 
     /**
+     * Search published items with filters for customer catalog
+     * 
+     * @param searchQuery search term for name (can be null)
+     * @param categoryId  filter by category (can be null)
+     * @return list of matching published items
+     */
+    public List<Item> searchPublishedItems(String searchQuery, String categoryId) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT * FROM items WHERE is_published = TRUE AND eligibility_status = 'ELIGIBLE' AND stock > 0");
+
+        if (searchQuery != null && !searchQuery.trim().isEmpty()) {
+            sql.append(" AND (name LIKE ? OR description LIKE ?)");
+        }
+        if (categoryId != null && !categoryId.trim().isEmpty()) {
+            sql.append(" AND category_id = ?");
+        }
+        sql.append(" ORDER BY created_at DESC");
+
+        List<Item> items = new ArrayList<>();
+
+        try (Connection conn = DatabaseConfig.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
+
+            int paramIndex = 1;
+            if (searchQuery != null && !searchQuery.trim().isEmpty()) {
+                String searchPattern = "%" + searchQuery.trim() + "%";
+                stmt.setString(paramIndex++, searchPattern);
+                stmt.setString(paramIndex++, searchPattern);
+            }
+            if (categoryId != null && !categoryId.trim().isEmpty()) {
+                stmt.setString(paramIndex++, categoryId);
+            }
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    items.add(mapResultSetToItem(rs));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error searching published items", e);
+        }
+        return items;
+    }
+
+    /**
      * Map ResultSet to Item object
      */
     private Item mapResultSetToItem(ResultSet rs) throws SQLException {

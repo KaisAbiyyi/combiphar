@@ -1,197 +1,207 @@
-{# ========================================================================== #}
-{# CATALOG PAGE - Home / Product catalog for customers                        #}
-{# ========================================================================== #}
 {% extends "customer/layout" %}
 
-{% block content %}
-{# ============================================================================ #}
-{# HERO SECTION                                                                 #}
-{# ============================================================================ #}
-<section class="hero">
-  <div class="hero__container">
-    {# Hero content (left) #}
-    <div class="hero__content">
-      <h1 class="hero__title">
-        Upgrade ruang kerjamu<br>
-        dengan pilihan bekas pakai<br>
-        berkualitas
-      </h1>
-      <p class="hero__description">
-        Koleksi furnitur office premium yang telah melalui proses inspeksi ketat. Hemat 
-        hingga 60% dengan kondisi prima dan garansi kenyamanan.
-      </p>
-      <div class="hero__actions">
-        <a href="#katalog" class="btn btn--primary">Jelajahi Produk</a>
-        <a href="/checkout" class="btn btn--secondary">Lanjut ke Checkout</a>
-      </div>
-    </div>
-    
-    {# Info card (right) #}
-    <div class="info-card">
-      <div class="info-card__header">
-        <span class="info-card__title">Rating Kepuasan</span>
-        <span class="info-card__rating">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-          </svg>
-          4.9
-        </span>
-      </div>
-      
-      <div class="info-card__stats">
-        <div class="info-card__stat">
-          <div class="info-card__stat-value">312+</div>
-          <div class="info-card__stat-label">Barang Tersedia</div>
-        </div>
-        <div class="info-card__stat">
-          <div class="info-card__stat-value">64</div>
-          <div class="info-card__stat-label">Partner Korporat</div>
-        </div>
-      </div>
-      
-      <p class="info-card__quote">
-        "Kami memastikan setiap barang layak pakai dengan 
-        inspeksi 45 titik kualitas sebelum sampai ke ruang kerja 
-        Anda."
-      </p>
-      
-      <div class="info-card__author">
-        <div class="info-card__avatar">
-          <img src="https://i.pravatar.cc/80?img=32" alt="Andien Maharani">
-        </div>
-        <div>
-          <div class="info-card__author-name">Andien Maharani</div>
-          <div class="info-card__author-role">Lead Curator Combiphar</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+{% block styles %}
+<link rel="stylesheet" href="/css/pages/customer/catalog.css">
+{% endblock %}
 
-{# ============================================================================ #}
-{# CATALOG SECTION                                                              #}
-{# ============================================================================ #}
-<section class="catalog" id="katalog">
-  <div class="catalog__container">
-    {# Catalog header #}
-    <div class="catalog__header">
-      <div>
-        <h2 class="catalog__title">Katalog Produk</h2>
-        <p class="catalog__subtitle">Pilihan furnitur kantor siap pakai dengan kualitas terjamin.</p>
+{% block content %}
+<div class="catalog-page">
+  {# ============================================================================ #}
+  {# HERO SECTION - Gradient background with stats card                          #}
+  {# ============================================================================ #}
+  <section class="hero">
+    <div class="hero__container">
+      {# Left Content #}
+      <div class="hero__content">
+        <h1 class="hero__title">Upgrade ruang kerjamu dengan pilihan bekas pakai berkualitas</h1>
+        <p class="hero__subtitle">
+          Koleksi furniture office premium yang telah melalui proses inspeksi ketat. Hemat 
+          hingga 60% dengan kondisi prima dan garansi kenyamanan.
+        </p>
       </div>
-      
-      {# Filter tabs #}
-      <div class="filter-tabs">
-        <button class="filter-tab filter-tab--active">Semua Produk</button>
-        <button class="filter-tab">Furnitur</button>
-        <button class="filter-tab">Elektronik</button>
+
+      {# Right Stats Card #}
+      <div class="hero__stats-card">
+        <div class="stats-card">
+          <div class="stats-card__header">
+            <span class="stats-card__label">Rating Kepuasan</span>
+            <div class="stats-card__rating">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="#fbbf24" stroke="#fbbf24">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+              <span>4.9</span>
+            </div>
+          </div>
+          
+          <div class="stats-card__metrics">
+            <div class="stats-card__metric">
+              <span class="stats-card__metric-value">{{ totalItems | default('312') }}+</span>
+              <span class="stats-card__metric-label">Barang Tersedia</span>
+            </div>
+            <div class="stats-card__metric">
+              <span class="stats-card__metric-value">64</span>
+              <span class="stats-card__metric-label">Partner Korporat</span>
+            </div>
+          </div>
+
+          <blockquote class="stats-card__quote">
+            "Kami memastikan setiap barang layak pakai dengan inspeksi 45 titik kualitas sebelum sampai ke ruang kerja Anda."
+          </blockquote>
+
+          <div class="stats-card__author">
+            <div class="stats-card__avatar">
+              <img src="https://ui-avatars.com/api/?name=Andien+Maharani&background=8b5cf6&color=fff&size=40" alt="Andien Maharani">
+            </div>
+            <div class="stats-card__author-info">
+              <span class="stats-card__author-name">Andien Maharani</span>
+              <span class="stats-card__author-role">Used Curator Combiphar</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    
-    {# Product grid #}
-    <div class="catalog__grid">
-      {# Product 1 #}
-      <article class="product-card">
-        <div class="product-card__image">
-          <img src="https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=400&h=300&fit=crop" alt="Meja Kantor Eksekutif">
-          <span class="product-card__badge badge badge--stock">Stok 8</span>
+  </section>
+
+  {# ============================================================================ #}
+  {# CATALOG SECTION - Products with filter tabs                                 #}
+  {# ============================================================================ #}
+  <section class="catalog" id="katalog">
+    <div class="catalog__container">
+      {# Catalog Header #}
+      <div class="catalog__header">
+        <div class="catalog__header-text">
+          {% if searchQuery is not empty %}
+          <h2 class="catalog__title">Hasil Pencarian "{{ searchQuery }}"</h2>
+          <p class="catalog__subtitle">Ditemukan {{ totalItems }} produk untuk pencarian Anda.</p>
+          {% else %}
+          <h2 class="catalog__title">Katalog Produk</h2>
+          <p class="catalog__subtitle">Pilihan furniture kantor siap pakai dengan kualitas terjamin.</p>
+          {% endif %}
         </div>
-        <div class="product-card__body">
-          <h3 class="product-card__title">Meja Kantor Eksekutif</h3>
-          <p class="product-card__description">Kayu jati solid, finishing glossy premium, dilengkapi manajemen kabel.</p>
-          <div class="product-card__price">Rp 7.500.000</div>
+      </div>
+
+      {# Search and Filter Row #}
+      <div class="catalog__filters-wrapper">
+        {# Search Bar #}
+        <form class="catalog__search" action="/catalog" method="GET">
+          <div class="catalog__search-wrapper">
+            <svg class="catalog__search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/>
+              <path d="M21 21l-4.35-4.35"/>
+            </svg>
+            <input 
+              type="text" 
+              name="search" 
+              class="catalog__search-input" 
+              placeholder="Cari meja, kursi, lemari, monitor..."
+              value="{{ searchQuery }}"
+            >
+            {% if currentCategory is not empty %}
+            <input type="hidden" name="category" value="{{ currentCategory }}">
+            {% endif %}
+          </div>
+        </form>
+
+        {# Category Filter Tabs #}
+        <div class="catalog__filters">
+          <a href="/catalog{% if searchQuery is not empty %}?search={{ searchQuery }}{% endif %}" 
+             class="catalog__filter-tab {{ currentCategory is empty ? 'active' : '' }}">
+            Semua Produk
+          </a>
+          {% for category in categories %}
+          <a href="/catalog?category={{ category.id }}{% if searchQuery is not empty %}&search={{ searchQuery }}{% endif %}" 
+             class="catalog__filter-tab {{ currentCategory == category.id ? 'active' : '' }}">
+            {{ category.name }}
+          </a>
+          {% endfor %}
         </div>
-        <div class="product-card__actions">
-          <a href="/product/1" class="btn btn--ghost btn--sm">Lihat Detail</a>
-          <button class="btn btn--primary btn--sm">Tambah ke Keranjang</button>
-        </div>
-      </article>
-      
-      {# Product 2 #}
-      <article class="product-card">
-        <div class="product-card__image">
-          <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=400&h=300&fit=crop" alt="Set Meja Rapat Glasium">
-          <span class="product-card__badge badge badge--stock">Stok 3</span>
-        </div>
-        <div class="product-card__body">
-          <h3 class="product-card__title">Set Meja Rapat Glasium</h3>
-          <p class="product-card__description">Meja kaca tempered 10 kursi dengan sistem kabel tersembunyi.</p>
-          <div class="product-card__price">Rp 15.900.000</div>
-        </div>
-        <div class="product-card__actions">
-          <a href="/product/2" class="btn btn--ghost btn--sm">Lihat Detail</a>
-          <button class="btn btn--primary btn--sm">Tambah ke Keranjang</button>
-        </div>
-      </article>
-      
-      {# Product 3 #}
-      <article class="product-card">
-        <div class="product-card__image">
-          <img src="https://images.unsplash.com/photo-1580480055273-228ff5388ef8?w=400&h=300&fit=crop" alt="Kursi Ergonomis Lumbar+">
-          <span class="product-card__badge badge badge--stock">Stok 21</span>
-        </div>
-        <div class="product-card__body">
-          <h3 class="product-card__title">Kursi Ergonomis Lumbar+</h3>
-          <p class="product-card__description">Sandaran mesh breathable, penyangga lumbar adjustable, dan armrest 4D.</p>
-          <div class="product-card__price">Rp 3.250.000</div>
-        </div>
-        <div class="product-card__actions">
-          <a href="/product/3" class="btn btn--ghost btn--sm">Lihat Detail</a>
-          <button class="btn btn--primary btn--sm">Tambah ke Keranjang</button>
-        </div>
-      </article>
-      
-      {# Product 4 #}
-      <article class="product-card">
-        <div class="product-card__image">
-          <img src="https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=400&h=300&fit=crop" alt="Monitor LCD 24 inch">
-          <span class="product-card__badge badge badge--stock">Stok 14</span>
-        </div>
-        <div class="product-card__body">
-          <h3 class="product-card__title">Monitor LCD 24 inch</h3>
-          <p class="product-card__description">Panel IPS Full HD, bezel tipis, konektivitas HDMI & DisplayPort.</p>
-          <div class="product-card__price">Rp 1.850.000</div>
-        </div>
-        <div class="product-card__actions">
-          <a href="/product/4" class="btn btn--ghost btn--sm">Lihat Detail</a>
-          <button class="btn btn--primary btn--sm">Tambah ke Keranjang</button>
-        </div>
-      </article>
-      
-      {# Product 5 #}
-      <article class="product-card">
-        <div class="product-card__image">
-          <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop" alt="Lemari Arsip Besi Tactical">
-          <span class="product-card__badge badge badge--stock">Stok 5</span>
-        </div>
-        <div class="product-card__body">
-          <h3 class="product-card__title">Lemari Arsip Besi Tactical</h3>
-          <p class="product-card__description">4 tingkat rak dengan kunci digital fingerprint dan anti karat.</p>
-          <div class="product-card__price">Rp 4.200.000</div>
-        </div>
-        <div class="product-card__actions">
-          <a href="/product/5" class="btn btn--ghost btn--sm">Lihat Detail</a>
-          <button class="btn btn--primary btn--sm">Tambah ke Keranjang</button>
-        </div>
-      </article>
-      
-      {# Product 6 #}
-      <article class="product-card">
-        <div class="product-card__image">
-          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop" alt="Task Lamp Focus Pro">
-          <span class="product-card__badge badge badge--stock">Stok 17</span>
-        </div>
-        <div class="product-card__body">
-          <h3 class="product-card__title">Task Lamp Focus Pro</h3>
-          <p class="product-card__description">Lampu meja LED dengan sensor cahaya adaptif dan wireless charging.</p>
-          <div class="product-card__price">Rp 980.000</div>
-        </div>
-        <div class="product-card__actions">
-          <a href="/product/6" class="btn btn--ghost btn--sm">Lihat Detail</a>
-          <button class="btn btn--primary btn--sm">Tambah ke Keranjang</button>
-        </div>
-      </article>
+      </div>
+
+      {# Product Grid #}
+      {% if items is empty %}
+      <div class="catalog__empty">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="1.5">
+          <circle cx="11" cy="11" r="8"/>
+          <path d="M21 21l-4.35-4.35"/>
+        </svg>
+        <h3 class="catalog__empty-title">Tidak ada produk ditemukan</h3>
+        {% if searchQuery is not empty %}
+        <p class="catalog__empty-text">Tidak ada produk yang cocok dengan pencarian "{{ searchQuery }}". Coba kata kunci lain.</p>
+        <a href="/catalog{% if currentCategory is not empty %}?category={{ currentCategory }}{% endif %}" class="btn btn--primary">Hapus Pencarian</a>
+        {% else %}
+        <p class="catalog__empty-text">Coba ubah filter kategori atau kata kunci pencarian.</p>
+        <a href="/catalog" class="btn btn--primary">Lihat Semua Produk</a>
+        {% endif %}
+      </div>
+      {% else %}
+      <div class="catalog__grid">
+        {% for item in items %}
+        <article class="product-card">
+          <div class="product-card__image">
+            {% if item.imageUrl is not empty %}
+            <img src="{{ item.imageUrl }}" alt="{{ item.name }}">
+            {% else %}
+            <div class="product-card__placeholder">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="1.5">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <path d="M21 15l-5-5L5 21"/>
+              </svg>
+            </div>
+            {% endif %}
+          </div>
+          
+          <div class="product-card__body">
+            <div class="product-card__header">
+              <h3 class="product-card__title">{{ item.name }}</h3>
+              <span class="product-card__stock">Stok {{ item.stock }}</span>
+            </div>
+            
+            <p class="product-card__desc">{{ item.description | abbreviate(80) }}</p>
+            
+            <p class="product-card__price">Rp {{ item.price | numberformat("#,###") }}</p>
+            
+            <div class="product-card__actions">
+              <a href="/product/{{ item.id }}" class="btn btn--outline-sm">Lihat Detail</a>
+              <button class="btn btn--primary-sm" onclick="addToCart({{ item.id }})">Tambah ke Keranjang</button>
+            </div>
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+      {% endif %}
     </div>
-  </div>
-</section>
+  </section>
+</div>
+
+<script>
+function addToCart(itemId) {
+  // TODO: Implement cart functionality in Phase 4
+  alert('Fitur keranjang akan tersedia segera!');
+}
+
+// Highlight search keywords in results
+{% if searchQuery is not empty %}
+(function() {
+  const searchQuery = "{{ searchQuery }}";
+  const searchRegex = new RegExp(`(${searchQuery})`, 'gi');
+  
+  // Highlight in product titles
+  document.querySelectorAll('.product-card__title').forEach(el => {
+    const text = el.textContent;
+    if (searchRegex.test(text)) {
+      el.innerHTML = text.replace(searchRegex, '<mark class="search-highlight">$1</mark>');
+    }
+  });
+  
+  // Highlight in descriptions
+  document.querySelectorAll('.product-card__desc').forEach(el => {
+    const text = el.textContent;
+    if (searchRegex.test(text)) {
+      el.innerHTML = text.replace(searchRegex, '<mark class="search-highlight">$1</mark>');
+    }
+  });
+})();
+{% endif %}
+</script>
 {% endblock %}

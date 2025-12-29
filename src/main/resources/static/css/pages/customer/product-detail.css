@@ -1,5 +1,5 @@
 .product-hero {
-  background: linear-gradient(135deg, #EC4899 0%, #8B5CF6 50%, #6366F1 100%);
+  background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 50%, #6366f1 100%);
   padding: 3rem 0;
 }
 
@@ -22,7 +22,7 @@
 }
 
 .product-hero__content {
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 .product-hero__badge {
@@ -30,7 +30,8 @@
 }
 
 .product-hero__title {
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    sans-serif;
   font-size: 1.875rem;
   font-weight: 700;
   line-height: 1.25;
@@ -41,7 +42,7 @@
   }
 }
 .product-hero__title {
-  color: #FFFFFF;
+  color: #ffffff;
   margin-bottom: 1rem;
 }
 
@@ -84,8 +85,8 @@
 }
 
 .product-hero .btn--primary {
-  background: #FFFFFF;
-  color: #9333EA;
+  background: #ffffff;
+  color: #9333ea;
 }
 .product-hero .btn--primary:hover {
   background: rgba(255, 255, 255, 0.9);
@@ -93,15 +94,15 @@
 
 .product-hero .btn--secondary {
   background: transparent;
-  color: #FFFFFF;
-  border-color: #FFFFFF;
+  color: #ffffff;
+  border-color: #ffffff;
 }
 .product-hero .btn--secondary:hover {
   background: rgba(255, 255, 255, 0.1);
 }
 
 .pricing-card {
-  background: #FFFFFF;
+  background: #ffffff;
   border-radius: 0.75rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   overflow: hidden;
@@ -111,7 +112,7 @@
 .pricing-card__label {
   font-size: 0.75rem;
   font-weight: 500;
-  color: #6B7280;
+  color: #6b7280;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin-bottom: 0.5rem;
@@ -120,13 +121,13 @@
 .pricing-card__price {
   font-size: 1.875rem;
   font-weight: 700;
-  color: #EC4899;
+  color: #ec4899;
   margin-bottom: 0.5rem;
 }
 
 .pricing-card__note {
   font-size: 0.875rem;
-  color: #6B7280;
+  color: #6b7280;
   margin-bottom: 1.5rem;
 }
 
@@ -135,21 +136,21 @@
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
   padding: 1rem 0;
-  border-top: 1px solid #E5E7EB;
-  border-bottom: 1px solid #E5E7EB;
+  border-top: 1px solid #e5e7eb;
+  border-bottom: 1px solid #e5e7eb;
   margin-bottom: 1.5rem;
 }
 
 .pricing-card__detail-label {
   font-size: 0.75rem;
-  color: #6B7280;
+  color: #6b7280;
   margin-bottom: 0.25rem;
 }
 
 .pricing-card__detail-value {
   font-size: 0.875rem;
   font-weight: 500;
-  color: #1F2937;
+  color: #1f2937;
 }
 
 .pricing-card__highlights {
@@ -159,7 +160,7 @@
 .pricing-card__highlights-title {
   font-size: 0.875rem;
   font-weight: 600;
-  color: #1F2937;
+  color: #1f2937;
   margin-bottom: 0.75rem;
 }
 
@@ -169,14 +170,14 @@
   justify-content: flex-start;
   gap: 0.5rem;
   font-size: 0.875rem;
-  color: #4B5563;
+  color: #4b5563;
   margin-bottom: 0.5rem;
 }
 .pricing-card__highlight-item::before {
   content: "";
   width: 6px;
   height: 6px;
-  background: #EC4899;
+  background: #ec4899;
   border-radius: 9999px;
   flex-shrink: 0;
 }
@@ -208,7 +209,8 @@
 }
 
 .product-features__title {
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    sans-serif;
   font-size: 1.25rem;
   font-weight: 600;
   line-height: 1.25;
@@ -216,11 +218,12 @@
 }
 
 .product-features__content {
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    sans-serif;
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
-  color: #4B5563;
+  color: #4b5563;
   line-height: 1.75;
 }
 
@@ -232,7 +235,7 @@
 }
 
 .product-features__spec {
-  background: #FFFFFF;
+  background: #ffffff;
   border-radius: 0.75rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   overflow: hidden;
@@ -241,7 +244,7 @@
 
 .product-features__spec-label {
   font-size: 0.75rem;
-  color: #6B7280;
+  color: #6b7280;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin-bottom: 0.25rem;
@@ -250,7 +253,7 @@
 .product-features__spec-value {
   font-size: 0.875rem;
   font-weight: 500;
-  color: #1F2937;
+  color: #1f2937;
 }
 
 .product-sidebar {
@@ -260,7 +263,7 @@
 }
 
 .product-sidebar__card {
-  background: #FFFFFF;
+  background: #ffffff;
   border-radius: 0.75rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   overflow: hidden;
@@ -270,7 +273,7 @@
 .product-sidebar__title {
   font-size: 1rem;
   font-weight: 600;
-  color: #1F2937;
+  color: #1f2937;
   margin-bottom: 1rem;
 }
 
@@ -286,13 +289,13 @@
   justify-content: flex-start;
   gap: 0.5rem;
   font-size: 0.875rem;
-  color: #4B5563;
+  color: #4b5563;
 }
 .product-sidebar__list-item::before {
   content: "";
   width: 6px;
   height: 6px;
-  background: #EC4899;
+  background: #ec4899;
   border-radius: 9999px;
   flex-shrink: 0;
 }
@@ -304,25 +307,25 @@
 .product-sidebar__demo {
   margin-top: 1.5rem;
   padding-top: 1.5rem;
-  border-top: 1px solid #E5E7EB;
+  border-top: 1px solid #e5e7eb;
 }
 
 .product-sidebar__demo-title {
   font-size: 0.875rem;
   font-weight: 600;
-  color: #1F2937;
+  color: #1f2937;
   margin-bottom: 0.5rem;
 }
 
 .product-sidebar__demo-text {
   font-size: 0.875rem;
-  color: #6B7280;
+  color: #6b7280;
   margin-bottom: 0.5rem;
 }
 
 .product-sidebar__demo-link {
   font-size: 0.875rem;
-  color: #9333EA;
+  color: #9333ea;
 }
 .product-sidebar__demo-link:hover {
   text-decoration: underline;

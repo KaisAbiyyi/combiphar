@@ -2,6 +2,7 @@
 import java.util.Map;
 
 import com.combiphar.core.controller.AuthController;
+import com.combiphar.core.controller.CatalogController;
 import com.combiphar.core.controller.CategoryController;
 import com.combiphar.core.controller.ItemController;
 import com.combiphar.core.controller.QualityCheckController;
@@ -35,10 +36,13 @@ public class Main {
         ItemController itemController = new ItemController();
         QualityCheckController qcController = new QualityCheckController();
 
+        // Initialize Phase 3 controllers (Customer Catalog)
+        CatalogController catalogController = new CatalogController();
+
         PebbleEngine engine = createPebbleEngine();
         Javalin app = createApp(engine);
 
-        registerRoutes(app, authController, categoryController, itemController, qcController);
+        registerRoutes(app, authController, categoryController, itemController, qcController, catalogController);
 
         app.start(PORT);
     }
@@ -103,23 +107,18 @@ public class Main {
     private static void registerRoutes(Javalin app, AuthController authController,
             CategoryController categoryController,
             ItemController itemController,
-            QualityCheckController qcController) {
-        // Home / Catalog page
-        app.get("/", ctx -> {
-            Map<String, Object> model = buildModel(
-                    "Katalog - Combiphar Used Goods",
-                    "catalog",
-                    ctx.sessionAttribute("currentUser"));
-            ctx.render("customer/catalog", model);
-        });
+            QualityCheckController qcController,
+            CatalogController catalogController) {
+        // ====== PHASE 3: Customer Catalog Routes ======
+        // Home / Catalog page - delegated to CatalogController
+        app.get("/", catalogController::showCatalogPage);
+        app.get("/catalog", catalogController::showCatalogPage);
 
-        app.get("/catalog", ctx -> {
-            Map<String, Object> model = buildModel(
-                    "Katalog - Combiphar Used Goods",
-                    "catalog",
-                    ctx.sessionAttribute("currentUser"));
-            ctx.render("customer/catalog", model);
-        });
+        // Product detail page - delegated to CatalogController
+        app.get("/product/{id}", catalogController::showProductDetail);
+
+        // Catalog search API endpoint
+        app.get("/api/catalog/search", catalogController::searchProducts);
 
         // Auth Routes
         app.post("/logout", authController::handleLogout);
@@ -146,17 +145,6 @@ public class Main {
         // Protected Admin Routes
         app.before("/admin/*", AuthMiddleware.adminOnly);
         app.before("/admin", AuthMiddleware.adminOnly);
-
-        // Product detail page
-        app.get("/product/{id}", ctx -> {
-            String productId = ctx.pathParam("id");
-            Map<String, Object> model = buildModel(
-                    "Set Meja Rapat Glasium - Combiphar Used Goods",
-                    "product",
-                    ctx.sessionAttribute("currentUser"));
-            model.put("productId", productId);
-            ctx.render("customer/product-detail", model);
-        });
 
         // Cart page
         app.get("/cart", ctx -> {
