@@ -66,6 +66,10 @@
         if (json && json.success) {
           const message = json.message || 'Alamat pengiriman tersimpan';
           window.showToast && showToast(message, 'success');
+          // Redirect ke halaman pembayaran
+          setTimeout(function() {
+            window.location.href = '/payment';
+          }, 500);
           return;
         }
         const message = json && json.message ? json.message : 'Alamat tidak valid';

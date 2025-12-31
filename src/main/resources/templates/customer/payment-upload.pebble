@@ -1,0 +1,131 @@
+{# ========================================================================== #}
+{# PAYMENT UPLOAD - Halaman upload bukti pembayaran                          #}
+{# ========================================================================== #}
+{% extends "customer/layout" %}
+
+{% block styles %}
+<link rel="stylesheet" href="/css/pages/customer/payment-upload.css">
+{% endblock %}
+
+{% block content %}
+<section class="payment-upload">
+  <div class="payment-upload__container">
+    
+    {# ================================================================== #}
+    {# HEADER                                                             #}
+    {# ================================================================== #}
+    <div class="payment-upload__header">
+      <h1>Unggah Bukti Pembayaran</h1>
+      <p>Upload bukti transfer untuk verifikasi pembayaran Anda.</p>
+    </div>
+
+    <div class="payment-upload__content">
+      
+      {# ================================================================== #}
+      {# UPLOAD FORM (LEFT)                                                #}
+      {# ================================================================== #}
+      <div class="upload-section">
+        <div class="upload-card">
+          <div class="upload-card__header">
+            <h2>Upload File</h2>
+          </div>
+          
+          <div class="upload-card__body">
+            {# Upload Form #}
+            <form id="uploadForm" class="upload-form" enctype="multipart/form-data">
+              
+              {# Dropzone Area #}
+              <div class="upload-dropzone" id="dropzone">
+                <div class="upload-dropzone__icon">📁</div>
+                <div class="upload-dropzone__text">
+                  <p>Drag & drop file di sini</p>
+                  <span>atau</span>
+                </div>
+                <label for="paymentProof" class="upload-dropzone__btn">
+                  Pilih File
+                </label>
+                <input 
+                  type="file" 
+                  id="paymentProof" 
+                  name="paymentProof"
+                  accept="image/*,.pdf"
+                  class="upload-dropzone__input"
+                  required
+                >
+                <p class="upload-dropzone__hint">
+                  Format: JPG, PNG, PDF (Maks. 5MB)
+                </p>
+              </div>
+
+              {# Preview Area #}
+              <div class="upload-preview" id="previewArea" style="display: none;">
+                <div class="upload-preview__header">
+                  <h4>File yang dipilih:</h4>
+                  <button type="button" class="upload-preview__remove" id="removeFile">
+                    ✕ Hapus
+                  </button>
+                </div>
+                <div class="upload-preview__content">
+                  <img id="previewImage" src="" alt="Preview" style="display: none;">
+                  <div id="previewFile" class="upload-preview__file" style="display: none;">
+                    <span class="upload-preview__file-icon">📄</span>
+                    <span class="upload-preview__file-name" id="fileName"></span>
+                  </div>
+                </div>
+              </div>
+
+              {# Submit Button #}
+              <button type="submit" class="btn btn--primary btn--full" id="submitBtn" disabled>
+                Kirim Bukti Pembayaran
+              </button>
+            </form>
+
+            {# Success Message (hidden by default) #}
+            <div class="upload-success" id="successMessage" style="display: none;">
+              <div class="upload-success__icon">✅</div>
+              <h3>Bukti Pembayaran Terkirim!</h3>
+              <p>Tim kami akan memverifikasi pembayaran Anda dalam 1x24 jam.</p>
+              <a href="/history" class="btn btn--secondary">Lihat Riwayat Pesanan</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {# ================================================================== #}
+      {# ORDER SUMMARY (RIGHT)                                             #}
+      {# ================================================================== #}
+      <aside class="order-summary-section">
+        <div class="order-card">
+          <div class="order-card__header">
+            <h3>Ringkasan Pesanan</h3>
+          </div>
+
+          <div class="order-card__items">
+            {% for item in cart.items %}
+            <div class="order-item">
+              <span class="order-item__name">{{ item.itemName }}</span>
+              <span class="order-item__qty">{{ item.quantity }}x</span>
+            </div>
+            {% endfor %}
+          </div>
+
+          <div class="order-card__totals">
+            <div class="order-row order-row--total">
+              <span>Total Pembayaran</span>
+              <span>Rp {{ orderSummary.totalPrice | numberformat("#,###") }}</span>
+            </div>
+          </div>
+        </div>
+
+        {# Back Link #}
+        <a href="/payment" class="back-link">← Kembali ke halaman transfer</a>
+      </aside>
+
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="/js/payment-upload.js"></script>
+{% endblock %}

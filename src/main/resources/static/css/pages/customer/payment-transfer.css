@@ -1,0 +1,450 @@
+/* ==========================================================================
+   PAYMENT TRANSFER PAGE STYLES
+   Halaman pembayaran transfer bank dengan list bank yang bisa diklik
+   ========================================================================== */
+
+.payment-transfer {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  padding: 2rem 1rem;
+}
+
+@media (min-width: 768px) {
+  .payment-transfer {
+    padding: 3rem 2rem;
+  }
+}
+
+.payment-transfer__container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Header */
+.payment-transfer__header {
+  margin-bottom: 2rem;
+}
+
+.payment-transfer__header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+}
+
+.payment-transfer__header p {
+  color: #6b7280;
+  font-size: 0.95rem;
+}
+
+/* Content Grid */
+.payment-transfer__content {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media (min-width: 1024px) {
+  .payment-transfer__content {
+    grid-template-columns: 1.2fr 0.8fr;
+  }
+}
+
+/* ==========================================================================
+   BANK SELECTION SECTION
+   ========================================================================== */
+.bank-selection-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.bank-card {
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.bank-card__header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.bank-card__header h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+
+.bank-card__body {
+  padding: 1rem;
+}
+
+/* Bank List */
+.bank-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.bank-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: #f9fafb;
+  border: 2px solid #e5e7eb;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 100%;
+  text-align: left;
+}
+
+.bank-item:hover {
+  background: #f3f4f6;
+  border-color: #9333ea;
+}
+
+.bank-item--active {
+  background: #faf5ff;
+  border-color: #9333ea;
+}
+
+.bank-item__logo {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border-radius: 0.5rem;
+}
+
+.bank-item__icon {
+  font-size: 1.5rem;
+}
+
+.bank-item__info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.bank-item__name {
+  font-weight: 600;
+  color: #1f2937;
+  font-size: 1rem;
+}
+
+.bank-item__hint {
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.bank-item__arrow {
+  font-size: 1.5rem;
+  color: #9ca3af;
+}
+
+/* ==========================================================================
+   TRANSFER INSTRUCTIONS
+   ========================================================================== */
+.transfer-instructions {
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.transfer-instructions__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.transfer-instructions__header h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+
+.transfer-instructions__close {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  color: #9ca3af;
+  cursor: pointer;
+  padding: 0.25rem;
+  line-height: 1;
+}
+
+.transfer-instructions__close:hover {
+  color: #1f2937;
+}
+
+.transfer-instructions__body {
+  padding: 1.5rem;
+}
+
+/* Transfer Account Info */
+.transfer-account {
+  background: linear-gradient(135deg, #9333ea 0%, #7c3aed 100%);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  color: white;
+  margin-bottom: 1.5rem;
+}
+
+.transfer-account__label {
+  font-size: 0.85rem;
+  opacity: 0.9;
+  margin-bottom: 0.5rem;
+}
+
+.transfer-account__bank {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.transfer-account__number {
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: monospace;
+  margin-bottom: 0.25rem;
+}
+
+.transfer-account__holder {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  margin-bottom: 1rem;
+}
+
+.transfer-account__copy {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 0.625rem 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+  width: 100%;
+}
+
+.transfer-account__copy:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Transfer Amount */
+.transfer-amount {
+  text-align: center;
+  padding: 1rem;
+  background: #faf5ff;
+  border-radius: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.transfer-amount__label {
+  display: block;
+  color: #6b7280;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.transfer-amount__value {
+  display: block;
+  color: #9333ea;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+/* Transfer Steps */
+.transfer-steps h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 0.75rem;
+}
+
+.transfer-steps__list {
+  margin: 0;
+  padding-left: 1.25rem;
+  color: #4b5563;
+  font-size: 0.9rem;
+  line-height: 1.8;
+}
+
+.transfer-steps__list strong {
+  color: #1f2937;
+}
+
+/* ==========================================================================
+   ORDER SUMMARY SECTION
+   ========================================================================== */
+.order-summary-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.order-card {
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.order-card__header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.order-card__header h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+
+.order-card__count {
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.order-card__items {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.order-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  font-size: 0.9rem;
+}
+
+.order-item__name {
+  flex: 1;
+  color: #1f2937;
+}
+
+.order-item__qty {
+  color: #6b7280;
+  margin: 0 1rem;
+}
+
+.order-item__price {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.order-card__totals {
+  padding: 1rem 1.5rem;
+}
+
+.order-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  font-size: 0.9rem;
+  color: #4b5563;
+}
+
+.order-row--total {
+  border-top: 1px solid #e5e7eb;
+  margin-top: 0.5rem;
+  padding-top: 1rem;
+  font-weight: 700;
+  color: #1f2937;
+  font-size: 1rem;
+}
+
+/* Help Card */
+.help-card {
+  background: white;
+  border-radius: 1rem;
+  padding: 1.25rem;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.help-card p {
+  color: #6b7280;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.help-card a {
+  color: #9333ea;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.help-card a:hover {
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   BUTTONS
+   ========================================================================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.875rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.btn--primary {
+  background: linear-gradient(135deg, #9333ea 0%, #7c3aed 100%);
+  color: white;
+}
+
+.btn--primary:hover {
+  background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+  transform: translateY(-1px);
+}
+
+.btn--secondary {
+  background: #f3f4f6;
+  color: #1f2937;
+}
+
+.btn--secondary:hover {
+  background: #e5e7eb;
+}
+
+.btn--full {
+  width: 100%;
+}

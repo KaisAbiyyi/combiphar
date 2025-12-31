@@ -7,6 +7,8 @@ import com.combiphar.core.controller.CatalogController;
 import com.combiphar.core.controller.CategoryController;
 import com.combiphar.core.controller.CheckoutController;
 import com.combiphar.core.controller.ItemController;
+import com.combiphar.core.controller.PaymentController;
+import com.combiphar.core.controller.PaymentUploadController;
 import com.combiphar.core.controller.QualityCheckController;
 import com.combiphar.core.middleware.AuthMiddleware;
 import com.combiphar.core.repository.CartRepository;
@@ -14,7 +16,9 @@ import com.combiphar.core.repository.ItemRepository;
 import com.combiphar.core.repository.UserRepository;
 import com.combiphar.core.service.AuthService;
 import com.combiphar.core.service.CartService;
+import com.combiphar.core.service.FileUploadService;
 import com.combiphar.core.service.OrderService;
+import com.combiphar.core.service.PaymentService;
 import com.mitchellbosecke.pebble.PebbleEngine;
 import com.mitchellbosecke.pebble.loader.ClasspathLoader;
 
@@ -41,6 +45,8 @@ public class Main {
         AuthService authService = new AuthService(userRepository);
         CartService cartService = new CartService(itemRepository);
         OrderService orderService = new OrderService();
+        FileUploadService fileUploadService = new FileUploadService();
+        PaymentService paymentService = new PaymentService(fileUploadService);
 
         // Initialize controllers - Phase 1: Auth
         AuthController authController = new AuthController(authService);
@@ -58,12 +64,17 @@ public class Main {
 
         CheckoutController checkoutController = new CheckoutController(orderService);
 
+        // Initialize Phase 5 controllers (Payment & Shipping)
+        PaymentController paymentController = new PaymentController(paymentService, orderService);
+        PaymentUploadController paymentUploadController = new PaymentUploadController(fileUploadService, orderService);
+
         PebbleEngine engine = createPebbleEngine();
         Javalin app = createApp(engine);
 
         registerRoutes(app, authController, categoryController,
                 itemController, qcController, catalogController, cartController,
-                checkoutController, cartRepository);
+                checkoutController, paymentController, paymentUploadController,
+                cartRepository, orderService);
 
         // Run DB migrations (best-effort). This will create carts/cart_items if missing.
         com.combiphar.core.migration.MigrationRunner.runMigrations();
@@ -135,7 +146,10 @@ public class Main {
             CatalogController catalogController,
             CartController cartController,
             CheckoutController checkoutController,
-            CartRepository cartRepository) {
+            PaymentController paymentController,
+            PaymentUploadController paymentUploadController,
+            CartRepository cartRepository,
+            OrderService orderService) {
         // ====== PHASE 3: Customer Catalog Routes ======
         // Home / Catalog page - delegated to CatalogController
         app.get("/", catalogController::showCatalogPage);
@@ -179,6 +193,7 @@ public class Main {
         app.before("/cart", AuthMiddleware.authenticated);
         app.before("/checkout", AuthMiddleware.authenticated);
         app.before("/payment", AuthMiddleware.authenticated);
+        app.before("/payment/*", AuthMiddleware.authenticated);
         app.before("/history", AuthMiddleware.authenticated);
         app.before("/order/*", AuthMiddleware.authenticated);
 
@@ -210,29 +225,33 @@ public class Main {
         app.before("/admin/*", AuthMiddleware.adminOnly);
         app.before("/admin", AuthMiddleware.adminOnly);
 
-        // Payment page (legacy route support)
-        app.get("/payment", ctx -> {
-            Map<String, Object> model = buildModel(
-                    "Pembayaran Pesanan - Combiphar Used Goods",
-                    "payment",
-                    ctx.sessionAttribute("currentUser"));
-            ctx.render("customer/payment", model);
-        });
+        // ====== PHASE 5: Payment Routes ======
+        // Payment transfer page - shows bank account info
+        app.get("/payment", paymentController::showPaymentPage);
 
-        app.get("/checkout/payment", ctx -> {
-            Map<String, Object> model = buildModel(
-                    "Pembayaran Pesanan - Combiphar Used Goods",
-                    "payment",
-                    ctx.sessionAttribute("currentUser"));
-            ctx.render("customer/payment", model);
-        });
+        // Payment upload page - upload bukti pembayaran
+        app.get("/payment/upload", paymentController::showUploadPage);
+
+        // Payment upload API
+        app.post("/api/payment/upload", paymentUploadController::uploadPaymentProof);
+
+        // Legacy payment route (redirect to new payment flow)
+        app.get("/checkout/payment", ctx -> ctx.redirect("/payment"));
 
         // History page
         app.get("/history", ctx -> {
+            var user = ctx.sessionAttribute("currentUser");
             Map<String, Object> model = buildModel(
                     "Riwayat Transaksi - Combiphar Used Goods",
                     "history",
-                    ctx.sessionAttribute("currentUser"));
+                    user);
+
+            if (user != null) {
+                java.util.List<com.combiphar.core.model.OrderHistory> orderHistory
+                        = orderService.getOrderHistory(((com.combiphar.core.model.User) user).getId());
+                model.put("orderHistory", orderHistory);
+            }
+
             ctx.render("customer/history", model);
         });
 

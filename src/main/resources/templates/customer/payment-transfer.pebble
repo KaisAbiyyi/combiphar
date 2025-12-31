@@ -1,0 +1,150 @@
+{# ========================================================================== #}
+{# PAYMENT TRANSFER - Halaman pembayaran via transfer bank                   #}
+{# ========================================================================== #}
+{% extends "customer/layout" %}
+
+{% block styles %}
+<link rel="stylesheet" href="/css/pages/customer/payment-transfer.css">
+{% endblock %}
+
+{% block content %}
+<section class="payment-transfer">
+  <div class="payment-transfer__container">
+    
+    {# ================================================================== #}
+    {# HEADER                                                             #}
+    {# ================================================================== #}
+    <div class="payment-transfer__header">
+      <h1>Pembayaran Transfer Bank</h1>
+      <p>Pilih bank dan transfer ke rekening yang tersedia.</p>
+    </div>
+
+    <div class="payment-transfer__content">
+      
+      {# ================================================================== #}
+      {# BANK SELECTION (LEFT)                                             #}
+      {# ================================================================== #}
+      <div class="bank-selection-section">
+        <div class="bank-card">
+          <div class="bank-card__header">
+            <h2>Pilih Bank Transfer</h2>
+          </div>
+          
+          <div class="bank-card__body">
+            {# Bank List #}
+            <div class="bank-list">
+              {% for account in allBankAccounts %}
+              <button class="bank-item" data-bank="{{ account.bankName }}" 
+                      data-account="{{ account.accountNumber }}" 
+                      data-holder="{{ account.accountHolder }}">
+                <div class="bank-item__logo">
+                  <span class="bank-item__icon">🏦</span>
+                </div>
+                <div class="bank-item__info">
+                  <span class="bank-item__name">{{ account.bankName }}</span>
+                  <span class="bank-item__hint">a.n. {{ account.accountHolder }}</span>
+                </div>
+                <span class="bank-item__arrow">›</span>
+              </button>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        {# Transfer Instructions (Hidden by default) #}
+        <div class="transfer-instructions" id="transferInstructions" style="display: none;">
+          <div class="transfer-instructions__header">
+            <h3>Petunjuk Transfer</h3>
+            <button class="transfer-instructions__close" id="closeInstructions">✕</button>
+          </div>
+          
+          <div class="transfer-instructions__body">
+            {# Account Info #}
+            <div class="transfer-account">
+              <div class="transfer-account__label">Transfer ke:</div>
+              <div class="transfer-account__bank" id="selectedBankName">-</div>
+              <div class="transfer-account__number" id="selectedAccountNumber">-</div>
+              <div class="transfer-account__holder" id="selectedAccountHolder">-</div>
+              <button class="transfer-account__copy" id="copyAccountNumber">
+                📋 Salin Nomor Rekening
+              </button>
+            </div>
+
+            {# Amount #}
+            <div class="transfer-amount">
+              <span class="transfer-amount__label">Jumlah Transfer:</span>
+              <span class="transfer-amount__value">Rp {{ orderSummary.totalPrice | numberformat("#,###") }}</span>
+            </div>
+
+            {# Steps #}
+            <div class="transfer-steps">
+              <h4>Langkah-langkah:</h4>
+              <ol class="transfer-steps__list">
+                <li>Buka aplikasi mobile banking atau ATM Anda</li>
+                <li>Pilih menu Transfer ke <strong id="bankNameStep">Bank</strong></li>
+                <li>Masukkan nomor rekening yang tertera di atas</li>
+                <li>Masukkan jumlah: <strong>Rp {{ orderSummary.totalPrice | numberformat("#,###") }}</strong></li>
+                <li>Konfirmasi dan selesaikan transfer</li>
+                <li>Simpan bukti transfer untuk diunggah</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {# ================================================================== #}
+      {# ORDER SUMMARY (RIGHT)                                             #}
+      {# ================================================================== #}
+      <aside class="order-summary-section">
+        <div class="order-card">
+          <div class="order-card__header">
+            <h3>Ringkasan Pesanan</h3>
+            <span class="order-card__count">{{ cart.itemCount }} barang</span>
+          </div>
+
+          <div class="order-card__items">
+            {% for item in cart.items %}
+            <div class="order-item">
+              <span class="order-item__name">{{ item.itemName }}</span>
+              <span class="order-item__qty">{{ item.quantity }}x</span>
+              <span class="order-item__price">Rp {{ item.subtotal | numberformat("#,###") }}</span>
+            </div>
+            {% endfor %}
+          </div>
+
+          <div class="order-card__totals">
+            <div class="order-row">
+              <span>Subtotal</span>
+              <span>Rp {{ orderSummary.subtotal | numberformat("#,###") }}</span>
+            </div>
+            <div class="order-row">
+              <span>Ongkos Kirim</span>
+              <span>Rp {{ orderSummary.shippingCost | numberformat("#,###") }}</span>
+            </div>
+            <div class="order-row order-row--total">
+              <span>Total</span>
+              <span>Rp {{ orderSummary.totalPrice | numberformat("#,###") }}</span>
+            </div>
+          </div>
+        </div>
+
+        {# Upload Button #}
+        <a href="/payment/upload" class="btn btn--primary btn--full">
+          Unggah Bukti Pembayaran
+        </a>
+
+        {# Help Section #}
+        <div class="help-card">
+          <p>Ada pertanyaan tentang pembayaran?</p>
+          <a href="mailto:finance@combiphar.id">finance@combiphar.id</a>
+        </div>
+      </aside>
+
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="/js/payment-transfer.js"></script>
+{% endblock %}

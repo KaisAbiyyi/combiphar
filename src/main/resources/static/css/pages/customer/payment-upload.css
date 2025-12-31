@@ -1,0 +1,410 @@
+/* ==========================================================================
+   PAYMENT UPLOAD PAGE STYLES
+   Halaman upload bukti pembayaran
+   ========================================================================== */
+
+.payment-upload {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  padding: 2rem 1rem;
+}
+
+@media (min-width: 768px) {
+  .payment-upload {
+    padding: 3rem 2rem;
+  }
+}
+
+.payment-upload__container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* Header */
+.payment-upload__header {
+  margin-bottom: 2rem;
+}
+
+.payment-upload__header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+}
+
+.payment-upload__header p {
+  color: #6b7280;
+  font-size: 0.95rem;
+}
+
+/* Content Grid */
+.payment-upload__content {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .payment-upload__content {
+    grid-template-columns: 1.2fr 0.8fr;
+  }
+}
+
+/* ==========================================================================
+   UPLOAD SECTION
+   ========================================================================== */
+.upload-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.upload-card {
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.upload-card__header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.upload-card__header h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+
+.upload-card__body {
+  padding: 1.5rem;
+}
+
+/* Transfer Reminder */
+.transfer-reminder {
+  background: #faf5ff;
+  border: 1px solid #e9d5ff;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.transfer-reminder p {
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin-bottom: 0.5rem;
+}
+
+.transfer-reminder__account {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.transfer-reminder__account strong {
+  color: #1f2937;
+  font-size: 1rem;
+}
+
+.transfer-reminder__account span {
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.transfer-reminder__amount {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #e9d5ff;
+  font-size: 0.95rem;
+  color: #1f2937;
+}
+
+.transfer-reminder__amount strong {
+  color: #9333ea;
+  font-size: 1.1rem;
+}
+
+/* ==========================================================================
+   UPLOAD DROPZONE
+   ========================================================================== */
+.upload-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.upload-dropzone {
+  border: 2px dashed #d1d5db;
+  border-radius: 1rem;
+  padding: 3rem 2rem;
+  text-align: center;
+  transition: all 0.2s;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.upload-dropzone:hover,
+.upload-dropzone--active {
+  border-color: #9333ea;
+  background: #faf5ff;
+}
+
+.upload-dropzone__icon {
+  font-size: 3rem;
+}
+
+.upload-dropzone__text p {
+  color: #1f2937;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.upload-dropzone__text span {
+  color: #9ca3af;
+  font-size: 0.85rem;
+}
+
+.upload-dropzone__btn {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background: #9333ea;
+  color: white;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.upload-dropzone__btn:hover {
+  background: #7c3aed;
+}
+
+.upload-dropzone__input {
+  display: none;
+}
+
+.upload-dropzone__hint {
+  font-size: 0.8rem;
+  color: #9ca3af;
+}
+
+/* ==========================================================================
+   UPLOAD PREVIEW
+   ========================================================================== */
+.upload-preview {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.upload-preview__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.upload-preview__header h4 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+
+.upload-preview__remove {
+  background: none;
+  border: none;
+  color: #ef4444;
+  font-size: 0.85rem;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.upload-preview__remove:hover {
+  text-decoration: underline;
+}
+
+.upload-preview__content {
+  padding: 1.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.upload-preview__content img {
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: 0.5rem;
+}
+
+.upload-preview__file {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: white;
+  border-radius: 0.5rem;
+}
+
+.upload-preview__file-icon {
+  font-size: 2rem;
+}
+
+.upload-preview__file-name {
+  color: #1f2937;
+  font-weight: 500;
+}
+
+/* ==========================================================================
+   UPLOAD SUCCESS
+   ========================================================================== */
+.upload-success {
+  text-align: center;
+  padding: 2rem;
+}
+
+.upload-success__icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.upload-success h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+}
+
+.upload-success p {
+  color: #6b7280;
+  margin-bottom: 1.5rem;
+}
+
+/* ==========================================================================
+   ORDER SUMMARY (REUSED)
+   ========================================================================== */
+.order-summary-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.order-card {
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.order-card__header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.order-card__header h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+
+.order-card__items {
+  padding: 1rem 1.5rem;
+}
+
+.order-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  font-size: 0.9rem;
+}
+
+.order-item__name {
+  flex: 1;
+  color: #1f2937;
+}
+
+.order-item__qty {
+  color: #6b7280;
+}
+
+.order-card__totals {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.order-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: #4b5563;
+}
+
+.order-row--total {
+  font-weight: 700;
+  color: #1f2937;
+  font-size: 1rem;
+}
+
+/* Back Link */
+.back-link {
+  display: inline-block;
+  color: #9333ea;
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   BUTTONS (REUSED)
+   ========================================================================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.875rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.btn--primary {
+  background: linear-gradient(135deg, #9333ea 0%, #7c3aed 100%);
+  color: white;
+}
+
+.btn--primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+  transform: translateY(-1px);
+}
+
+.btn--primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn--secondary {
+  background: #f3f4f6;
+  color: #1f2937;
+}
+
+.btn--secondary:hover {
+  background: #e5e7eb;
+}
+
+.btn--full {
+  width: 100%;
+}

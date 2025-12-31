@@ -68,101 +68,38 @@ extends "customer/layout" %} {% block content %}
         </thead>
         <tbody class="history-table__body">
 
-          {# Transaction 1 #}
+          {% if orderHistory is empty %}
+          <tr class="history-table__row">
+            <td colspan="6" class="history-table__cell" style="text-align: center; padding: 40px;">
+              <p style="color: #666;">Belum ada transaksi</p>
+            </td>
+          </tr>
+          {% else %}
+          {% for order in orderHistory %}
           <tr class="history-table__row">
             <td class="history-table__cell history-table__cell--invoice">
               <div class="invoice-cell">
-                <span class="invoice-cell__number">INV-229021</span>
+                <span class="invoice-cell__number">{{ order.orderNumber }}</span>
               </div>
             </td>
-            <td class="history-table__cell">26 Sep 2025</td>
+            <td class="history-table__cell">{{ order.formattedDate }}</td>
             <td class="history-table__cell">
               <div class="product-cell">
-                <span class="product-cell__name">Meja Eksekutif Aura Lumbar+</span>
+                <span class="product-cell__name">{{ order.firstItemName }}{{ order.itemCount }}</span>
               </div>
             </td>
             <td class="history-table__cell">
-              <span class="status-badge status-badge--proses">Dikirim</span>
+              <span class="status-badge status-badge--{{ order.statusBadge }}">{{ order.statusText }}</span>
             </td>
             <td class="history-table__cell history-table__cell--price">
-              Rp 30.300.000
+              {{ order.formattedPrice }}
             </td>
             <td class="history-table__cell">
-              <button class="history-action-btn">Lihat Detail</button>
+              <a href="/order/{{ order.orderId }}" class="history-action-btn">{{ order.actionButton }}</a>
             </td>
           </tr>
-
-          {# Transaction 2 #}
-          <tr class="history-table__row">
-            <td class="history-table__cell history-table__cell--invoice">
-              <div class="invoice-cell">
-                <span class="invoice-cell__number">INV-229444</span>
-              </div>
-            </td>
-            <td class="history-table__cell">17 Sep 2025</td>
-            <td class="history-table__cell">
-              <div class="product-cell">
-                <span class="product-cell__name">Monitor LCD GF, Lamour Mwax Pro</span>
-              </div>
-            </td>
-            <td class="history-table__cell">
-              <span class="status-badge status-badge--selesai">Selesai</span>
-            </td>
-            <td class="history-table__cell history-table__cell--price">
-              Rp 21.780.000
-            </td>
-            <td class="history-table__cell">
-              <button class="history-action-btn">Unduh Invoice</button>
-            </td>
-          </tr>
-
-          {# Transaction 3 #}
-          <tr class="history-table__row">
-            <td class="history-table__cell history-table__cell--invoice">
-              <div class="invoice-cell">
-                <span class="invoice-cell__number">INV-229410</span>
-              </div>
-            </td>
-            <td class="history-table__cell">16 Sep 2025</td>
-            <td class="history-table__cell">
-              <div class="product-cell">
-                <span class="product-cell__name">Bet Meja Digital Western</span>
-              </div>
-            </td>
-            <td class="history-table__cell">
-              <span class="status-badge status-badge--pending">Menunggu</span>
-            </td>
-            <td class="history-table__cell history-table__cell--price">
-              Rp 35.500.000
-            </td>
-            <td class="history-table__cell">
-              <button class="history-action-btn">Ajukan Revisi</button>
-            </td>
-          </tr>
-
-          {# Transaction 4 #}
-          <tr class="history-table__row">
-            <td class="history-table__cell history-table__cell--invoice">
-              <div class="invoice-cell">
-                <span class="invoice-cell__number">INV-227986</span>
-              </div>
-            </td>
-            <td class="history-table__cell">26 Jul 2025</td>
-            <td class="history-table__cell">
-              <div class="product-cell">
-                <span class="product-cell__name">Lemari Arsip Polywood</span>
-              </div>
-            </td>
-            <td class="history-table__cell">
-              <span class="status-badge status-badge--selesai">Selesai</span>
-            </td>
-            <td class="history-table__cell history-table__cell--price">
-              Rp 4.250.000
-            </td>
-            <td class="history-table__cell">
-              <button class="history-action-btn">Beri Penilaian</button>
-            </td>
-          </tr>
+          {% endfor %}
+          {% endif %}
 
         </tbody>
       </table>
