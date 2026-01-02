@@ -19,17 +19,18 @@ public class PaymentRepository {
      * Menyimpan payment baru ke database.
      */
     public void save(Payment payment) {
-        String sql = "INSERT INTO payments (id, order_id, type, amount, status, created_at) "
-                + "VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO payments (id, order_id, type, bank, amount, status, created_at) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, payment.getId());
             stmt.setString(2, payment.getOrderId());
             stmt.setString(3, payment.getType());
-            stmt.setBigDecimal(4, payment.getAmount());
-            stmt.setString(5, payment.getStatus());
-            stmt.setTimestamp(6, Timestamp.valueOf(payment.getCreatedAt()));
+            stmt.setString(4, payment.getBank());
+            stmt.setBigDecimal(5, payment.getAmount());
+            stmt.setString(6, payment.getStatus());
+            stmt.setTimestamp(7, Timestamp.valueOf(payment.getCreatedAt()));
 
             stmt.executeUpdate();
         } catch (SQLException e) {
@@ -38,15 +39,16 @@ public class PaymentRepository {
     }
 
     /**
-     * Update payment dengan bukti pembayaran.
+     * Update payment dengan bukti pembayaran dan bank.
      */
-    public void updateWithProof(String paymentId, String proofFilePath) {
-        String sql = "UPDATE payments SET status = 'SUCCESS', paid_at = ? WHERE id = ?";
+    public void updatePayment(String paymentId, String proofFilePath, String bank) {
+        String sql = "UPDATE payments SET status = 'SUCCESS', proof = ?, bank = ?, paid_at = ? WHERE id = ?";
 
         try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
-            stmt.setString(2, paymentId);
+            stmt.setString(1, proofFilePath);
+            stmt.setString(2, bank);
+            stmt.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
+            stmt.setString(4, paymentId);
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Error updating payment: " + e.getMessage(), e);
@@ -79,9 +81,10 @@ public class PaymentRepository {
                 rs.getString("id"),
                 rs.getString("order_id"),
                 rs.getString("type"),
+                rs.getString("bank"),
                 rs.getBigDecimal("amount"),
                 rs.getString("status"),
-                null, // proof_file_path not in current schema
+                rs.getString("proof"),
                 paidAtTs != null ? paidAtTs.toLocalDateTime() : null,
                 rs.getTimestamp("created_at").toLocalDateTime()
         );

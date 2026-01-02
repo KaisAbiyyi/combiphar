@@ -1,6 +1,7 @@
 
 import java.util.Map;
 
+import com.combiphar.core.controller.AdminShippingController;
 import com.combiphar.core.controller.AuthController;
 import com.combiphar.core.controller.CartController;
 import com.combiphar.core.controller.CatalogController;
@@ -11,6 +12,7 @@ import com.combiphar.core.controller.PaymentController;
 import com.combiphar.core.controller.PaymentUploadController;
 import com.combiphar.core.controller.QualityCheckController;
 import com.combiphar.core.middleware.AuthMiddleware;
+import com.combiphar.core.model.Order;
 import com.combiphar.core.repository.CartRepository;
 import com.combiphar.core.repository.ItemRepository;
 import com.combiphar.core.repository.UserRepository;
@@ -19,6 +21,7 @@ import com.combiphar.core.service.CartService;
 import com.combiphar.core.service.FileUploadService;
 import com.combiphar.core.service.OrderService;
 import com.combiphar.core.service.PaymentService;
+import com.combiphar.core.service.ShippingService;
 import com.mitchellbosecke.pebble.PebbleEngine;
 import com.mitchellbosecke.pebble.loader.ClasspathLoader;
 
@@ -67,6 +70,8 @@ public class Main {
         // Initialize Phase 5 controllers (Payment & Shipping)
         PaymentController paymentController = new PaymentController(paymentService, orderService);
         PaymentUploadController paymentUploadController = new PaymentUploadController(fileUploadService, orderService);
+        ShippingService shippingService = new ShippingService();
+        AdminShippingController adminShippingController = new AdminShippingController(shippingService);
 
         PebbleEngine engine = createPebbleEngine();
         Javalin app = createApp(engine);
@@ -74,6 +79,7 @@ public class Main {
         registerRoutes(app, authController, categoryController,
                 itemController, qcController, catalogController, cartController,
                 checkoutController, paymentController, paymentUploadController,
+                adminShippingController, shippingService,
                 cartRepository, orderService);
 
         // Run DB migrations (best-effort). This will create carts/cart_items if missing.
@@ -148,6 +154,8 @@ public class Main {
             CheckoutController checkoutController,
             PaymentController paymentController,
             PaymentUploadController paymentUploadController,
+            AdminShippingController adminShippingController,
+            ShippingService shippingService,
             CartRepository cartRepository,
             OrderService orderService) {
         // ====== PHASE 3: Customer Catalog Routes ======
@@ -235,6 +243,24 @@ public class Main {
         // Payment upload API
         app.post("/api/payment/upload", paymentUploadController::uploadPaymentProof);
 
+        // Order complete API - user marks order as received
+        app.post("/api/order/complete", ctx -> {
+            String orderId = ctx.formParam("orderId");
+            if (orderId == null || orderId.isBlank()) {
+                ctx.status(400).json(Map.of("success", false, "message", "Order ID required"));
+                return;
+            }
+            try {
+                var shipment = shippingService.getShipmentByOrderId(orderId);
+                if (shipment.isPresent()) {
+                    shippingService.markAsReceived(shipment.get().getId());
+                }
+                ctx.redirect("/order/" + orderId);
+            } catch (Exception e) {
+                ctx.status(500).json(Map.of("success", false, "message", e.getMessage()));
+            }
+        });
+
         // Legacy payment route (redirect to new payment flow)
         app.get("/checkout/payment", ctx -> ctx.redirect("/payment"));
 
@@ -247,8 +273,9 @@ public class Main {
                     user);
 
             if (user != null) {
+                String userId = ((com.combiphar.core.model.User) user).getId();
                 java.util.List<com.combiphar.core.model.OrderHistory> orderHistory
-                        = orderService.getOrderHistory(((com.combiphar.core.model.User) user).getId());
+                        = orderService.getOrderHistory(userId, shippingService);
                 model.put("orderHistory", orderHistory);
             }
 
@@ -262,7 +289,51 @@ public class Main {
                     "Detail Pesanan - Combiphar Used Goods",
                     "history",
                     ctx.sessionAttribute("currentUser"));
-            model.put("orderId", orderId);
+
+            // Add user display name and initials for avatar
+            Object currUserObj = ctx.sessionAttribute("currentUser");
+            String userName = null;
+            String userInitials = "U";
+            if (currUserObj != null && currUserObj instanceof com.combiphar.core.model.User) {
+                com.combiphar.core.model.User cu = (com.combiphar.core.model.User) currUserObj;
+                userName = cu.getName();
+                if (userName != null && !userName.isBlank()) {
+                    String[] parts = userName.trim().split("\\s+");
+                    if (parts.length == 1) {
+                        userInitials = parts[0].substring(0, Math.min(2, parts[0].length())).toUpperCase();
+                    } else {
+                        String first = parts[0].substring(0, 1);
+                        String last = parts[parts.length - 1].substring(0, 1);
+                        userInitials = (first + last).toUpperCase();
+                    }
+                }
+            }
+            model.put("userName", userName);
+            model.put("userInitials", userInitials);
+
+            // Get order details
+            com.combiphar.core.repository.OrderRepository orderRepo = new com.combiphar.core.repository.OrderRepository();
+            orderRepo.findById(orderId).ifPresentOrElse(order -> {
+                model.put("order", order);
+
+                // Get payment info
+                com.combiphar.core.repository.PaymentRepository paymentRepo = new com.combiphar.core.repository.PaymentRepository();
+                paymentRepo.findByOrderId(orderId).ifPresent(payment -> {
+                    model.put("payment", payment);
+                });
+
+                // Get order items
+                com.combiphar.core.repository.OrderItemRepository itemRepo = new com.combiphar.core.repository.OrderItemRepository();
+                model.put("items", itemRepo.findByOrderId(orderId));
+
+                // Get shipment info for tracking
+                shippingService.getShipmentByOrderId(orderId).ifPresent(shipment -> {
+                    model.put("shipment", shipment);
+                });
+            }, () -> {
+                model.put("error", "Order tidak ditemukan");
+            });
+
             ctx.render("customer/order-tracking", model);
         });
 
@@ -337,6 +408,25 @@ public class Main {
                     "orders",
                     ctx.sessionAttribute("currentUser"));
             model.put("pageTitle", "Monitoring Pesanan");
+
+            // Get all orders with payment info
+            java.util.List<Order> orders = new com.combiphar.core.repository.OrderRepository().findAll();
+            java.util.List<Map<String, Object>> orderDetails = new java.util.ArrayList<>();
+
+            for (Order order : orders) {
+                Map<String, Object> detail = new java.util.HashMap<>();
+                detail.put("order", order);
+
+                // Get payment info
+                com.combiphar.core.repository.PaymentRepository paymentRepo = new com.combiphar.core.repository.PaymentRepository();
+                paymentRepo.findByOrderId(order.getId()).ifPresent(payment -> {
+                    detail.put("payment", payment);
+                });
+
+                orderDetails.add(detail);
+            }
+
+            model.put("orders", orderDetails);
             ctx.render("admin/order", model);
         });
 
@@ -360,15 +450,13 @@ public class Main {
             ctx.render("admin/payment", model);
         });
 
-        // Admin shipping page (English route)
-        app.get("/admin/shipping", ctx -> {
-            Map<String, Object> model = buildModel(
-                    "Monitoring Pengiriman",
-                    "shipping",
-                    ctx.sessionAttribute("currentUser"));
-            model.put("pageTitle", "Monitoring Pengiriman");
-            ctx.render("admin/shipping", model);
-        });
+        // Admin shipping page (English route) - delegated to controller
+        app.get("/admin/shipping", adminShippingController::showShippingPage);
+
+        // Admin shipping API routes
+        app.post("/api/admin/shipping/{id}/tracking", adminShippingController::updateTrackingNumber);
+        app.post("/api/admin/shipping/{id}/status", adminShippingController::updateStatus);
+        app.post("/api/admin/shipping/create", adminShippingController::createShipment);
 
         // Admin user page (English route)
         app.get("/admin/users", ctx -> {

@@ -6,10 +6,65 @@
 -- ========================================
 
 -- ========================================
--- STEP 1: Update orders table - change payment_method to 'TRANSFER' only
+-- STEP 0: Drop check constraints if they exist
 -- ========================================
 
 SET @current_db = DATABASE();
+
+-- Drop check constraint on orders table (if exists)
+SET @constraint_exists = (
+    SELECT COUNT(*)
+    FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS
+    WHERE TABLE_SCHEMA = @current_db
+    AND TABLE_NAME = 'orders'
+    AND CONSTRAINT_NAME = 'chk_orders_payment_method'
+);
+
+SET @drop_constraint = IF(@constraint_exists > 0,
+    'ALTER TABLE orders DROP CONSTRAINT chk_orders_payment_method',
+    'SELECT "Constraint chk_orders_payment_method does not exist" AS info');
+
+PREPARE stmt FROM @drop_constraint;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+-- Drop check constraint on payments table (if exists)
+SET @constraint_exists = (
+    SELECT COUNT(*)
+    FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS
+    WHERE TABLE_SCHEMA = @current_db
+    AND TABLE_NAME = 'payments'
+    AND CONSTRAINT_NAME = 'chk_payments_type'
+);
+
+SET @drop_constraint = IF(@constraint_exists > 0,
+    'ALTER TABLE payments DROP CONSTRAINT chk_payments_type',
+    'SELECT "Constraint chk_payments_type does not exist" AS info');
+
+PREPARE stmt FROM @drop_constraint;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+-- Drop check constraint on orders status_order (if exists)
+SET @constraint_exists = (
+    SELECT COUNT(*)
+    FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS
+    WHERE TABLE_SCHEMA = @current_db
+    AND TABLE_NAME = 'orders'
+    AND CONSTRAINT_NAME = 'chk_orders_status_order'
+);
+
+SET @drop_constraint = IF(@constraint_exists > 0,
+    'ALTER TABLE orders DROP CONSTRAINT chk_orders_status_order',
+    'SELECT "Constraint chk_orders_status_order does not exist" AS info');
+
+PREPARE stmt FROM @drop_constraint;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+-- ========================================
+-- STEP 1: Update orders table - change payment_method to 'TRANSFER' only
+-- ========================================
 
 -- Update payment_method ENUM to only support 'TRANSFER'
 ALTER TABLE orders
@@ -191,6 +246,7 @@ SELECT '========================================' AS '';
 -- Migration Summary
 -- ========================================
 -- Changes made:
+-- 0. Dropped check constraints for payment_method, payments type, and status_order
 -- 1. Updated orders.payment_method ENUM to 'TRANSFER' only
 -- 2. Added payments.bank column (ENUM: BCA, MANDIRI, BRI)
 -- 3. Added payments.proof column (VARCHAR(255) for transfer proof image)

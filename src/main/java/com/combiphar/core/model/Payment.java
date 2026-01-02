@@ -13,27 +13,30 @@ public class Payment {
     private final String id;
     private final String orderId;
     private final String type;
+    private final String bank;
     private final BigDecimal amount;
     private String status;
     private String proofFilePath;
     private LocalDateTime paidAt;
     private final LocalDateTime createdAt;
 
-    public Payment(String orderId, BigDecimal amount) {
+    public Payment(String orderId, BigDecimal amount, String bank) {
         this.id = UUID.randomUUID().toString();
         this.orderId = Objects.requireNonNull(orderId);
-        this.type = "CASH";
+        this.type = "TRANSFER";
+        this.bank = bank;
         this.amount = Objects.requireNonNull(amount);
         this.status = "PENDING";
         this.createdAt = LocalDateTime.now();
     }
 
-    public Payment(String id, String orderId, String type, BigDecimal amount,
+    public Payment(String id, String orderId, String type, String bank, BigDecimal amount,
             String status, String proofFilePath, LocalDateTime paidAt,
             LocalDateTime createdAt) {
         this.id = id;
         this.orderId = orderId;
         this.type = type;
+        this.bank = bank;
         this.amount = amount;
         this.status = status;
         this.proofFilePath = proofFilePath;
@@ -57,6 +60,10 @@ public class Payment {
 
     public String getType() {
         return type;
+    }
+
+    public String getBank() {
+        return bank;
     }
 
     public BigDecimal getAmount() {

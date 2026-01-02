@@ -4,8 +4,8 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import com.combiphar.core.model.Cart;
 import com.combiphar.core.model.OrderSummary;
@@ -25,6 +25,7 @@ public class CheckoutController {
     private static final String SESSION_USER = "currentUser";
     private static final String SESSION_CART = "cart";
     private static final String SESSION_SHIPPING = "shippingAddress";
+    private static final String SESSION_COURIER = "selectedCourier";
 
     public CheckoutController(OrderService orderService) {
         this.orderService = Objects.requireNonNull(orderService, "OrderService tidak boleh null");
@@ -93,7 +94,8 @@ public class CheckoutController {
     }
 
     /**
-     * POST /api/checkout/validate-address - Validates shipping address.
+     * POST /api/checkout/validate-address - Validates shipping address. Also
+     * stores selected courier in session.
      */
     public void validateAddress(Context ctx) {
         try {
@@ -102,6 +104,7 @@ public class CheckoutController {
             String city = ctx.formParam("city");
             String postalCode = ctx.formParam("postalCode");
             String phone = ctx.formParam("phone");
+            String courier = ctx.formParam("courier");
 
             if (phone == null || phone.isBlank()) {
                 throw new IllegalArgumentException("Nomor telepon wajib diisi");
@@ -113,6 +116,11 @@ public class CheckoutController {
 
             orderService.validateShippingAddress(shippingAddress);
             ctx.sessionAttribute(SESSION_SHIPPING, shippingAddress);
+
+            // Simpan courier yang dipilih ke session
+            if (courier != null && !courier.isBlank()) {
+                ctx.sessionAttribute(SESSION_COURIER, courier);
+            }
 
             ctx.json(Map.of(
                     "success", true,

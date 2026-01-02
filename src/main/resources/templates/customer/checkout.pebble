@@ -33,7 +33,7 @@
           </div>
 
           <div class="shipping-section__row">
-            <div class="shipping-section__field">
+            <div class="shipping-section__field shipping-section__field--wide">
               <label for="phone">Nomor Telepon</label>
               <input
                 type="tel"
@@ -42,16 +42,6 @@
                 value="{{ shippingAddress is not null ? shippingAddress.phone : '' }}"
                 placeholder="08xx xxxx xxxx"
                 required
-              >
-            </div>
-            <div class="shipping-section__field">
-              <label for="companyName">Nama Perusahaan</label>
-              <input
-                type="text"
-                id="companyName"
-                name="companyName"
-                value="{{ addressSettings is not null ? addressSettings.companyName : '' }}"
-                placeholder="Nama perusahaan"
               >
             </div>
           </div>
@@ -68,6 +58,31 @@
 
           <div class="shipping-section__row">
             <div class="shipping-section__field">
+              <label for="subdistrict">Kelurahan/Desa</label>
+              <input
+                type="text"
+                id="subdistrict"
+                name="subdistrict"
+                value="{{ shippingAddress is not null ? shippingAddress.subdistrict : '' }}"
+                placeholder="Kelurahan atau desa"
+                required
+              >
+            </div>
+            <div class="shipping-section__field">
+              <label for="district">Kecamatan</label>
+              <input
+                type="text"
+                id="district"
+                name="district"
+                value="{{ shippingAddress is not null ? shippingAddress.district : '' }}"
+                placeholder="Kecamatan"
+                required
+              >
+            </div>
+          </div>
+
+          <div class="shipping-section__row">
+            <div class="shipping-section__field">
               <label for="city">Kota</label>
               <input
                 type="text"
@@ -79,16 +94,28 @@
               >
             </div>
             <div class="shipping-section__field">
-              <label for="postalCode">Kode Pos</label>
+              <label for="province">Provinsi</label>
               <input
                 type="text"
-                id="postalCode"
-                name="postalCode"
-                value="{{ shippingAddress is not null ? shippingAddress.postalCode : '' }}"
-                placeholder="12345"
+                id="province"
+                name="province"
+                value="{{ shippingAddress is not null ? shippingAddress.province : '' }}"
+                placeholder="Provinsi"
                 required
               >
             </div>
+          </div>
+
+          <div class="shipping-section__field shipping-section__field--wide">
+            <label for="postalCode">Kode Pos</label>
+            <input
+              type="text"
+              id="postalCode"
+              name="postalCode"
+              value="{{ shippingAddress is not null ? shippingAddress.postalCode : '' }}"
+              placeholder="12345"
+              required
+            >
           </div>
 
           <div class="shipping-section__field">
@@ -102,16 +129,7 @@
             </select>
           </div>
 
-          <div class="shipping-section__field">
-            <label for="courierNotes">Catatan Kurir</label>
-            <input
-              type="text"
-              id="courierNotes"
-              name="courierNotes"
-              value="{{ addressSettings is not null ? addressSettings.courierNotes : '' }}"
-              placeholder="Hubungi penerima sebelum datang (opsional)"
-            >
-          </div>
+          <!-- courierNotes field removed per UI update request -->
 
           <div class="shipping-section__note">
             <input type="checkbox" id="terms" name="terms" checked required>

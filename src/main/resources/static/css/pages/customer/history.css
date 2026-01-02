@@ -265,6 +265,16 @@
   color: #1e40af;
 }
 
+.status-badge--processing {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.status-badge--cancelled {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
 /* Action button */
 .history-action-btn {
   padding: 0.5rem 1rem;

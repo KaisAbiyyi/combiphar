@@ -89,7 +89,7 @@ CREATE TABLE IF NOT EXISTS shipments (
     order_id VARCHAR(36) NOT NULL,
     courier_name VARCHAR(100),
     tracking_number VARCHAR(100),
-    shipment_status ENUM('PENDING', 'PACKED', 'SHIPPED', 'DELIVERED') DEFAULT 'PENDING',
+    shipment_status ENUM('PENDING', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'RECEIVED') DEFAULT 'PENDING',
     shipped_at TIMESTAMP NULL,
     delivered_at TIMESTAMP NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

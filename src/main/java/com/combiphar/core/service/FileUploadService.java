@@ -16,7 +16,7 @@ import com.combiphar.core.model.PaymentProof;
  */
 public class FileUploadService {
 
-    private static final String UPLOAD_DIR = "uploads/payment-proofs";
+    private static final String UPLOAD_DIR = "src/main/resources/static/images/proof";
     private static final long MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
     /**
@@ -40,7 +40,9 @@ public class FileUploadService {
 
         Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
 
-        return new PaymentProof(originalFileName, filePath.toString(), contentType, fileSize);
+        // Return URL path instead of absolute path
+        String urlPath = "/images/proof/" + savedFileName;
+        return new PaymentProof(originalFileName, urlPath, contentType, fileSize);
     }
 
     private void validateFile(String fileName, String contentType, long fileSize) {

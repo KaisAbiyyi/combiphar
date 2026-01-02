@@ -4,32 +4,32 @@
 <div class="admin-shipping">
   {# Header Section with Stats #}
   <div class="admin-shipping__header">
-    {# Stat Card 1 #}
+    {# Stat Card 1 - Pending #}
     <div class="stat-card stat-card--compact">
       <div class="stat-card__label">SIAP KIRIM</div>
-      <div class="stat-card__value">23</div>
-      <div class="stat-card__description">Menunggu pickup hari ini</div>
+      <div class="stat-card__value">{{ stats.pending | default(0) }}</div>
+      <div class="stat-card__description">Menunggu input resi</div>
     </div>
 
-    {# Stat Card 2 #}
+    {# Stat Card 2 - Packed #}
+    <div class="stat-card stat-card--compact">
+      <div class="stat-card__label">DIKEMAS</div>
+      <div class="stat-card__value">{{ stats.packed | default(0) }}</div>
+      <div class="stat-card__description">Sedang diproses gudang</div>
+    </div>
+
+    {# Stat Card 3 - Shipped #}
     <div class="stat-card stat-card--compact">
       <div class="stat-card__label">DALAM PERJALANAN</div>
-      <div class="stat-card__value">15</div>
+      <div class="stat-card__value">{{ stats.shipped | default(0) }}</div>
       <div class="stat-card__description">Sedang dikirim ke customer</div>
     </div>
 
-    {# Stat Card 3 #}
+    {# Stat Card 4 - Delivered #}
     <div class="stat-card stat-card--compact">
-      <div class="stat-card__label">SELESAI HARI INI</div>
-      <div class="stat-card__value">8</div>
-      <div class="stat-card__description stat-card__description--success">+2 dari target</div>
-    </div>
-
-    {# Stat Card 4 #}
-    <div class="stat-card stat-card--compact">
-      <div class="stat-card__label">KENDALA</div>
-      <div class="stat-card__value">2</div>
-      <div class="stat-card__description stat-card__description--alert">Alamat tidak ditemukan</div>
+      <div class="stat-card__label">SELESAI</div>
+      <div class="stat-card__value">{{ stats.delivered | default(0) }}</div>
+      <div class="stat-card__description stat-card__description--success">Terkirim</div>
     </div>
   </div>
 
@@ -42,29 +42,7 @@
         <div class="shipping-table__header-top">
           <div>
             <h3 class="shipping-table__title">Daftar Pengiriman</h3>
-            <p class="shipping-table__subtitle">Kelola transaksi pesanan dan pickup</p>
-          </div>
-          <div class="shipping-table__actions-top">
-            <button class="btn btn--primary">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2H4C2.89543 2 2 2.89543 2 4V12C2 13.1046 2.89543 14 4 14H12C13.1046 14 14 13.1046 14 12V4C14 2.89543 13.1046 2 12 2Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M2 6H14M5 10H8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              <span>Jadwal Hari Ini</span>
-            </button>
-            <button class="btn btn--secondary">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M2 4H14M4 4V2H12V4M4 6L5 14H11L12 6H4Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              <span>Filter Status</span>
-            </button>
-            <button class="btn btn--secondary">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M8 2V10M8 10L11 7M8 10L5 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M2 14H14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              </svg>
-              <span>Export XLSX</span>
-            </button>
+            <p class="shipping-table__subtitle">Kelola pengiriman dan input nomor resi</p>
           </div>
         </div>
       </div>
@@ -76,129 +54,182 @@
             <tr>
               <th>ORDER ID</th>
               <th>CUSTOMER</th>
-              <th>TANGGAL PICKUP</th>
-              <th>GUDANG</th>
+              <th>KURIR</th>
+              <th>NOMOR RESI</th>
               <th>STATUS</th>
-              <th>SURAT JALAN</th>
+              <th>AKSI</th>
             </tr>
           </thead>
           <tbody>
-            {# Row 1 #}
+            {% if shipments is empty %}
             <tr>
-              <td class="shipping-order-id">ORD-42391</td>
-              <td>PT Sinar Digital</td>
-              <td class="shipping-date">25 Sep 2025 • 13:00</td>
-              <td>Wirehouse Jakarta</td>
-              <td>
-                <span class="badge badge--warning">Siap Kirim</span>
-              </td>
-              <td>
-                <button class="btn-text btn-text--primary">Cetak Surat Jalan</button>
+              <td colspan="6" style="text-align: center; padding: 2rem; color: #6b7280;">
+                Belum ada pesanan yang perlu dikirim
               </td>
             </tr>
-
-            {# Row 2 #}
-            <tr>
-              <td class="shipping-order-id">ORD-42387</td>
-              <td>CV Harmoni Media</td>
-              <td class="shipping-date">25 Sep 2025 • 15:30</td>
-              <td>Wirehouse Bandung</td>
+            {% else %}
+            {% for detail in shipments %}
+            <tr data-order-id="{{ detail.order.id }}">
+              <td class="shipping-order-id">{{ detail.order.orderNumber }}</td>
+              <td>{{ detail.customerName | default('Customer') }}</td>
+              <td>{{ detail.order.note | default('Standard') }}</td>
               <td>
-                <span class="badge badge--success">Terkirim</span>
+                {% if detail.shipment is not null and detail.shipment.hasTrackingNumber %}
+                  <span class="tracking-number">{{ detail.shipment.trackingNumber }}</span>
+                {% else %}
+                  <span class="text-muted">Belum ada resi</span>
+                {% endif %}
               </td>
               <td>
-                <button class="btn-text btn-text--secondary">Unduh PDF</button>
-              </td>
-            </tr>
-
-            {# Row 3 #}
-            <tr>
-              <td class="shipping-order-id">ORD-42380</td>
-              <td>PT Globetek</td>
-              <td class="shipping-date">25 Sep 2025 • 13:45</td>
-              <td>Wirehouse Jakarta</td>
-              <td>
-                <span class="badge badge--success">Terkirim</span>
-              </td>
-              <td>
-                <button class="btn-text btn-text--secondary">Unduh PDF</button>
-              </td>
-            </tr>
-
-            {# Row 4 #}
-            <tr>
-              <td class="shipping-order-id">ORD-42371</td>
-              <td>PT Mandiri Kreatif</td>
-              <td class="shipping-date">25 Sep 2025 • 09:00</td>
-              <td>Wirehouse Surabaya</td>
-              <td>
-                <span class="badge badge--info">Belum Konfirmasi</span>
+                {% if detail.shipment is null %}
+                  <span class="badge badge--info">Belum Diproses</span>
+                {% elseif detail.shipment.status.name == 'PENDING' %}
+                  <span class="badge badge--warning">Menunggu</span>
+                {% elseif detail.shipment.status.name == 'PACKED' %}
+                  <span class="badge badge--info">Dikemas</span>
+                {% elseif detail.shipment.status.name == 'SHIPPED' %}
+                  <span class="badge badge--primary">Dikirim</span>
+                {% elseif detail.shipment.status.name == 'DELIVERED' %}
+                  <span class="badge badge--success">Terkirim</span>
+                {% endif %}
               </td>
               <td>
-                <button class="btn-text btn-text--primary">Hubungi Customer</button>
-              </td>
-            </tr>
-
-            {# Row 5 #}
-            <tr>
-              <td class="shipping-order-id">ORD-42365</td>
-              <td>PT Bintang Retail</td>
-              <td class="shipping-date">24 Sep 2025 • 14:05</td>
-              <td>Wirehouse Bandung</td>
-              <td>
-                <span class="badge badge--warning">Siap Kirim</span>
-              </td>
-              <td>
-                <button class="btn-text btn-text--primary">Cetak Surat Jalan</button>
+                {% if detail.shipment is null %}
+                  {# Tombol buat shipment #}
+                  <button class="btn-text btn-text--primary" 
+                          onclick="createShipment('{{ detail.order.id }}', '{{ detail.order.note | default("Standard") }}')">
+                    Proses Kirim
+                  </button>
+                {% elseif not detail.shipment.hasTrackingNumber %}
+                  {# Form input resi #}
+                  <form class="inline-form" onsubmit="updateTracking(event, '{{ detail.shipment.id }}')">
+                    <input type="text" name="trackingNumber" placeholder="Masukkan no. resi" 
+                           class="input-small" required>
+                    <button type="submit" class="btn-text btn-text--primary">Simpan</button>
+                  </form>
+                {% elseif detail.shipment.status.name == 'SHIPPED' %}
+                  {# Tombol tandai terkirim #}
+                  <button class="btn-text btn-text--success" 
+                          onclick="markDelivered('{{ detail.shipment.id }}')">
+                    Tandai Terkirim
+                  </button>
+                {% else %}
+                  <span class="text-muted">Selesai</span>
+                {% endif %}
               </td>
             </tr>
-
-            {# Row 6 #}
-            <tr>
-              <td class="shipping-order-id">ORD-42362</td>
-              <td>CV Prima Advent</td>
-              <td class="shipping-date">24 Sep 2025 • 08:00</td>
-              <td>Wirehouse Jakarta</td>
-              <td>
-                <span class="badge badge--success">Terkirim</span>
-              </td>
-              <td>
-                <button class="btn-text btn-text--secondary">Unduh PDF</button>
-              </td>
-            </tr>
-
-            {# Row 7 #}
-            <tr>
-              <td class="shipping-order-id">ORD-42358</td>
-              <td>PT Ruangtara Health</td>
-              <td class="shipping-date">24 Sep 2025 • 09:20</td>
-              <td>Wirehouse Jakarta</td>
-              <td>
-                <span class="badge badge--danger">Pengiriman Batal</span>
-              </td>
-              <td>
-                <button class="btn-text btn-text--primary">Kurang Customer</button>
-              </td>
-            </tr>
+            {% endfor %}
+            {% endif %}
           </tbody>
         </table>
-      </div>
-
-      {# Pagination / Footer #}
-      <div class="shipping-table__footer">
-        <div class="pagination">
-          <div class="pagination__controls">
-            <button class="pagination__btn pagination__btn--icon">‹</button>
-            <button class="pagination__btn pagination__btn--active">1</button>
-            <button class="pagination__btn">2</button>
-            <button class="pagination__btn">3</button>
-            <span class="pagination__ellipsis">…</span>
-            <button class="pagination__btn">31</button>
-            <button class="pagination__btn pagination__btn--icon">›</button>
-          </div>
-        </div>
       </div>
     </div>
   </div>
 </div>
+
+{# Inline Styles for Form #}
+<style>
+.inline-form {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+.input-small {
+  padding: 0.375rem 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  width: 140px;
+}
+.input-small:focus {
+  outline: none;
+  border-color: #9333ea;
+  box-shadow: 0 0 0 2px rgba(147, 51, 234, 0.1);
+}
+.tracking-number {
+  font-family: monospace;
+  font-weight: 500;
+  color: #1f2937;
+}
+.text-muted {
+  color: #9ca3af;
+  font-size: 0.875rem;
+}
+</style>
+
+{# JavaScript for Actions #}
+<script>
+/**
+ * Buat shipment baru untuk order.
+ */
+function createShipment(orderId, courierName) {
+  const formData = new FormData();
+  formData.append('orderId', orderId);
+  formData.append('courierName', courierName);
+
+  fetch('/api/admin/shipping/create', {
+    method: 'POST',
+    body: formData
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      location.reload();
+    } else {
+      alert('Gagal: ' + data.message);
+    }
+  })
+  .catch(err => alert('Error: ' + err.message));
+}
+
+/**
+ * Update nomor resi.
+ */
+function updateTracking(event, shipmentId) {
+  event.preventDefault();
+  const form = event.target;
+  const trackingNumber = form.trackingNumber.value;
+
+  const formData = new FormData();
+  formData.append('trackingNumber', trackingNumber);
+
+  fetch('/api/admin/shipping/' + shipmentId + '/tracking', {
+    method: 'POST',
+    body: formData
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      location.reload();
+    } else {
+      alert('Gagal: ' + data.message);
+    }
+  })
+  .catch(err => alert('Error: ' + err.message));
+}
+
+/**
+ * Tandai sebagai terkirim.
+ */
+function markDelivered(shipmentId) {
+  if (!confirm('Tandai pengiriman sebagai terkirim?')) return;
+
+  const formData = new FormData();
+  formData.append('status', 'DELIVERED');
+
+  fetch('/api/admin/shipping/' + shipmentId + '/status', {
+    method: 'POST',
+    body: formData
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      location.reload();
+    } else {
+      alert('Gagal: ' + data.message);
+    }
+  })
+  .catch(err => alert('Error: ' + err.message));
+}
+</script>
 {% endblock %}

@@ -133,8 +133,10 @@
   uploadForm.addEventListener('submit', function(e) {
     e.preventDefault();
 
-    if (!fileInput.files.length) {
-      showToast('Pilih file terlebih dahulu', 'error');
+    const bankSelect = document.getElementById('bankSelect');
+    
+    if (!bankSelect.value || !fileInput.files.length) {
+      showToast && showToast(!bankSelect.value ? 'Pilih bank terlebih dahulu' : 'Pilih file terlebih dahulu', 'error');
       return;
     }
 
@@ -143,6 +145,7 @@
 
     const formData = new FormData();
     formData.append('paymentProof', fileInput.files[0]);
+    formData.append('bank', bankSelect.value);
 
     fetch('/api/payment/upload', {
       method: 'POST',

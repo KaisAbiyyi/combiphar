@@ -213,6 +213,27 @@
   background: rgba(236, 72, 153, 0.1);
 }
 
+/* Simple styling for per-item note */
+.cart-item__note {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #E5E7EB;
+  border-radius: 0.5rem;
+  background: #F8FAFC;
+  font-size: 0.95rem;
+  color: #111827;
+  min-height: 48px;
+  resize: vertical;
+  margin-top: 0.25rem;
+}
+.cart-item__note:focus {
+  outline: none;
+  border-color: #9333EA;
+  background: #FFFFFF;
+  box-shadow: 0 0 0 4px rgba(147, 51, 234, 0.06);
+}
+
 .cart-summary {
   display: flex;
   flex-direction: column;

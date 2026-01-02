@@ -38,22 +38,21 @@ public class PaymentUploadController {
     public void uploadPaymentProof(Context ctx) {
         try {
             UploadedFile uploadedFile = ctx.uploadedFile("paymentProof");
+            String bank = ctx.formParam("bank");
 
-            if (uploadedFile == null) {
+            if (uploadedFile == null || bank == null || bank.isBlank()) {
                 ctx.status(400).json(Map.of(
                         "success", false,
-                        "message", "File bukti pembayaran tidak ditemukan"
+                        "message", uploadedFile == null ? "File tidak ditemukan" : "Pilih bank terlebih dahulu"
                 ));
                 return;
             }
 
             PaymentProof proof = saveUploadedFile(uploadedFile);
-
-            // Ambil orderId dari session
             String orderId = ctx.sessionAttribute("orderId");
+
             if (orderId != null) {
-                // Update payment proof di database
-                orderService.updatePaymentProof(orderId, proof.getFilePath());
+                orderService.updatePaymentProof(orderId, proof.getFilePath(), bank);
 
                 // Clear cart setelah payment berhasil
                 ctx.sessionAttribute("cart", null);

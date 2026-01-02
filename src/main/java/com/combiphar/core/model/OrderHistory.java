@@ -12,11 +12,17 @@ public class OrderHistory {
     private final Order order;
     private final List<OrderItem> items;
     private final String firstItemName;
+    private final Shipment shipment;
 
     public OrderHistory(Order order, List<OrderItem> items, String firstItemName) {
+        this(order, items, firstItemName, null);
+    }
+
+    public OrderHistory(Order order, List<OrderItem> items, String firstItemName, Shipment shipment) {
         this.order = order;
         this.items = items;
         this.firstItemName = firstItemName;
+        this.shipment = shipment;
     }
 
     public String getOrderNumber() {
@@ -41,8 +47,30 @@ public class OrderHistory {
     }
 
     public String getStatusBadge() {
-        String status = order.getStatusOrder();
-        switch (status) {
+        String paymentStatus = order.getStatusPayment();
+        String orderStatus = order.getStatusOrder();
+
+        // Badge untuk status pembayaran pending
+        if ("PENDING".equals(paymentStatus)) {
+            return "pending";
+        }
+
+        // Badge untuk status pengiriman jika ada
+        if (shipment != null && "PAID".equals(paymentStatus)) {
+            switch (shipment.getStatus()) {
+                case RECEIVED:
+                case DELIVERED:
+                    return "selesai";
+                case SHIPPED:
+                case PROCESSING:
+                    return "processing";
+                case PENDING:
+                    return "pending";
+            }
+        }
+
+        // Badge untuk status order
+        switch (orderStatus) {
             case "NEW":
             case "PROCESSING":
                 return "pending";
@@ -64,9 +92,26 @@ public class OrderHistory {
             return "Menunggu Pembayaran";
         }
 
+        // Prioritas status pengiriman jika ada
+        if (shipment != null && "PAID".equals(paymentStatus)) {
+            switch (shipment.getStatus()) {
+                case RECEIVED:
+                    return "Pesanan Selesai";
+                case DELIVERED:
+                    return "Paket Terkirim";
+                case SHIPPED:
+                    return "Dalam Perjalanan";
+                case PROCESSING:
+                    return "Diproses";
+                case PENDING:
+                    return "Menunggu Konfirmasi";
+            }
+        }
+
         switch (orderStatus) {
+            case "PENDING":
+                return "Menunggu Konfirmasi";
             case "NEW":
-                return "Pesanan Baru";
             case "PROCESSING":
                 return "Diproses";
             case "READY":

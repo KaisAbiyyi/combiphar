@@ -28,8 +28,23 @@
       body,
       credentials: 'same-origin',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-    })
-      .then(res => res.json().catch(() => ({ success: false, message: 'Respons tidak valid' })));
+    }).then(res => {
+      // No content
+      if (res.status === 204) return { success: true };
+      const ct = (res.headers.get('content-type') || '').toLowerCase();
+      if (ct.includes('application/json')) {
+        return res.json().catch(() => ({ success: false, message: 'Respons tidak valid' }));
+      }
+      // Try to parse text as JSON if content-type is missing/incorrect, otherwise return text as message
+      return res.text().then(text => {
+        if (!text) return { success: false, message: 'Respons tidak valid' };
+        try {
+          return JSON.parse(text);
+        } catch (e) {
+          return { success: false, message: text };
+        }
+      });
+    }).catch(() => ({ success: false, message: 'Respons tidak valid' }));
   }
 
   function updateQuantity(itemId, quantity) {
@@ -124,4 +139,18 @@
       });
     });
   }
+
+  // Delegated blur listener to save per-item notes silently (no notifications)
+  document.addEventListener('blur', function (e) {
+    const area = e.target;
+    if (!area || !area.classList || !area.classList.contains('cart-item__note')) return;
+
+    const itemId = area.dataset.itemid;
+    const note = area.value || '';
+
+    if (!itemId) return;
+
+    // Save silently in background without showing any notifications
+    postForm('/api/cart/update-note', { itemId: itemId, note: note });
+  }, true);
 })();

@@ -42,6 +42,11 @@
                 </div>
                 <h3 class="cart-item__name">{{ item.itemName }}</h3>
                 <p class="cart-item__sku">ID: {{ item.itemId }}</p>
+                <textarea
+                  class="cart-item__note"
+                  data-itemid="{{ item.itemId }}"
+                  placeholder="Catatan untuk produk (opsional)"
+                >{{ item.note is defined ? item.note : '' }}</textarea>
               </div>
 
               <div class="cart-item__actions-wrapper">

@@ -34,6 +34,17 @@
             {# Upload Form #}
             <form id="uploadForm" class="upload-form" enctype="multipart/form-data">
               
+              {# Bank Selection #}
+              <div class="form-group">
+                <label for="bankSelect" class="form-label">Pilih Bank Transfer <span class="text-danger">*</span></label>
+                <select id="bankSelect" name="bank" class="form-select" required>
+                  <option value="">-- Pilih Bank --</option>
+                  <option value="BCA">BCA</option>
+                  <option value="MANDIRI">Mandiri</option>
+                  <option value="BRI">BRI</option>
+                </select>
+              </div>
+
               {# Dropzone Area #}
               <div class="upload-dropzone" id="dropzone">
                 <div class="upload-dropzone__icon">📁</div>

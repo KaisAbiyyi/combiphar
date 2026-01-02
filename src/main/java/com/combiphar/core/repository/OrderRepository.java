@@ -100,6 +100,25 @@ public class OrderRepository {
         return orders;
     }
 
+    /**
+     * Mencari semua order.
+     */
+    public java.util.List<Order> findAll() {
+        java.util.List<Order> orders = new java.util.ArrayList<>();
+        String sql = "SELECT * FROM orders ORDER BY created_at DESC LIMIT 50";
+
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    orders.add(mapResultSetToOrder(rs));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error finding all orders: " + e.getMessage(), e);
+        }
+        return orders;
+    }
+
     private Order mapResultSetToOrder(ResultSet rs) throws SQLException {
         return new Order(
                 rs.getString("id"),

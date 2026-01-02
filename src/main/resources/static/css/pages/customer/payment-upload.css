@@ -82,6 +82,40 @@
   padding: 1.5rem;
 }
 
+/* Form Group */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-label {
+  display: block;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.form-select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 0.95rem;
+  color: #1f2937;
+  background-color: white;
+  transition: all 0.2s;
+}
+
+.form-select:focus {
+  outline: none;
+  border-color: #8b5cf6;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+}
+
+.text-danger {
+  color: #ef4444;
+}
+
 /* Transfer Reminder */
 .transfer-reminder {
   background: #faf5ff;

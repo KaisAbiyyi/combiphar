@@ -22,6 +22,7 @@ public class PaymentController {
     private static final String SESSION_CART = "cart";
     private static final String SESSION_ORDER_SUMMARY = "orderSummary";
     private static final String SESSION_ORDER_ID = "orderId";
+    private static final String SESSION_COURIER = "selectedCourier";
 
     private final PaymentService paymentService;
     private final OrderService orderService;
@@ -54,7 +55,9 @@ public class PaymentController {
         // Hitung order summary
         OrderSummary summary = ctx.sessionAttribute(SESSION_ORDER_SUMMARY);
         if (summary == null) {
-            summary = orderService.calculateOrderSummary(cart, null);
+            // Ambil courier dari session (dipilih saat checkout)
+            String selectedCourier = ctx.sessionAttribute(SESSION_COURIER);
+            summary = orderService.calculateOrderSummary(cart, selectedCourier);
             ctx.sessionAttribute(SESSION_ORDER_SUMMARY, summary);
         }
 

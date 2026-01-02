@@ -82,6 +82,10 @@
     grid-template-columns: 1fr 1fr;
   }
 }
+.shipping-section__field.shipping-section__field--wide {
+  /* allow specific fields to span the full row */
+  grid-column: 1 / -1;
+}
 .shipping-section__field {
   display: flex;
   flex-direction: column;

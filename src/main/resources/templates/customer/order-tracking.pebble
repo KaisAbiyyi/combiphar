@@ -17,10 +17,9 @@
       </a>
       
       <div class="order-tracking-user">
-        <span class="order-tracking-user__name">Salma P. Wijaya</span>
+        <span class="order-tracking-user__name">{{ userName | default('User') }}</span>
         <div class="order-tracking-user__avatar">
-          <img src="/static/images/avatar-placeholder.jpg" alt="Salma P. Wijaya" class="order-tracking-user__img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-          <div class="order-tracking-user__placeholder" style="display: none;">SW</div>
+          <div class="order-tracking-user__placeholder" style="display:flex;">{{ userInitials }}</div>
         </div>
       </div>
     </div>
@@ -30,13 +29,26 @@
       <div class="order-info-card__header">
         <div class="order-info-card__left">
           <div class="order-info-card__label">ORDER ID</div>
-          <h1 class="order-info-card__id">ORD-42391</h1>
-          <p class="order-info-card__date">Dibuat 25 Sep 2025 • 11:57 WIB</p>
+          <h1 class="order-info-card__id">{{ order.orderNumber }}</h1>
+          <p class="order-info-card__date">Dibuat {{ order.createdAt }}</p>
         </div>
         
         <div class="order-info-card__badges">
-          <span class="order-status-badge order-status-badge--paid">Pembayaran Lunas (QRIS)</span>
-          <span class="order-status-badge order-status-badge--shipped">Pengiriman: Dikirim</span>
+          {% if order.statusPayment == 'PAID' %}
+          <span class="order-status-badge order-status-badge--paid">Pembayaran Lunas ({{ payment.bank | default('Transfer') }})</span>
+          {% else %}
+          <span class="order-status-badge order-status-badge--pending">Menunggu Pembayaran</span>
+          {% endif %}
+          
+          {% if order.statusOrder == 'COMPLETED' %}
+          <span class="order-status-badge order-status-badge--shipped">Selesai</span>
+          {% elseif order.statusOrder == 'READY' %}
+          <span class="order-status-badge order-status-badge--shipped">Siap Kirim</span>
+          {% elseif order.statusOrder == 'PROCESSING' %}
+          <span class="order-status-badge order-status-badge--processing">Diproses</span>
+          {% else %}
+          <span class="order-status-badge order-status-badge--pending">{{ order.statusOrder }}</span>
+          {% endif %}
         </div>
       </div>
     </div>
@@ -60,60 +72,29 @@
           </div>
 
           <div class="order-items-list">
-            {# Item 1 #}
+            {% if items is empty %}
+            <p style="text-align: center; padding: 2rem; color: #6b7280;">Tidak ada item</p>
+            {% else %}
+            {% for item in items %}
             <div class="order-item">
               <div class="order-item__image">
-                <img src="https://via.placeholder.com/80x80/9333EA/FFFFFF?text=Meja" alt="Meja Eksekutif Alto" class="order-item__img">
+                <img src="https://via.placeholder.com/80x80/9333EA/FFFFFF?text=Item" alt="{{ item.itemId }}" class="order-item__img">
               </div>
               <div class="order-item__details">
-                <h3 class="order-item__name">Meja Eksekutif Alto</h3>
-                <p class="order-item__meta">Qty 1 • 1.350.000</p>
+                <h3 class="order-item__name">{{ item.itemId }}</h3>
+                <p class="order-item__meta">Qty {{ item.quantity }} • Rp {{ item.unitPrice | numberformat("#,###") }}</p>
               </div>
-              <div class="order-item__price">Rp 7.500.000</div>
+              <div class="order-item__price">Rp {{ item.subtotal | numberformat("#,###") }}</div>
             </div>
-
-            {# Item 2 #}
-            <div class="order-item">
-              <div class="order-item__image">
-                <img src="https://via.placeholder.com/80x80/7C3AED/FFFFFF?text=Kursi" alt="Kursi Lumbar+ (4)" class="order-item__img">
-              </div>
-              <div class="order-item__details">
-                <h3 class="order-item__name">Kursi Lumbar+ (4)</h3>
-                <p class="order-item__meta">Qty 4 • Rp 1.250.000</p>
-              </div>
-              <div class="order-item__price">Rp 13.000.000</div>
-            </div>
-
-            {# Item 3 #}
-            <div class="order-item">
-              <div class="order-item__image">
-                <img src="https://via.placeholder.com/80x80/A855F7/FFFFFF?text=Monitor" alt="Monitor Aurora 24&quot; (6)" class="order-item__img">
-              </div>
-              <div class="order-item__details">
-                <h3 class="order-item__name">Monitor Aurora 24" (6)</h3>
-                <p class="order-item__meta">Qty 6 • Rp 1.850.000</p>
-              </div>
-              <div class="order-item__price">Rp 11.100.000</div>
-            </div>
+            {% endfor %}
+            {% endif %}
           </div>
 
           {# Price Breakdown #}
           <div class="order-price-breakdown">
-            <div class="order-price-row">
-              <span class="order-price-label">Subtotal</span>
-              <span class="order-price-value">Rp 31.600.000</span>
-            </div>
-            <div class="order-price-row order-price-row--discount">
-              <span class="order-price-label">Diskon karyawan</span>
-              <span class="order-price-value">- Rp 2.500.000</span>
-            </div>
-            <div class="order-price-row">
-              <span class="order-price-label">Asuransi & logistik</span>
-              <span class="order-price-value">Rp 1.200.000</span>
-            </div>
             <div class="order-price-total">
               <span class="order-price-total__label">Total</span>
-              <span class="order-price-total__value">Rp 30.300.000</span>
+              <span class="order-price-total__value">Rp {{ order.totalPrice | numberformat("#,###") }}</span>
             </div>
           </div>
         </div>
@@ -123,31 +104,150 @@
           <h3 class="delivery-info-card__title">Metode Pengiriman</h3>
           <div class="delivery-info-card__content">
             <div class="delivery-method">
-              <strong class="delivery-method__name">Delivery • Premium Logistics (2–3 hari)</strong>
+              <strong class="delivery-method__name">{{ order.note | default('Standard Logistics') }}</strong>
             </div>
             
+            {% if payment is not null %}
             <div class="delivery-address">
-              <div class="delivery-address__label">Alamat Pengiriman</div>
+              <div class="delivery-address__label">Metode Pembayaran</div>
               <div class="delivery-address__content">
-                <strong class="delivery-address__name">Jl. Melati No. 45, Kebayoran Baru</strong>
+                <strong class="delivery-address__name">Transfer Bank {{ payment.bank | default('-') }}</strong>
               </div>
             </div>
             
+            {% if payment.proof is not null %}
             <div class="delivery-contact">
-              <div class="delivery-contact__label">Kontak Penerima</div>
-              <div class="delivery-contact__content">Indra Purnama (0812 3456 7890)</div>
+              <div class="delivery-contact__label">Bukti Transfer</div>
+              <div class="delivery-contact__content">
+                <img src="{{ payment.proof }}" alt="Bukti Transfer" style="max-width: 100%; border-radius: 0.5rem; border: 1px solid #e5e7eb;">
+              </div>
             </div>
+            {% endif %}
+            {% endif %}
+          </div>
+        </div>
+
+        {# Tracking Timeline #}
+        <div class="tracking-timeline-card">
+          <h2 class="tracking-timeline-card__title">Riwayat Status</h2>
+          <p class="tracking-timeline-card__subtitle">Pelacakan Pengiriman</p>
+
+          <div class="tracking-timeline">
+            {% set currentStatus = shipment.status.name | default('PENDING') %}
             
-            <div class="delivery-notes">
-              <div class="delivery-notes__label">Catatan Kustdi</div>
-              <div class="delivery-notes__content">Drop di loading dock basement, hubungi security Pat John.</div>
+            {# Step 1: Menunggu Konfirmasi #}
+            <div class="tracking-step tracking-step--completed">
+              <div class="tracking-step__indicator">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="10" cy="10" r="10" fill="#10B981"/>
+                  <path d="M6 10L9 13L14 7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <div class="tracking-step__content">
+                <div class="tracking-step__title">Menunggu Konfirmasi</div>
+                <div class="tracking-step__time">{{ order.createdAt | default('-') }}</div>
+              </div>
             </div>
 
-            <div class="delivery-proof">
-              <div class="delivery-proof__label">Bukti pengiriman dikirirm? Hubungi</div>
-              <a href="mailto:support@combiphar.com" class="delivery-proof__link">support@combiphar.com</a>
+            {# Step 2: Diproses #}
+            <div class="tracking-step {% if currentStatus == 'PROCESSING' or currentStatus == 'SHIPPED' or currentStatus == 'DELIVERED' or currentStatus == 'RECEIVED' %}tracking-step--completed{% endif %}">
+              <div class="tracking-step__indicator">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  {% if currentStatus == 'PROCESSING' or currentStatus == 'SHIPPED' or currentStatus == 'DELIVERED' or currentStatus == 'RECEIVED' %}
+                  <circle cx="10" cy="10" r="10" fill="#10B981"/>
+                  <path d="M6 10L9 13L14 7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  {% elseif currentStatus == 'PROCESSING' %}
+                  <circle cx="10" cy="10" r="10" fill="#F59E0B"/>
+                  <circle cx="10" cy="10" r="4" fill="white"/>
+                  {% else %}
+                  <circle cx="10" cy="10" r="10" fill="#E5E7EB"/>
+                  <circle cx="10" cy="10" r="4" fill="white"/>
+                  {% endif %}
+                </svg>
+              </div>
+              <div class="tracking-step__content">
+                <div class="tracking-step__title">Diproses</div>
+                <div class="tracking-step__time">-</div>
+              </div>
+            </div>
+
+            {# Step 3: Dalam Perjalanan #}
+            <div class="tracking-step {% if currentStatus == 'SHIPPED' or currentStatus == 'DELIVERED' or currentStatus == 'RECEIVED' %}tracking-step--completed{% endif %}">
+              <div class="tracking-step__indicator">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  {% if currentStatus == 'SHIPPED' or currentStatus == 'DELIVERED' or currentStatus == 'RECEIVED' %}
+                  <circle cx="10" cy="10" r="10" fill="#10B981"/>
+                  <path d="M6 10L9 13L14 7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  {% elseif currentStatus == 'SHIPPED' %}
+                  <circle cx="10" cy="10" r="10" fill="#F59E0B"/>
+                  <circle cx="10" cy="10" r="4" fill="white"/>
+                  {% else %}
+                  <circle cx="10" cy="10" r="10" fill="#E5E7EB"/>
+                  <circle cx="10" cy="10" r="4" fill="white"/>
+                  {% endif %}
+                </svg>
+              </div>
+              <div class="tracking-step__content">
+                <div class="tracking-step__title">Dalam Perjalanan</div>
+                <div class="tracking-step__time">{{ shipment.shippedAt | default('-') }}</div>
+              </div>
+            </div>
+
+            {# Step 4: Paket Terkirim #}
+            <div class="tracking-step {% if currentStatus == 'DELIVERED' or currentStatus == 'RECEIVED' %}tracking-step--completed{% endif %}">
+              <div class="tracking-step__indicator">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  {% if currentStatus == 'DELIVERED' or currentStatus == 'RECEIVED' %}
+                  <circle cx="10" cy="10" r="10" fill="#10B981"/>
+                  <path d="M6 10L9 13L14 7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  {% elseif currentStatus == 'DELIVERED' %}
+                  <circle cx="10" cy="10" r="10" fill="#F59E0B"/>
+                  <circle cx="10" cy="10" r="4" fill="white"/>
+                  {% else %}
+                  <circle cx="10" cy="10" r="10" fill="#E5E7EB"/>
+                  <circle cx="10" cy="10" r="4" fill="white"/>
+                  {% endif %}
+                </svg>
+              </div>
+              <div class="tracking-step__content">
+                <div class="tracking-step__title">Paket Terkirim</div>
+                <div class="tracking-step__time">{{ shipment.deliveredAt | default('-') }}</div>
+              </div>
+            </div>
+
+            {# Step 5: Pesanan Selesai #}
+            <div class="tracking-step {% if currentStatus == 'RECEIVED' %}tracking-step--completed{% endif %}">
+              <div class="tracking-step__indicator">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  {% if currentStatus == 'RECEIVED' %}
+                  <circle cx="10" cy="10" r="10" fill="#10B981"/>
+                  <path d="M6 10L9 13L14 7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  {% else %}
+                  <circle cx="10" cy="10" r="10" fill="#E5E7EB"/>
+                  <circle cx="10" cy="10" r="4" fill="white"/>
+                  {% endif %}
+                </svg>
+              </div>
+              <div class="tracking-step__content">
+                <div class="tracking-step__title">Pesanan Selesai</div>
+                <div class="tracking-step__time">-</div>
+              </div>
             </div>
           </div>
+
+          {# Button Selesaikan Pesanan - hanya muncul di status DELIVERED, hilang saat RECEIVED #}
+          {% if currentStatus == 'DELIVERED' %}
+          <form action="/api/order/complete" method="post" style="margin-top: 1.5rem;">
+            <input type="hidden" name="orderId" value="{{ order.id }}">
+            <button type="submit" class="btn btn--primary" style="width: 100%; padding: 0.875rem; font-size: 1rem;">
+              Selesaikan Pesanan
+            </button>
+          </form>
+          {% elseif currentStatus == 'RECEIVED' %}
+          <div style="margin-top: 1.5rem; padding: 1rem; background: #F0FDF4; border-radius: 0.5rem; text-align: center; color: #15803D; font-weight: 500;">
+            ✓ Pesanan telah selesai
+          </div>
+          {% endif %}
         </div>
 
       </div>
@@ -174,71 +274,6 @@
         </div>
       </div>
 
-    </div>
-
-    {# Tracking Timeline #}
-    <div class="tracking-timeline-card">
-      <h2 class="tracking-timeline-card__title">Riwayat Status</h2>
-      <p class="tracking-timeline-card__subtitle">Pelacakan Pengiriman</p>
-
-      <div class="tracking-timeline">
-        {# Step 1 - Completed #}
-        <div class="tracking-step tracking-step--completed">
-          <div class="tracking-step__indicator">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="10" cy="10" r="10" fill="#10B981"/>
-              <path d="M6 10L9 13L14 7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-          <div class="tracking-step__content">
-            <div class="tracking-step__title">Dikerinci ke eksisendiri</div>
-            <div class="tracking-step__time">25 Sep 2025 • 17:30</div>
-            <div class="tracking-step__resi">Nomor resi: JNE-CGP-42391</div>
-          </div>
-        </div>
-
-        {# Step 2 - Completed #}
-        <div class="tracking-step tracking-step--completed">
-          <div class="tracking-step__indicator">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="10" cy="10" r="10" fill="#F59E0B"/>
-              <circle cx="10" cy="10" r="4" fill="white"/>
-            </svg>
-          </div>
-          <div class="tracking-step__content">
-            <div class="tracking-step__title">Sedang dikemas</div>
-            <div class="tracking-step__time">25 Sep 2025 • 03:12</div>
-          </div>
-        </div>
-
-        {# Step 3 - Completed #}
-        <div class="tracking-step tracking-step--completed">
-          <div class="tracking-step__indicator">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="10" cy="10" r="10" fill="#F59E0B"/>
-              <circle cx="10" cy="10" r="4" fill="white"/>
-            </svg>
-          </div>
-          <div class="tracking-step__content">
-            <div class="tracking-step__title">Pembayaran terkonfirmasi</div>
-            <div class="tracking-step__time">25 Sep 2025 • 03:12</div>
-          </div>
-        </div>
-
-        {# Step 4 - Completed #}
-        <div class="tracking-step tracking-step--completed">
-          <div class="tracking-step__indicator">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="10" cy="10" r="10" fill="#F59E0B"/>
-              <circle cx="10" cy="10" r="4" fill="white"/>
-            </svg>
-          </div>
-          <div class="tracking-step__content">
-            <div class="tracking-step__title">Menunggu pembayaran</div>
-            <div class="tracking-step__time">25 Sep 2025 • 03:12</div>
-          </div>
-        </div>
-      </div>
     </div>
 
   </div>

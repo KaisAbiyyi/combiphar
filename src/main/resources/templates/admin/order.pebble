@@ -88,90 +88,49 @@
               </tr>
             </thead>
             <tbody>
-              {# Row 1 #}
+              {% if orders is empty %}
               <tr>
-                <td class="order-id">ORD-42391</td>
-                <td>PT Sirnar Digital</td>
-                <td class="order-value">Rp 30.300.000</td>
+                <td colspan="7" style="text-align: center; padding: 2rem;">Belum ada order</td>
+              </tr>
+              {% else %}
+              {% for item in orders %}
+              <tr>
+                <td class="order-id">{{ item.order.orderNumber }}</td>
+                <td>{{ item.order.userId }}</td>
+                <td class="order-value">Rp {{ item.order.totalPrice | numberformat("#,###") }}</td>
                 <td class="order-response">
-                  <span class="badge badge--pending">Picking</span>
+                  {% if item.order.statusOrder == 'PENDING' %}
+                  <span class="badge badge--pending">Menunggu Konfirmasi</span>
+                  {% elseif item.order.statusOrder == 'PROCESSING' %}
+                  <span class="badge badge--warning">Diproses</span>
+                  {% elseif item.order.statusOrder == 'READY' %}
+                  <span class="badge badge--info">Siap Kirim</span>
+                  {% elseif item.order.statusOrder == 'COMPLETED' %}
+                  <span class="badge badge--success">Selesai</span>
+                  {% else %}
+                  <span class="badge badge--danger">{{ item.order.statusOrder }}</span>
+                  {% endif %}
                 </td>
                 <td>
+                  {% if item.order.statusPayment == 'PAID' %}
                   <span class="badge badge--success">Paid</span>
+                  {% elseif item.order.statusPayment == 'PENDING' %}
+                  <span class="badge badge--pending">Pending</span>
+                  {% else %}
+                  <span class="badge badge--danger">{{ item.order.statusPayment }}</span>
+                  {% endif %}
                 </td>
-                <td class="order-date">25 Sep • 18:30</td>
+                <td class="order-date">{{ item.order.createdAt }}</td>
                 <td>
+                  {% if item.payment %}
+                  <button class="btn-text btn-text--primary" onclick="showDetail('{{ item.order.id }}', '{{ item.order.orderNumber }}', '{{ item.payment.bank }}', '{{ item.payment.proof }}', '{{ item.payment.status }}')">Detail</button>
+                  {% else %}
                   <button class="btn-text btn-text--primary">Detail</button>
+                  {% endif %}
                 </td>
               </tr>
-
-              {# Row 2 #}
-              <tr>
-                <td class="order-id">ORD-42387</td>
-                <td>CV Hamonix Media</td>
-                <td class="order-value">Rp 21.600.000</td>
-                <td class="order-response">
-                  <span class="badge badge--selesai">Selesai</span>
-                </td>
-                <td>
-                  <span class="badge badge--success">Paid</span>
-                </td>
-                <td class="order-date">25 Sep • 18:25</td>
-                <td>
-                  <button class="btn-text btn-text--primary">Invoice</button>
-                </td>
-              </tr>
-
-              {# Row 3 #}
-              <tr>
-                <td class="order-id">ORD-42380</td>
-                <td>PT Videotok</td>
-                <td class="order-value">Rp 24.600.000</td>
-                <td class="order-response">
-                  <span class="badge badge--dikemas">QC</span>
-                </td>
-                <td>
-                  <span class="badge badge--dikemas">Pending</span>
-                </td>
-                <td class="order-date">25 Sep • 18:50</td>
-                <td>
-                  <button class="btn-text btn-text--primary">Follow Up</button>
-                </td>
-              </tr>
-
-              {# Row 4 #}
-              <tr>
-                <td class="order-id">ORD-42371</td>
-                <td>PT Mandiri Kreacif</td>
-                <td class="order-value">Rp 39.200.000</td>
-                <td class="order-response">
-                  <span class="badge badge--warning">Hold</span>
-                </td>
-                <td>
-                  <span class="badge badge--dikemas">Pending</span>
-                </td>
-                <td class="order-date">24 Sep • 19:16</td>
-                <td>
-                  <button class="btn-text btn-text--primary">Hubungi</button>
-                </td>
-              </tr>
-
-              {# Row 5 #}
-              <tr>
-                <td class="order-id">ORD-42368</td>
-                <td>PT Nusantara Health</td>
-                <td class="order-value">Rp 16.750.000</td>
-                <td class="order-response">
-                  <span class="badge badge--selesai">Selesai</span>
-                </td>
-                <td>
-                  <span class="badge badge--success">Paid</span>
-                </td>
-                <td class="order-date">24 Sep • 18:10</td>
-                <td>
-                  <button class="btn-text btn-text--primary">Invoice</button>
-                </td>
-              </tr>
+              {% endfor %}
+              {% endif %}
             </tbody>
           </table>
         </div>
@@ -182,87 +141,46 @@
     <div class="admin-order__sidebar">
       <div class="order-detail-card">
         <div class="order-detail-card__header">
-          <h3 class="order-detail-card__title">Detail Tahapan</h3>
-          <p class="order-detail-card__subtitle">Tracking status order aktif</p>
+          <h3 class="order-detail-card__title">Detail Pembayaran</h3>
+          <p class="order-detail-card__subtitle">Informasi order dan bukti transfer</p>
         </div>
 
-        <div class="order-detail-card__body">
-          <div class="order-detail-info">
-            <div class="order-detail-info__label">Order #</div>
-            <div class="order-detail-info__value order-detail-info__value--primary">ORD-42391</div>
-          </div>
-
-          {# Timeline Steps #}
-          <div class="order-timeline">
-            <div class="order-timeline-item order-timeline-item--completed">
-              <div class="order-timeline-item__icon">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <path d="M3 8L6 11L13 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </div>
-              <div class="order-timeline-item__content">
-                <div class="order-timeline-item__title">Pesanan Masuk</div>
-                <div class="order-timeline-item__time">24 Sep 2025 • 18:30</div>
-              </div>
-            </div>
-
-            <div class="order-timeline-item order-timeline-item--completed">
-              <div class="order-timeline-item__icon">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <path d="M3 8L6 11L13 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </div>
-              <div class="order-timeline-item__content">
-                <div class="order-timeline-item__title">Pembayaran Diverifikasi</div>
-                <div class="order-timeline-item__time">24 Sep 2025 • 19:15</div>
-              </div>
-            </div>
-
-            <div class="order-timeline-item order-timeline-item--active">
-              <div class="order-timeline-item__icon">
-                <div class="order-timeline-item__spinner"></div>
-              </div>
-              <div class="order-timeline-item__content">
-                <div class="order-timeline-item__title">Picking & Packing</div>
-                <div class="order-timeline-item__time">Sedang berlangsung</div>
-              </div>
-            </div>
-
-            <div class="order-timeline-item">
-              <div class="order-timeline-item__icon"></div>
-              <div class="order-timeline-item__content">
-                <div class="order-timeline-item__title">Siap Kirim</div>
-                <div class="order-timeline-item__time">Belum</div>
-              </div>
-            </div>
-          </div>
-
-          {# Detail Information #}
-          <div class="order-detail-section">
-            <div class="order-detail-row">
-              <span class="order-detail-row__label">Gudang:</span>
-              <span class="order-detail-row__value">Jakarta Timur</span>
-            </div>
-            <div class="order-detail-row">
-              <span class="order-detail-row__label">PIC:</span>
-              <span class="order-detail-row__value">Rifai Bambang • +62 857 323</span>
-            </div>
-            <div class="order-detail-row order-detail-row--alert">
-              <span class="order-detail-row__label">Catatan:</span>
-              <span class="order-detail-row__value">Request tambahan bubble wrap untuk 3 monitor</span>
-            </div>
-          </div>
-
-          {# Stage Notes removed per request #}
-
-          {# Action Buttons #}
-          <div class="order-detail-actions">
-            <button class="btn btn--secondary btn--block">Catat Kendala</button>
-            <button class="btn btn--primary btn--block">Tandai Tahap Berikut</button>
-          </div>
+        <div class="order-detail-card__body" id="orderDetailBody">
+          <p style="text-align: center; color: #6b7280; padding: 2rem;">Pilih order untuk melihat detail</p>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<script>
+function showDetail(orderId, orderNumber, bank, proof, status) {
+  const detailBody = document.getElementById('orderDetailBody');
+  detailBody.innerHTML = `
+    <div class="order-detail-info">
+      <div class="order-detail-info__label">Order #</div>
+      <div class="order-detail-info__value order-detail-info__value--primary">${orderNumber}</div>
+    </div>
+    
+    <div class="order-detail-section">
+      <div class="order-detail-row">
+        <span class="order-detail-row__label">Bank:</span>
+        <span class="order-detail-row__value">${bank || '-'}</span>
+      </div>
+      <div class="order-detail-row">
+        <span class="order-detail-row__label">Status:</span>
+        <span class="order-detail-row__value">${status || 'PENDING'}</span>
+      </div>
+    </div>
+    
+    ${proof ? `
+    <div class="order-detail-section">
+      <div class="order-detail-row__label" style="margin-bottom: 0.5rem;">Bukti Transfer:</div>
+      <img src="${proof}" alt="Bukti Transfer" style="width: 100%; border-radius: 0.5rem; border: 1px solid #e5e7eb;">
+    </div>
+    ` : '<p style="color: #6b7280; padding: 1rem; text-align: center;">Belum ada bukti pembayaran</p>'}
+  `;
+}
+</script>
+
 {% endblock %}

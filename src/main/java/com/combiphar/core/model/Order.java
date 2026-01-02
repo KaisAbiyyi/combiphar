@@ -29,10 +29,10 @@ public class Order {
         this.userId = Objects.requireNonNull(userId, "User ID required");
         this.orderNumber = generateOrderNumber();
         this.totalPrice = Objects.requireNonNull(totalPrice, "Total price required");
-        this.paymentMethod = "CASH";
+        this.paymentMethod = "TRANSFER";
         this.pickupMethod = "DELIVERY";
         this.statusPayment = "PENDING";
-        this.statusOrder = "NEW";
+        this.statusOrder = "PENDING";
         this.note = courierName;
         this.createdAt = LocalDateTime.now();
     }

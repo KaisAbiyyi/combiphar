@@ -134,28 +134,21 @@ public class OrderService {
             orderItemRepository.save(orderItem);
         }
 
-        // Buat payment record
-        Payment payment = new Payment(order.getId(), summary.getTotalPrice());
+        // Buat payment record dengan bank null (akan dipilih saat pembayaran)
+        Payment payment = new Payment(order.getId(), summary.getTotalPrice(), null);
         paymentRepository.save(payment);
 
         return order;
     }
 
     /**
-     * Update payment dengan bukti pembayaran.
-     *
-     * @param orderId ID order
-     * @param proofFilePath path file bukti pembayaran
+     * Update payment dengan bukti pembayaran dan bank.
      */
-    public void updatePaymentProof(String orderId, String proofFilePath) {
-        // Cari payment berdasarkan orderId
+    public void updatePaymentProof(String orderId, String proofFilePath, String bank) {
         Payment payment = paymentRepository.findByOrderId(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("Payment tidak ditemukan"));
 
-        // Update payment status
-        paymentRepository.updateWithProof(payment.getId(), proofFilePath);
-
-        // Update order payment status
+        paymentRepository.updatePayment(payment.getId(), proofFilePath, bank);
         orderRepository.updatePaymentStatus(orderId, "PAID");
     }
 
@@ -163,13 +156,33 @@ public class OrderService {
      * Get order history untuk user.
      */
     public java.util.List<com.combiphar.core.model.OrderHistory> getOrderHistory(String userId) {
+        return getOrderHistory(userId, null);
+    }
+
+    /**
+     * Get order history dengan opsi untuk include shipment data.
+     *
+     * @param userId ID user
+     * @param shippingService optional shipping service untuk ambil data
+     * shipment
+     * @return list of order history
+     */
+    public java.util.List<com.combiphar.core.model.OrderHistory> getOrderHistory(
+            String userId, ShippingService shippingService) {
         java.util.List<Order> orders = orderRepository.findByUserId(userId);
         java.util.List<com.combiphar.core.model.OrderHistory> history = new java.util.ArrayList<>();
 
         for (Order order : orders) {
             java.util.List<OrderItem> items = orderItemRepository.findByOrderId(order.getId());
             String firstItemName = orderItemRepository.findFirstItemNameByOrderId(order.getId());
-            history.add(new com.combiphar.core.model.OrderHistory(order, items, firstItemName));
+
+            // Ambil shipment jika shippingService disediakan
+            com.combiphar.core.model.Shipment shipment = null;
+            if (shippingService != null) {
+                shipment = shippingService.getShipmentByOrderId(order.getId()).orElse(null);
+            }
+
+            history.add(new com.combiphar.core.model.OrderHistory(order, items, firstItemName, shipment));
         }
 
         return history;
