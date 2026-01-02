@@ -5,6 +5,5 @@ package com.combiphar.core.model;
  */
 public enum Role {
     CUSTOMER,
-    ADMIN,
-    OWNER
+    ADMIN
 }

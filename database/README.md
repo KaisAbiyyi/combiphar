@@ -1,105 +1,177 @@
 # Database Setup & Migration
 
-## File yang Ada
+## Overview
 
-1. **schema.sql** - File asli untuk struktur database dasar
-2. **migrations.sql** - File pembaruan database untuk fitur baru
-3. **add_image_to_items.sql** - Migration lama (optional)
-4. **add_status_to_categories.sql** - Migration lama (optional)
+This project uses a single comprehensive database schema (`schema_v2.sql`) that includes all tables and features. The schema supports:
 
-## Cara Setup Database
+- User management (CUSTOMER, ADMIN roles)
+- Category management
+- Item/Product management with QC pipeline
+- Shopping cart (persistent)
+- Address management
+- Order management
+- Payment system (Transfer method with BCA, MANDIRI, BRI)
+- Shipment tracking
 
-### Instalasi Baru (Fresh Install)
+## Quick Start
 
-Jika Anda baru setup database pertama kali:
-
-```bash
-# 1. Jalankan schema.sql untuk membuat struktur dasar
-mysql -u root -p < database/schema.sql
-
-# 2. Jalankan migrations.sql untuk update dan seed data
-mysql -u root -p < database/migrations.sql
-```
-
-### Update Database yang Sudah Ada
-
-Jika database sudah ada dan hanya perlu update:
+### Fresh Installation
 
 ```bash
-# Jalankan migrations.sql saja
-mysql -u root -p < database/migrations.sql
+# 1. Set environment variables
+export DB_URL="jdbc:mysql://localhost:3306/combiphar_db?useSSL=false&serverTimezone=Asia/Jakarta"
+export DB_USER="root"
+export DB_PASS="your_password"
+
+# 2. Run schema v2
+mysql -u root -p < database/schema_v2.sql
+
+# 3. Run seeders in order
+./gradlew seedUser     # Creates users (admin, customers)
+./gradlew seedCategory # Creates categories
+./gradlew seedItem     # Creates items/products
+./gradlew seedAddress  # Creates addresses
+./gradlew seedOrder    # Creates orders with payments & shipments
 ```
 
-## Isi migrations.sql
+### Seeder Execution Order
 
-File `migrations.sql` berisi:
+Run seeders in this specific order to respect foreign key dependencies:
 
-1. **Drop CHECK Constraint** - Menghapus constraint yang membatasi `NEEDS_QC`
-2. **Tambah Kolom `image_url`** - Untuk fitur upload gambar produk
-3. **Update ENUM `eligibility_status`** - Menambahkan nilai `NEEDS_QC` dan `NOT_ELIGIBLE`
-4. **Seed Data Dummy** - 7 items dengan status `NEEDS_QC` untuk testing Pipeline QC
+```
+1. UserSeeder      → Creates users
+2. CategorySeeder  → Creates categories
+3. ItemSeeder      → Creates items (requires categories)
+4. AddressSeeder   → Creates addresses (requires users)
+5. OrderSeeder     → Creates orders (requires users, addresses, items)
+```
 
-## Fitur yang Ditambahkan
+## Available Seeders
 
-### 1. Status Kelayakan NEEDS_QC
+| Seeder | Description | Defensive |
+|--------|-------------|-----------|
+| UserSeeder | Creates admin, owner, and test customers | ✅ Can run multiple times |
+| CategorySeeder | Creates product categories | ✅ Can run multiple times |
+| ItemSeeder (ProductSeeder) | Creates test items/products | ✅ Can run multiple times |
+| AddressSeeder | Creates test addresses | ✅ Can run multiple times |
+| OrderSeeder | Creates test orders with payments & shipments | ✅ Can run multiple times |
 
-Mendukung status baru untuk Quality Control Pipeline:
+## Default Login Credentials
 
-- `ELIGIBLE` - Layak Jual
-- `NEEDS_QC` - Perlu QC ✨ (BARU)
-- `NEEDS_REPAIR` - Label Ulang
-- `NOT_ELIGIBLE` - Tidak Layak ✨ (BARU)
+After running `UserSeeder`:
 
-### 2. Upload Gambar Produk
+| Role | Email | Password |
+|------|-------|----------|
+| Admin | admin@combiphar.com | Admin123456 |
+| Customer | customer1@test.com | Customer123 |
 
-Kolom `image_url` untuk menyimpan path gambar produk yang diupload.
+## Database Tables
 
-### 3. Data Dummy untuk Testing
+### Core Tables
 
-7 items otomatis ditambahkan dengan status `NEEDS_QC` untuk menguji:
+- **users** - User accounts with roles (CUSTOMER, ADMIN)
+- **categories** - Product categories with status (AKTIF, REVIEW, DRAFT)
+- **items** - Products with QC pipeline (ELIGIBLE, NEEDS_QC, NEEDS_REPAIR, NOT_ELIGIBLE)
 
-- Card "Pipeline QC Hari Ini"
-- Card "Perlu QC" count
-- Filter status kelayakan
+### Cart Tables
+
+- **carts** - Shopping cart per user
+- **cart_items** - Items in cart with snapshot pricing
+
+### Order Tables
+
+- **addresses** - User delivery addresses
+- **orders** - Order headers with payment & shipping status
+- **order_items** - Order line items with notes
+
+### Payment & Shipment
+
+- **payments** - Payment records (TRANSFER method: BCA, MANDIRI, BRI)
+- **shipments** - Shipment tracking with courier info
+
+## Schema Features
+
+### QC Pipeline for Items
+
+Items can have these eligibility statuses:
+- `ELIGIBLE` - Ready for sale
+- `NEEDS_QC` - Requires quality check
+- `NEEDS_REPAIR` - Needs repair/relabeling
+- `NOT_ELIGIBLE` - Not suitable for sale
+
+### Payment Methods
+
+Only TRANSFER method is supported with these banks:
+- `BCA` - Bank Central Asia
+- `MANDIRI` - Mandiri Bank
+- `BRI` - Bank Rakyat Indonesia
+
+### Shipment Status
+
+Orders track shipment through these stages:
+- `PENDING` - Waiting for confirmation
+- `PROCESSING` - Being prepared
+- `SHIPPED` - In transit
+- `DELIVERED` - Delivered to address
+- `RECEIVED` - Order completed
+
+## Old Migration Files (Deprecated)
+
+The following files are deprecated and replaced by `schema_v2.sql`:
+
+- ~~`schema.sql`~~ - Use `schema_v2.sql` instead
+- ~~`migrations.sql`~~ - Merged into `schema_v2.sql`
+- ~~`migration_add_cart.sql`~~ - Merged into `schema_v2.sql`
+- ~~`migration_address_and_notes.sql`~~ - Merged into `schema_v2.sql`
+- ~~`migration_update_payment_to_transfer.sql`~~ - Merged into `schema_v2.sql`
+- ~~`migration_update_shipment_status.sql`~~ - Merged into `schema_v2.sql`
 
 ## Troubleshooting
 
-### Error: "Duplicate column name 'image_url'"
+### "Environment variable DB_URL not set"
 
-Abaikan error ini. Kolom sudah ada dari migration sebelumnya.
+Make sure to set all required environment variables before running the application:
 
-### Error: "Check constraint 'chk_items_eligibility' is violated"
-
-Jalankan migrations.sql untuk menghapus constraint lama.
-
-### Tidak muncul data di Pipeline QC
-
-1. Pastikan migrations.sql sudah dijalankan
-2. Cek di database: `SELECT * FROM items WHERE eligibility_status = 'NEEDS_QC'`
-3. Restart aplikasi setelah menjalankan migration
-
-## Verifikasi
-
-Setelah menjalankan migrations.sql, Anda bisa verifikasi dengan:
-
-```sql
--- Cek struktur tabel
-DESCRIBE items;
-
--- Cek jumlah items per status
-SELECT eligibility_status, COUNT(*)
-FROM items
-GROUP BY eligibility_status;
-
--- Lihat items NEEDS_QC
-SELECT id, name, stock, price
-FROM items
-WHERE eligibility_status = 'NEEDS_QC';
+```bash
+export DB_URL="jdbc:mysql://localhost:3306/combiphar_db?useSSL=false&serverTimezone=Asia/Jakarta"
+export DB_USER="root"
+export DB_PASS="your_password"
 ```
 
-## Catatan Penting
+### Seeder says "already exists"
 
-- ⚠️ **Backup database sebelum menjalankan migration**
-- ✅ File migrations.sql aman dijalankan berulang kali (idempotent)
-- ✅ Tidak akan menghapus data yang sudah ada
-- ✅ Hanya menambahkan kolom dan data baru jika belum ada
+This is normal behavior. All seeders use defensive programming - they check for duplicates before inserting. You can safely run seeders multiple times.
+
+### No users found when running AddressSeeder
+
+Make sure to run `UserSeeder` first before running `AddressSeeder`.
+
+### No items found when running OrderSeeder
+
+Make sure to run `ItemSeeder` first before running `OrderSeeder`.
+
+## Verification
+
+After setup, verify with:
+
+```sql
+-- Check all tables
+SHOW TABLES;
+
+-- Check users
+SELECT email, role FROM users;
+
+-- Check items per status
+SELECT eligibility_status, COUNT(*) FROM items GROUP BY eligibility_status;
+
+-- Check orders
+SELECT order_number, status_payment, status_order FROM orders;
+```
+
+## Important Notes
+
+- All seeders are **idempotent** - safe to run multiple times
+- Foreign key constraints are properly set up
+- Indexes are created for performance
+- No `products` table exists - use `items` table instead
+- All payment methods use TRANSFER with bank selection

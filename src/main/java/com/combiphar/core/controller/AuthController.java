@@ -94,7 +94,7 @@ public class AuthController {
         String password = ctx.formParam("password");
 
         authService.login(email, password)
-                .filter(user -> user.getRole() == Role.ADMIN || user.getRole() == Role.OWNER)
+                .filter(user -> user.getRole() == Role.ADMIN)
                 .ifPresentOrElse(user -> {
                     ctx.sessionAttribute(SESSION_USER, user);
                     ctx.redirect("/admin/dashboard");

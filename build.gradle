@@ -61,28 +61,68 @@ tasks.withType(JavaExec) {
     environment loadDotEnv()
 }
 
-// Task to run admin seeder
+// Task to run admin seeder (deprecated - use seedUser)
 task seed(type: JavaExec) {
     group = 'database'
-    description = 'Create admin account'
+    description = 'Create admin account (deprecated - use seedUser)'
     classpath = sourceSets.main.runtimeClasspath
     mainClass = 'com.combiphar.core.seeder.AdminSeeder'
 }
 
+// Task to run user seeder (admin + customers)
+task seedUser(type: JavaExec) {
+    group = 'database'
+    description = 'Seed users (admin and test customers)'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'com.combiphar.core.seeder.UserSeeder'
+}
+
 // Task to run category seeder
-task seedCategories(type: JavaExec) {
+task seedCategory(type: JavaExec) {
     group = 'database'
     description = 'Seed sample categories'
     classpath = sourceSets.main.runtimeClasspath
     mainClass = 'com.combiphar.core.seeder.CategorySeeder'
 }
 
-// Task to run product seeder
-task seedProducts(type: JavaExec) {
+// Alias for seedCategory
+task seedCategories(type: JavaExec) {
     group = 'database'
-    description = 'Seed sample products with dummy data'
+    description = 'Seed sample categories (alias for seedCategory)'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'com.combiphar.core.seeder.CategorySeeder'
+}
+
+// Task to run item/product seeder
+task seedItem(type: JavaExec) {
+    group = 'database'
+    description = 'Seed sample items/products with dummy data'
     classpath = sourceSets.main.runtimeClasspath
     mainClass = 'com.combiphar.core.seeder.ProductSeeder'
+}
+
+// Alias for seedItem
+task seedProducts(type: JavaExec) {
+    group = 'database'
+    description = 'Seed sample items/products (alias for seedItem)'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'com.combiphar.core.seeder.ProductSeeder'
+}
+
+// Task to run address seeder
+task seedAddress(type: JavaExec) {
+    group = 'database'
+    description = 'Seed test addresses for customers'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'com.combiphar.core.seeder.AddressSeeder'
+}
+
+// Task to run order seeder (with payments & shipments)
+task seedOrder(type: JavaExec) {
+    group = 'database'
+    description = 'Seed test orders with payments and shipments'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'com.combiphar.core.seeder.OrderSeeder'
 }
 
 // Task to run QC items seeder
@@ -99,4 +139,19 @@ task demoCart(type: JavaExec) {
     description = 'Run a small demo that saves and loads a cart for a demo user'
     classpath = sourceSets.main.runtimeClasspath
     mainClass = 'com.combiphar.core.seeder.CartDemoSeeder'
+}
+
+// Task to seed all data in correct order (single JVM)
+task seedAll(type: JavaExec) {
+    group = 'database'
+    description = 'Run all seeders in correct order (single JVM)'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'com.combiphar.core.seeder.SeedAll'
+}
+
+// Deprecated: use seedAll instead (runs in single JVM)
+task seedAllParallel {
+    group = 'database'
+    description = 'Run all seeders in parallel (deprecated - use seedAll)'
+    dependsOn 'seedUser', 'seedCategory', 'seedItem', 'seedAddress', 'seedOrder'
 }

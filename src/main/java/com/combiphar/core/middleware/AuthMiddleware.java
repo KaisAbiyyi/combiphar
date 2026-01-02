@@ -26,7 +26,7 @@ public class AuthMiddleware {
     };
 
     /**
-     * Middleware to ensure the user has ADMIN or OWNER privileges. Handles
+     * Middleware to ensure the user has ADMIN privileges. Handles
      * redirection based on the user's role and target path.
      */
     public static Handler adminOnly = ctx -> {
@@ -44,7 +44,7 @@ public class AuthMiddleware {
             throw new RedirectResponse(HttpStatus.FOUND, "/admin/login");
         }
 
-        if (user.getRole() != Role.ADMIN && user.getRole() != Role.OWNER) {
+        if (user.getRole() != Role.ADMIN) {
             throw new RedirectResponse(HttpStatus.FOUND, "/");
         }
     };
@@ -55,7 +55,7 @@ public class AuthMiddleware {
      */
     private static void handleAdminLoginRedirect(io.javalin.http.Context ctx, User user) {
         if (user != null) {
-            if (user.getRole() == Role.ADMIN || user.getRole() == Role.OWNER) {
+            if (user.getRole() == Role.ADMIN) {
                 throw new RedirectResponse(HttpStatus.FOUND, "/admin/dashboard");
             } else {
                 throw new RedirectResponse(HttpStatus.FOUND, "/");
