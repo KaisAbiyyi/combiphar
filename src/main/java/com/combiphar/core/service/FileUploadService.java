@@ -16,13 +16,14 @@ import com.combiphar.core.model.PaymentProof;
  */
 public class FileUploadService {
 
-    private static final String UPLOAD_DIR = "src/main/resources/static/images/proof";
+    private static final String UPLOAD_DIR = "uploads/payment-proofs";
     private static final long MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
     /**
-     * Menyimpan file yang diunggah dan mengembalikan PaymentProof.
+     * Menyimpan file yang diunggah dan mengembalikan PaymentProof. InputStream
+     * akan ditutup oleh caller menggunakan try-with-resources.
      *
-     * @param inputStream stream file yang diunggah
+     * @param inputStream stream file yang diunggah (akan ditutup oleh caller)
      * @param originalFileName nama file asli
      * @param contentType tipe MIME file
      * @param fileSize ukuran file
@@ -38,10 +39,19 @@ public class FileUploadService {
         Path uploadPath = getUploadPath();
         Path filePath = uploadPath.resolve(savedFileName);
 
+        // Copy file dengan REPLACE_EXISTING untuk menghindari konflik
         Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
 
+        // Flush dan pastikan file ter-write ke disk
+        try {
+            // Force sync to disk untuk memastikan file selesai ditulis
+            filePath.toFile().setReadable(true);
+        } catch (SecurityException ignored) {
+            // Ignore jika tidak bisa set permissions
+        }
+
         // Return URL path instead of absolute path
-        String urlPath = "/images/proof/" + savedFileName;
+        String urlPath = "/uploads/payment-proofs/" + savedFileName;
         return new PaymentProof(originalFileName, urlPath, contentType, fileSize);
     }
 

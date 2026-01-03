@@ -13,6 +13,7 @@ public class CartItem {
     private final String itemName;
     private final BigDecimal itemPrice;
     private final int quantity;
+    private final String imageUrl;
 
     /**
      * Creates a cart item with validation.
@@ -24,6 +25,20 @@ public class CartItem {
      * @throws IllegalArgumentException if any parameter is invalid
      */
     public CartItem(String itemId, String itemName, BigDecimal itemPrice, int quantity) {
+        this(itemId, itemName, itemPrice, quantity, null);
+    }
+
+    /**
+     * Creates a cart item with validation including image URL.
+     *
+     * @param itemId the product ID
+     * @param itemName the product name
+     * @param itemPrice the product price
+     * @param quantity the quantity (must be positive)
+     * @param imageUrl the product image URL (optional)
+     * @throws IllegalArgumentException if any parameter is invalid
+     */
+    public CartItem(String itemId, String itemName, BigDecimal itemPrice, int quantity, String imageUrl) {
         if (itemId == null || itemId.isBlank()) {
             throw new IllegalArgumentException("Item ID tidak boleh kosong");
         }
@@ -41,6 +56,7 @@ public class CartItem {
         this.itemName = itemName;
         this.itemPrice = itemPrice;
         this.quantity = quantity;
+        this.imageUrl = imageUrl;
     }
 
     public String getItemId() {
@@ -57,6 +73,10 @@ public class CartItem {
 
     public int getQuantity() {
         return quantity;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
     }
 
     /**
@@ -76,7 +96,7 @@ public class CartItem {
      * @return a new CartItem with the updated quantity
      */
     public CartItem withQuantity(int newQuantity) {
-        return new CartItem(itemId, itemName, itemPrice, newQuantity);
+        return new CartItem(itemId, itemName, itemPrice, newQuantity, imageUrl);
     }
 
     @Override

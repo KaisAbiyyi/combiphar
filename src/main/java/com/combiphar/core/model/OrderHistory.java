@@ -47,82 +47,59 @@ public class OrderHistory {
     }
 
     public String getStatusBadge() {
-        String paymentStatus = order.getStatusPayment();
-        String orderStatus = order.getStatusOrder();
-
-        // Badge untuk status pembayaran pending
-        if ("PENDING".equals(paymentStatus)) {
+        if ("PENDING".equals(order.getStatusPayment())) {
             return "pending";
         }
-
-        // Badge untuk status pengiriman jika ada
-        if (shipment != null && "PAID".equals(paymentStatus)) {
-            switch (shipment.getStatus()) {
-                case RECEIVED:
-                case DELIVERED:
-                    return "selesai";
-                case SHIPPED:
-                case PROCESSING:
-                    return "processing";
-                case PENDING:
-                    return "pending";
-            }
+        if (shipment != null && "PAID".equals(order.getStatusPayment())) {
+            return switch (shipment.getStatus()) {
+                case RECEIVED, DELIVERED ->
+                    "selesai";
+                case SHIPPED, PROCESSING ->
+                    "processing";
+                default ->
+                    "pending";
+            };
         }
-
-        // Badge untuk status order
-        switch (orderStatus) {
-            case "NEW":
-            case "PROCESSING":
-                return "pending";
-            case "READY":
-            case "COMPLETED":
-                return "selesai";
-            case "CANCELLED":
-                return "cancelled";
-            default:
-                return "pending";
-        }
+        return switch (order.getStatusOrder()) {
+            case "READY", "COMPLETED" ->
+                "selesai";
+            case "CANCELLED" ->
+                "cancelled";
+            default ->
+                "pending";
+        };
     }
 
     public String getStatusText() {
-        String paymentStatus = order.getStatusPayment();
-        String orderStatus = order.getStatusOrder();
-
-        if ("PENDING".equals(paymentStatus)) {
+        if ("PENDING".equals(order.getStatusPayment())) {
             return "Menunggu Pembayaran";
         }
-
-        // Prioritas status pengiriman jika ada
-        if (shipment != null && "PAID".equals(paymentStatus)) {
-            switch (shipment.getStatus()) {
-                case RECEIVED:
-                    return "Pesanan Selesai";
-                case DELIVERED:
-                    return "Paket Terkirim";
-                case SHIPPED:
-                    return "Dalam Perjalanan";
-                case PROCESSING:
-                    return "Diproses";
-                case PENDING:
-                    return "Menunggu Konfirmasi";
-            }
+        if (shipment != null && "PAID".equals(order.getStatusPayment())) {
+            return switch (shipment.getStatus()) {
+                case RECEIVED ->
+                    "Pesanan Selesai";
+                case DELIVERED ->
+                    "Paket Terkirim";
+                case SHIPPED ->
+                    "Dalam Perjalanan";
+                case PROCESSING ->
+                    "Diproses";
+                default ->
+                    "Menunggu Konfirmasi";
+            };
         }
-
-        switch (orderStatus) {
-            case "PENDING":
-                return "Menunggu Konfirmasi";
-            case "NEW":
-            case "PROCESSING":
-                return "Diproses";
-            case "READY":
-                return "Siap Dikirim";
-            case "COMPLETED":
-                return "Selesai";
-            case "CANCELLED":
-                return "Dibatalkan";
-            default:
-                return orderStatus;
-        }
+        return switch (order.getStatusOrder()) {
+            case "NEW", "PROCESSING" ->
+                "Diproses";
+            case "READY" ->
+                "Siap Dikirim";
+            case "COMPLETED" ->
+                "Selesai";
+            case "CANCELLED" ->
+                "Dibatalkan";
+            default ->
+                order.getStatusOrder();
+        };
     }
 
     public String getFormattedPrice() {
@@ -130,21 +107,17 @@ public class OrderHistory {
     }
 
     public String getActionButton() {
-        String paymentStatus = order.getStatusPayment();
-        String orderStatus = order.getStatusOrder();
-
-        if ("PENDING".equals(paymentStatus)) {
+        if ("PENDING".equals(order.getStatusPayment())) {
             return "Bayar Sekarang";
         }
-
-        switch (orderStatus) {
-            case "COMPLETED":
-                return "Beri Penilaian";
-            case "CANCELLED":
-                return "Pesan Lagi";
-            default:
-                return "Lihat Detail";
-        }
+        return switch (order.getStatusOrder()) {
+            case "COMPLETED" ->
+                "Beri Penilaian";
+            case "CANCELLED" ->
+                "Pesan Lagi";
+            default ->
+                "Lihat Detail";
+        };
     }
 
     public String getOrderId() {

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ title }}</title>
+  <style>
+    body{margin:0;font-family:system-ui,sans-serif;background:#f3f4f6;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:1rem}
+    .container{background:#fff;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.1);padding:2rem;max-width:800px;width:100%}
+    h1{font-size:1.5rem;margin:0 0 1.5rem;text-align:center;color:#111}
+    img,embed{width:100%;border-radius:8px;border:1px solid #e5e7eb}
+    embed{height:600px}
+    button{margin-top:1.5rem;padding:12px 24px;background:#6d28d9;color:#fff;border:none;border-radius:8px;cursor:pointer;display:block;margin-left:auto;margin-right:auto}
+    button:hover{background:#5b21b6}
+    p{text-align:center;color:#6b7280}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Bukti Pembayaran</h1>
+    {% if proofImagePath is not null %}
+      {% if isPdf %}
+      <embed src="{{ proofImagePath }}" type="application/pdf">
+      {% else %}
+      <img src="{{ proofImagePath }}" alt="Bukti Pembayaran">
+      {% endif %}
+    {% else %}
+    <p>Bukti pembayaran tidak tersedia</p>
+    {% endif %}
+    <button onclick="window.close()">Tutup</button>
+  </div>
+</body>
+</html>

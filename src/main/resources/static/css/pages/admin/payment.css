@@ -3,12 +3,17 @@
 /* Page-specific styles for payment verification in admin dashboard           */
 /* ========================================================================== */
 
-/* Payment Page Layout
+/* Payment Page Layout - Full Width Single Layer
    ========================================================================== */
 .admin-payment {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.admin-payment__content {
+  width: 100%;
 }
 
 /* Header Stats Section
@@ -17,49 +22,22 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1.25rem;
-}
-
-/* Content Grid Layout
-   ========================================================================== */
-.admin-payment__content {
-  display: grid;
-  grid-template-columns: 1fr 460px;
-  gap: 1rem;
-  align-items: start;
-}
-
-/* Table Section
-   ========================================================================== */
-.admin-payment__table-section {
   width: 100%;
 }
 
-/* Sidebar Section
-   ========================================================================== */
-.admin-payment__sidebar {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-/* Payment Table Component
+/* Payment Table Component - Full Width
    ========================================================================== */
 .payment-table {
   background: #FFFFFF;
   border-radius: 1rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   overflow: hidden;
+  width: 100%;
 }
 
 .payment-table__header {
   padding: 1.5rem;
   border-bottom: 1px solid #E5E7EB;
-}
-
-.payment-table__header-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
 }
 
 .payment-table__title {
@@ -75,78 +53,57 @@
   margin: 0;
 }
 
-.payment-table__actions-top {
-  display: flex;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-}
-
 .payment-table__body {
   overflow-x: auto;
+  width: 100%;
 }
 
-/* Table footer / pagination */
-.payment-table__footer {
-  padding: 0.75rem 1rem 1rem 1rem;
+.payment-table__body .data-table {
+  width: 100%;
+}
+
+/* Table Empty State */
+.empty-state {
+  text-align: center;
+  padding: 2rem;
+  color: #6b7280;
 }
 
 .pagination {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:12px;
-  background: #FFFFFF;
-  border-radius: 12px;
-  padding: 10px;
-  border: 1px solid #F3F4F6;
-  box-shadow: 0 2px 6px rgba(15,15,15,0.02);
-}
-
-.pagination__info {
-  color: #6B7280;
-  font-size: 0.875rem;
-}
-
-.pagination__controls {
-  display:flex;
-  gap:8px;
-  align-items:center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 1rem 0;
 }
 
 .pagination__btn {
-  padding: 8px 10px;
-  min-width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  background: #FFFFFF;
-  border: 1px solid #E5E7EB;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #fff;
   color: #374151;
-  font-size: 0.875rem;
+  font-size: 1.125rem;
+  text-decoration: none;
   cursor: pointer;
+  transition: all 150ms ease;
 }
 
-.pagination__btn--icon {
-  width:36px;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
+.pagination__btn:hover {
+  background: #F9FAFB;
+  border-color: #D1D5DB;
+  text-decoration: none;
 }
 
 .pagination__btn--active {
-  background: #F8F7FF;
-  border-color: #E9D5FF;
-  color: #111827;
-  font-weight:600;
-}
-
-.pagination__ellipsis {
-  color:#9CA3AF;
-  padding:0 6px;
-}
-
-@media (max-width: 680px) {
-  .pagination { flex-direction: column; align-items: stretch; gap:8px }
-  .pagination__controls { justify-content:flex-start }
+  border: 1px solid #6d28d9;
+  background: #6d28d9;
+  color: #fff;
+  font-weight: 500;
 }
 
 /* Payment Table Specific Styles
@@ -167,347 +124,26 @@
   color: #6B7280;
 }
 
-/* Payment Validation Card
-   ========================================================================== */
-.payment-validation-card {
-  background: #FFFFFF;
-  border-radius: 1rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  overflow: hidden;
-}
-
-.payment-validation-card__header {
-  padding: 1.25rem;
-  border-bottom: 1px solid #F3F4F6;
-}
-
-.payment-validation-card__header--active-invoice {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem 1.25rem;
-}
-
-.payment-validation-card__small {
-  font-size: 0.75rem;
-  color: #7C5A86;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.payment-validation-card__invoice {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #6D28D9;
-  margin-top: 0.25rem;
-}
-
-.payment-validation-card__header-right {
-  display: flex;
-  align-items: center;
-}
-
-/* Verify badge specific */
-.badge--verify {
-  background: #FFF2ED;
-  color: #B45309;
-  border-color: #FBC9B1;
-}
-
-.payment-validation-card__title {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #111827;
-  margin: 0 0 0.25rem 0;
-}
-
-.payment-validation-card__subtitle {
-  font-size: 0.875rem;
-  color: #6B7280;
-  margin: 0;
-}
-
-.payment-validation-card__body {
-  padding: 1.25rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
-/* Payment Detail Info
-   ========================================================================== */
-.payment-detail-info {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.payment-detail-info__label {
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: #6B7280;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.payment-detail-info__value {
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: #111827;
-}
-
-.payment-detail-info__value--primary {
-  color: #6D28D9;
-}
-
-/* Payment Info Section
-   ========================================================================== */
-.payment-info-section {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  padding: 1rem;
-  background: #F9FAFB;
-  border-radius: 0.5rem;
-  border: 1px solid #D1D5DB; /* added border for Kuitansi Setoran box */
-}
-
-/* Receipt Box */
-.receipt-box {
-  background: #FBF7FF;
-  padding: 1rem;
-  border-radius: 0.75rem;
-  margin-bottom: 0.75rem;
-}
-
-.receipt-box__title {
-  font-weight: 700;
-  color: #6D28D9;
-  margin-bottom: 0.5rem;
-}
-
-.receipt-box__line {
-  font-size: 0.875rem;
-  color: #6B7280;
-  margin-bottom: 0.25rem;
-}
-
-.receipt-box__image {
-  width: 100%;
-  height: auto;
-  display: block;
-  border-radius: 0.75rem;
-}
-
-.payment-info-row {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.875rem;
-}
-
-.payment-info-row__label {
-  font-weight: 500;
-  color: #6B7280;
-}
-
-.payment-info-row__value {
-  font-weight: 500;
-  color: #111827;
-  text-align: right;
-}
-
-/* Payment Finance Notes
-   ========================================================================== */
-.payment-finance-notes {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  padding: 0; /* removed pink container */
-  background: transparent;
-  border-left: none;
-  border-radius: 0;
-  margin: 0;
-}
-
-.payment-finance-notes__title {
-  font-size: 0.875rem; /* match Status Keputusan label */
-  font-weight: 500;
-  color: #374151; /* same as .payment-form__label */
-  text-transform: none;
-  letter-spacing: normal;
-}
-
-.payment-finance-notes__content {
-  font-size: 0.875rem;
-  color: #374151; /* match Status Keputusan label color */
-  line-height: 1.4;
-}
-
-.payment-finance-notes__content p {
-  margin: 0;
-}
-
-/* Editable finance notes textarea */
-.payment-finance-notes__textarea {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  font-size: 0.9375rem;
-  color: #111827; /* input text black */
-  background: #FFFFFF;
-  border: 1px solid #D1D5DB; /* match select box color */
-  border-radius: 0.75rem;
-  resize: vertical;
-}
-
-.payment-finance-notes__textarea:focus {
-  outline: none;
-  box-shadow: 0 0 0 6px rgba(209,213,219,0.35);
-  border-color: #D1D5DB;
-}
-
-.payment-finance-notes__textarea::placeholder {
-  color: #C6B2D9;
-  font-style: italic;
-}
-
-/* Payment Form
-   ========================================================================== */
-.payment-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.payment-form--two-col {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-}
-
-.payment-form__field {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.payment-form__label {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #374151;
-}
-
-.payment-form__select {
-  width: 100%;
-  padding: 0.625rem 0.875rem;
-  font-size: 0.875rem;
-  color: #111827;
-  background: #FFFFFF;
-  border: 1px solid #D1D5DB;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  transition: border-color 150ms ease, box-shadow 150ms ease;
-}
-
-.payment-form__select:focus {
-  outline: none;
-  border-color: #6D28D9;
-  box-shadow: 0 0 0 4px rgba(108, 81, 255, 0.08);
-}
-
-/* Payment Validation Actions
-   ========================================================================== */
-.payment-validation-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  padding-top: 0.5rem;
-  border-top: 1px solid #E5E7EB;
-}
-
-.payment-validation-actions--row {
-  flex-direction: row;
-  gap: 0.75rem;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.btn-secondary--full {
-  width: 48%;
-  background: #FFFFFF;
-  color: #6D28D9;
-  border: 1px solid #E9D5FF;
-}
-
-.btn-primary--full {
-  width: 48%;
-}
-
-/* Stat Card Alert Description
-   ========================================================================== */
-.stat-card__description--success {
-  color: #059669;
-  font-weight: 500;
-}
-
 /* Responsive Design
    ========================================================================== */
 @media (max-width: 1280px) {
-  .admin-payment__content {
-    grid-template-columns: 1fr 420px;
-  }
-}
-
-@media (max-width: 1024px) {
-  .admin-payment__content {
-    grid-template-columns: 1fr;
-  }
-
-  .admin-payment__sidebar {
-    order: -1;
+  .admin-payment__header {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 768px) {
   .admin-payment__header {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-  }
-
-  .payment-table__header-top {
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .payment-table__actions-top {
-    width: 100%;
-    justify-content: stretch;
-  }
-
-  .payment-table__actions-top button {
-    flex: 1;
-  }
-
-  .payment-form--two-col {
     grid-template-columns: 1fr;
   }
 
-  .payment-validation-actions--row {
+  .pagination {
     flex-direction: column;
-  }
-}
-
-@media (max-width: 640px) {
-  .admin-payment {
-    gap: 0.75rem;
+    align-items: stretch;
+    gap: 8px;
   }
 
-  .admin-payment__header {
-    grid-template-columns: 1fr;
-  }
-
-  .payment-validation-card__body {
-    padding: 1rem;
-    gap: 1rem;
+  .pagination__controls {
+    justify-content: center;
   }
 }

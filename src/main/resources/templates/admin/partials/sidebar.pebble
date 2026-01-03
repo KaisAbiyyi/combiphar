@@ -139,28 +139,6 @@
         </a>
       </li>
 
-      <li class="admin-sidebar__menu-item {% if activePage == 'transactions' %}admin-sidebar__menu-item--active{% endif %}">
-        <a href="/admin/transactions" class="admin-sidebar__link">
-          <svg
-            class="admin-sidebar__icon"
-            width="20"
-            height="20"
-            viewBox="0 0 20 20"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M4 4C4 2.89543 4.89543 2 6 2H14C15.1046 2 16 2.89543 16 4V16C16 17.1046 15.1046 18 14 18H6C4.89543 18 4 17.1046 4 16V4Z"
-              fill="currentColor"
-            />
-            <path d="M7 7H13V8H7V7Z" fill="white" />
-            <path d="M7 10H13V11H7V10Z" fill="white" />
-            <path d="M7 13H10V14H7V13Z" fill="white" />
-          </svg>
-          <span class="admin-sidebar__text">Transactions</span>
-        </a>
-      </li>
-
       <li class="admin-sidebar__menu-item {% if activePage == 'payments' %}admin-sidebar__menu-item--active{% endif %}">
         <a href="/admin/payments" class="admin-sidebar__link">
           <svg
@@ -181,8 +159,8 @@
         </a>
       </li>
 
-      <li class="admin-sidebar__menu-item {% if activePage == 'shipping' %}admin-sidebar__menu-item--active{% endif %}">
-        <a href="/admin/shipping" class="admin-sidebar__link">
+      <li class="admin-sidebar__menu-item {% if activePage == 'shipment' %}admin-sidebar__menu-item--active{% endif %}">
+        <a href="/admin/shipment" class="admin-sidebar__link">
           <svg
             class="admin-sidebar__icon"
             width="20"
@@ -202,7 +180,7 @@
             <circle cx="5" cy="16" r="2" fill="currentColor" />
             <circle cx="15" cy="16" r="2" fill="currentColor" />
           </svg>
-          <span class="admin-sidebar__text">Shipping</span>
+          <span class="admin-sidebar__text">Shipment</span>
         </a>
       </li>
 

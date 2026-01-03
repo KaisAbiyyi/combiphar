@@ -10,8 +10,8 @@ version = '1.0-SNAPSHOT'
 repositories { mavenCentral() }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
 
 dependencies {
@@ -29,7 +29,8 @@ dependencies {
     implementation 'com.mysql:mysql-connector-j:8.3.0'
     implementation 'org.mindrot:jbcrypt:0.4'
 
-    runtimeOnly 'org.slf4j:slf4j-simple:2.0.16'
+    // Logback for better logging control (suppress Jetty warnings)
+    implementation 'ch.qos.logback:logback-classic:1.4.14'
 }
 
 

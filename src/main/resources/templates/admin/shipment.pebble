@@ -1,54 +1,51 @@
 {% extends "admin/layout" %}
 
 {% block content %}
-<div class="admin-shipping">
-  {# Header Section with Stats #}
-  <div class="admin-shipping__header">
-    {# Stat Card 1 - Pending #}
+<div class="admin-shipment">
+  {# Header Section with Stats - 5 Cards #}
+  <div class="admin-shipment__header">
     <div class="stat-card stat-card--compact">
       <div class="stat-card__label">SIAP KIRIM</div>
       <div class="stat-card__value">{{ stats.pending | default(0) }}</div>
       <div class="stat-card__description">Menunggu input resi</div>
     </div>
 
-    {# Stat Card 2 - Packed #}
     <div class="stat-card stat-card--compact">
       <div class="stat-card__label">DIKEMAS</div>
       <div class="stat-card__value">{{ stats.packed | default(0) }}</div>
       <div class="stat-card__description">Sedang diproses gudang</div>
     </div>
 
-    {# Stat Card 3 - Shipped #}
     <div class="stat-card stat-card--compact">
       <div class="stat-card__label">DALAM PERJALANAN</div>
       <div class="stat-card__value">{{ stats.shipped | default(0) }}</div>
       <div class="stat-card__description">Sedang dikirim ke customer</div>
     </div>
 
-    {# Stat Card 4 - Delivered #}
     <div class="stat-card stat-card--compact">
-      <div class="stat-card__label">SELESAI</div>
+      <div class="stat-card__label">TERKIRIM</div>
       <div class="stat-card__value">{{ stats.delivered | default(0) }}</div>
-      <div class="stat-card__description stat-card__description--success">Terkirim</div>
+      <div class="stat-card__description">Sampai di alamat tujuan</div>
+    </div>
+
+    <div class="stat-card stat-card--compact">
+      <div class="stat-card__label">DITERIMA</div>
+      <div class="stat-card__value">{{ stats.received | default(0) }}</div>
+      <div class="stat-card__description stat-card__description--success">Diterima oleh customer</div>
     </div>
   </div>
 
   {# Main Content Area #}
-  <div class="admin-shipping__content">
-    {# Shipping Table #}
-    <div class="shipping-table">
-      {# Table Header #}
-      <div class="shipping-table__header">
-        <div class="shipping-table__header-top">
-          <div>
-            <h3 class="shipping-table__title">Daftar Pengiriman</h3>
-            <p class="shipping-table__subtitle">Kelola pengiriman dan input nomor resi</p>
-          </div>
+  <div class="admin-shipment__content">
+    <div class="shipment-table">
+      <div class="shipment-table__header">
+        <div>
+          <h3 class="shipment-table__title">Daftar Pengiriman</h3>
+          <p class="shipment-table__subtitle">Kelola pengiriman dan input nomor resi</p>
         </div>
       </div>
 
-      {# Table Content #}
-      <div class="shipping-table__body">
+      <div class="shipment-table__body">
         <table class="data-table">
           <thead>
             <tr>
@@ -63,14 +60,12 @@
           <tbody>
             {% if shipments is empty %}
             <tr>
-              <td colspan="6" style="text-align: center; padding: 2rem; color: #6b7280;">
-                Belum ada pesanan yang perlu dikirim
-              </td>
+              <td colspan="6" class="empty-state">Belum ada pesanan yang perlu dikirim</td>
             </tr>
             {% else %}
             {% for detail in shipments %}
             <tr data-order-id="{{ detail.order.id }}">
-              <td class="shipping-order-id">{{ detail.order.orderNumber }}</td>
+              <td class="shipment-order-id">{{ detail.order.orderNumber }}</td>
               <td>{{ detail.customerName | default('Customer') }}</td>
               <td>{{ detail.order.note | default('Standard') }}</td>
               <td>
@@ -85,33 +80,37 @@
                   <span class="badge badge--info">Belum Diproses</span>
                 {% elseif detail.shipment.status.name == 'PENDING' %}
                   <span class="badge badge--warning">Menunggu</span>
-                {% elseif detail.shipment.status.name == 'PACKED' %}
+                {% elseif detail.shipment.status.name == 'PACKED' or detail.shipment.status.name == 'PROCESSING' %}
                   <span class="badge badge--info">Dikemas</span>
                 {% elseif detail.shipment.status.name == 'SHIPPED' %}
                   <span class="badge badge--primary">Dikirim</span>
                 {% elseif detail.shipment.status.name == 'DELIVERED' %}
                   <span class="badge badge--success">Terkirim</span>
+                {% elseif detail.shipment.status.name == 'RECEIVED' %}
+                  <span class="badge badge--success">Diterima</span>
                 {% endif %}
               </td>
               <td>
                 {% if detail.shipment is null %}
-                  {# Tombol buat shipment #}
                   <button class="btn-text btn-text--primary" 
                           onclick="createShipment('{{ detail.order.id }}', '{{ detail.order.note | default("Standard") }}')">
                     Proses Kirim
                   </button>
                 {% elseif not detail.shipment.hasTrackingNumber %}
-                  {# Form input resi #}
                   <form class="inline-form" onsubmit="updateTracking(event, '{{ detail.shipment.id }}')">
                     <input type="text" name="trackingNumber" placeholder="Masukkan no. resi" 
                            class="input-small" required>
                     <button type="submit" class="btn-text btn-text--primary">Simpan</button>
                   </form>
                 {% elseif detail.shipment.status.name == 'SHIPPED' %}
-                  {# Tombol tandai terkirim #}
                   <button class="btn-text btn-text--success" 
                           onclick="markDelivered('{{ detail.shipment.id }}')">
                     Tandai Terkirim
+                  </button>
+                {% elseif detail.shipment.status.name == 'DELIVERED' %}
+                  <button class="btn-text btn-text--success" 
+                          onclick="markReceived('{{ detail.shipment.id }}')">
+                    Tandai Diterima
                   </button>
                 {% else %}
                   <span class="text-muted">Selesai</span>
@@ -122,12 +121,23 @@
             {% endif %}
           </tbody>
         </table>
+        
+        {% if totalPages > 1 %}
+        <div class="pagination">
+          {% if hasPrevious %}
+          <a href="?page={{ currentPage - 1 }}" class="pagination__btn">‹</a>
+          {% endif %}
+          <span class="pagination__btn pagination__btn--active">{{ currentPage }}</span>
+          {% if hasNext %}
+          <a href="?page={{ currentPage + 1 }}" class="pagination__btn">›</a>
+          {% endif %}
+        </div>
+        {% endif %}
       </div>
     </div>
   </div>
 </div>
 
-{# Inline Styles for Form #}
 <style>
 .inline-form {
   display: flex;
@@ -155,19 +165,20 @@
   color: #9ca3af;
   font-size: 0.875rem;
 }
+.empty-state {
+  text-align: center;
+  padding: 2rem;
+  color: #6b7280;
+}
 </style>
 
-{# JavaScript for Actions #}
 <script>
-/**
- * Buat shipment baru untuk order.
- */
 function createShipment(orderId, courierName) {
   const formData = new FormData();
   formData.append('orderId', orderId);
   formData.append('courierName', courierName);
 
-  fetch('/api/admin/shipping/create', {
+  fetch('/api/admin/shipment/create', {
     method: 'POST',
     body: formData
   })
@@ -182,9 +193,6 @@ function createShipment(orderId, courierName) {
   .catch(err => alert('Error: ' + err.message));
 }
 
-/**
- * Update nomor resi.
- */
 function updateTracking(event, shipmentId) {
   event.preventDefault();
   const form = event.target;
@@ -193,7 +201,7 @@ function updateTracking(event, shipmentId) {
   const formData = new FormData();
   formData.append('trackingNumber', trackingNumber);
 
-  fetch('/api/admin/shipping/' + shipmentId + '/tracking', {
+  fetch('/api/admin/shipment/' + shipmentId + '/tracking', {
     method: 'POST',
     body: formData
   })
@@ -208,16 +216,34 @@ function updateTracking(event, shipmentId) {
   .catch(err => alert('Error: ' + err.message));
 }
 
-/**
- * Tandai sebagai terkirim.
- */
 function markDelivered(shipmentId) {
   if (!confirm('Tandai pengiriman sebagai terkirim?')) return;
 
   const formData = new FormData();
   formData.append('status', 'DELIVERED');
 
-  fetch('/api/admin/shipping/' + shipmentId + '/status', {
+  fetch('/api/admin/shipment/' + shipmentId + '/status', {
+    method: 'POST',
+    body: formData
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      location.reload();
+    } else {
+      alert('Gagal: ' + data.message);
+    }
+  })
+  .catch(err => alert('Error: ' + err.message));
+}
+
+function markReceived(shipmentId) {
+  if (!confirm('Tandai pesanan sebagai diterima oleh customer?')) return;
+
+  const formData = new FormData();
+  formData.append('status', 'RECEIVED');
+
+  fetch('/api/admin/shipment/' + shipmentId + '/status', {
     method: 'POST',
     body: formData
   })

@@ -52,7 +52,7 @@ Berikut adalah pembagian tugas yang disusun secara kronologis berdasarkan alur k
 
 - **feat(cart): implement add to cart and quantity management**
   - Membuat logika penyimpanan item sementara di keranjang belanja pada rute /cart.
-- **feat(checkout): create shipping address and courier selection form**
+- **feat(checkout): create shipment address and courier selection form**
   - Menangani input formulir pengiriman (Nama, Alamat, Kota, Kode Pos) di halaman /checkout.
 - **feat(order): implement order summary logic and subtotal calculation**
   - Menghitung otomatis subtotal, biaya logistik, dan total pembayaran di ringkasan pesanan.
@@ -61,15 +61,15 @@ Berikut adalah pembagian tugas yang disusun secara kronologis berdasarkan alur k
 
 **Fase 5: Pembayaran & Pemenuhan Pesanan (Jarwo Eddy Wicaksono)**
 
-#### **Branch: feature/payment-and-shipping**
+#### **Branch: feature/payment-and-shipment**
 
 - **feat(payment): integrate QRIS payment gateway and automated callback**
   - Integrasi API pihak ketiga untuk generate kode QRIS pada rute /payment.
   - Membuat _webhook_ untuk pembaruan status pembayaran otomatis menjadi "PAID".
 - **feat(admin-payment): implement manual cash verification**
   - Membuat fitur konfirmasi pembayaran tunai oleh admin di rute /admin/payments.
-- **feat(shipping): implement receipt input and shipment tracking**
-  - Implementasi input nomor resi dan pembaruan status kurir di rute /admin/shipping.
+- **feat(shipment): implement receipt input and shipment tracking**
+  - Implementasi input nomor resi dan pembaruan status kurir di rute /admin/shipment.
   - Menghubungkan data status pengiriman ke halaman pelacakan pelanggan /order/{id}.
 
 ### ---

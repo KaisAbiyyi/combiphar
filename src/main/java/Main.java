@@ -1,7 +1,9 @@
 
 import java.util.Map;
 
-import com.combiphar.core.controller.AdminShippingController;
+import com.combiphar.core.controller.AddressController;
+import com.combiphar.core.controller.AdminPaymentController;
+import com.combiphar.core.controller.AdminShipmentController;
 import com.combiphar.core.controller.AuthController;
 import com.combiphar.core.controller.CartController;
 import com.combiphar.core.controller.CatalogController;
@@ -13,6 +15,7 @@ import com.combiphar.core.controller.PaymentUploadController;
 import com.combiphar.core.controller.QualityCheckController;
 import com.combiphar.core.middleware.AuthMiddleware;
 import com.combiphar.core.model.Order;
+import com.combiphar.core.repository.AddressRepository;
 import com.combiphar.core.repository.CartRepository;
 import com.combiphar.core.repository.ItemRepository;
 import com.combiphar.core.repository.UserRepository;
@@ -21,7 +24,7 @@ import com.combiphar.core.service.CartService;
 import com.combiphar.core.service.FileUploadService;
 import com.combiphar.core.service.OrderService;
 import com.combiphar.core.service.PaymentService;
-import com.combiphar.core.service.ShippingService;
+import com.combiphar.core.service.ShipmentService;
 import com.mitchellbosecke.pebble.PebbleEngine;
 import com.mitchellbosecke.pebble.loader.ClasspathLoader;
 
@@ -43,6 +46,7 @@ public class Main {
         UserRepository userRepository = new UserRepository();
         ItemRepository itemRepository = new ItemRepository();
         CartRepository cartRepository = new CartRepository();
+        AddressRepository addressRepository = new AddressRepository();
 
         // Initialize services
         AuthService authService = new AuthService(userRepository);
@@ -52,7 +56,7 @@ public class Main {
         PaymentService paymentService = new PaymentService(fileUploadService);
 
         // Initialize controllers - Phase 1: Auth
-        AuthController authController = new AuthController(authService);
+        AuthController authController = new AuthController(authService, addressRepository);
 
         // Initialize Phase 2 controllers
         CategoryController categoryController = new CategoryController();
@@ -65,13 +69,17 @@ public class Main {
         // Initialize Phase 4 controllers (Transaction Flow)
         CartController cartController = new CartController(cartService, cartRepository);
 
-        CheckoutController checkoutController = new CheckoutController(orderService);
+        CheckoutController checkoutController = new CheckoutController(orderService, addressRepository);
 
-        // Initialize Phase 5 controllers (Payment & Shipping)
+        // Initialize Phase 5 controllers (Payment & Shipment)
         PaymentController paymentController = new PaymentController(paymentService, orderService);
-        PaymentUploadController paymentUploadController = new PaymentUploadController(fileUploadService, orderService);
-        ShippingService shippingService = new ShippingService();
-        AdminShippingController adminShippingController = new AdminShippingController(shippingService);
+        PaymentUploadController paymentUploadController = new PaymentUploadController(fileUploadService, orderService, cartRepository);
+        ShipmentService shipmentService = new ShipmentService();
+        AdminShipmentController adminShipmentController = new AdminShipmentController(shipmentService);
+        AdminPaymentController adminPaymentController = new AdminPaymentController();
+
+        // Initialize Address controller
+        AddressController addressController = new AddressController(addressRepository);
 
         PebbleEngine engine = createPebbleEngine();
         Javalin app = createApp(engine);
@@ -79,8 +87,8 @@ public class Main {
         registerRoutes(app, authController, categoryController,
                 itemController, qcController, catalogController, cartController,
                 checkoutController, paymentController, paymentUploadController,
-                adminShippingController, shippingService,
-                cartRepository, orderService);
+                adminShipmentController, adminPaymentController, shipmentService,
+                cartRepository, orderService, addressController);
 
         // Run DB migrations (best-effort). This will create carts/cart_items if missing.
         com.combiphar.core.migration.MigrationRunner.runMigrations();
@@ -108,12 +116,21 @@ public class Main {
         Javalin app = Javalin.create(config -> {
             config.fileRenderer(new JavalinPebble(engine));
             config.staticFiles.add("/static");
+            config.staticFiles.add(staticConfig -> {
+                staticConfig.hostedPath = "/uploads";
+                staticConfig.directory = "uploads";
+                staticConfig.location = io.javalin.http.staticfiles.Location.EXTERNAL;
+            });
 
             // Session Configuration
             config.jetty.modifyServletContextHandler(handler -> {
                 handler.getSessionHandler().setSessionCookie("COMBIPHAR_SESSION");
                 handler.getSessionHandler().setMaxInactiveInterval(3600); // 1 hour
             });
+
+            // Multipart Configuration - untuk mengurangi warning pada Windows
+            config.jetty.multipartConfig.cacheDirectory("uploads/temp");
+            config.http.maxRequestSize = 5_242_880L; // 5MB max file size
         });
 
         // Global Exception Handlers for cleaner redirects
@@ -154,10 +171,12 @@ public class Main {
             CheckoutController checkoutController,
             PaymentController paymentController,
             PaymentUploadController paymentUploadController,
-            AdminShippingController adminShippingController,
-            ShippingService shippingService,
+            AdminShipmentController adminShipmentController,
+            AdminPaymentController adminPaymentController,
+            ShipmentService shipmentService,
             CartRepository cartRepository,
-            OrderService orderService) {
+            OrderService orderService,
+            AddressController addressController) {
         // ====== PHASE 3: Customer Catalog Routes ======
         // Home / Catalog page - delegated to CatalogController
         app.get("/", catalogController::showCatalogPage);
@@ -197,7 +216,8 @@ public class Main {
 
         // Protected Customer Routes
         app.before("/profile", AuthMiddleware.authenticated);
-        // address-settings page removed
+        app.before("/addresses", AuthMiddleware.authenticated);
+        app.before("/addresses/*", AuthMiddleware.authenticated);
         app.before("/cart", AuthMiddleware.authenticated);
         app.before("/checkout", AuthMiddleware.authenticated);
         app.before("/payment", AuthMiddleware.authenticated);
@@ -206,7 +226,13 @@ public class Main {
         app.before("/order/*", AuthMiddleware.authenticated);
 
         app.get("/profile", authController::showProfile);
-        // address-settings route removed
+
+        // ====== Address Management Routes ======
+        app.get("/addresses", addressController::showAddressList);
+        app.get("/addresses/add", addressController::showAddressForm);
+        app.post("/addresses/add", addressController::handleAddAddress);
+        app.post("/addresses/set-primary", addressController::setPrimaryAddress);
+        app.post("/addresses/delete", addressController::deleteAddress);
 
         // ====== PHASE 4: Cart & Checkout Routes ======
         // Cart management
@@ -222,8 +248,7 @@ public class Main {
         // Checkout flow
         app.get("/checkout", checkoutController::showCheckout);
         app.post("/api/checkout/calculate", checkoutController::calculateOrder);
-        app.post("/api/checkout/validate-address", checkoutController::validateAddress);
-        app.get("/checkout/summary", checkoutController::showOrderSummary);
+        app.post("/checkout/validate-address", checkoutController::validateAddress);
 
         // Admin Auth
         app.get("/admin/login", authController::showAdminLogin);
@@ -251,9 +276,9 @@ public class Main {
                 return;
             }
             try {
-                var shipment = shippingService.getShipmentByOrderId(orderId);
+                var shipment = shipmentService.getShipmentByOrderId(orderId);
                 if (shipment.isPresent()) {
-                    shippingService.markAsReceived(shipment.get().getId());
+                    shipmentService.markAsReceived(shipment.get().getId());
                 }
                 ctx.redirect("/order/" + orderId);
             } catch (Exception e) {
@@ -275,7 +300,7 @@ public class Main {
             if (user != null) {
                 String userId = ((com.combiphar.core.model.User) user).getId();
                 java.util.List<com.combiphar.core.model.OrderHistory> orderHistory
-                        = orderService.getOrderHistory(userId, shippingService);
+                        = orderService.getOrderHistory(userId, shipmentService);
                 model.put("orderHistory", orderHistory);
             }
 
@@ -327,7 +352,7 @@ public class Main {
                 model.put("items", itemRepo.findByOrderId(orderId));
 
                 // Get shipment info for tracking
-                shippingService.getShipmentByOrderId(orderId).ifPresent(shipment -> {
+                shipmentService.getShipmentByOrderId(orderId).ifPresent(shipment -> {
                     model.put("shipment", shipment);
                 });
             }, () -> {
@@ -403,60 +428,72 @@ public class Main {
 
         // Admin order page (English route)
         app.get("/admin/orders", ctx -> {
+            int page = ctx.queryParamAsClass("page", Integer.class).getOrDefault(1);
+
             Map<String, Object> model = buildModel(
                     "Monitoring Pesanan",
                     "orders",
                     ctx.sessionAttribute("currentUser"));
             model.put("pageTitle", "Monitoring Pesanan");
 
-            // Get all orders with payment info
-            java.util.List<Order> orders = new com.combiphar.core.repository.OrderRepository().findAll();
+            com.combiphar.core.repository.OrderRepository orderRepo = new com.combiphar.core.repository.OrderRepository();
+            com.combiphar.core.repository.PaymentRepository paymentRepo = new com.combiphar.core.repository.PaymentRepository();
+            java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("dd MMM yyyy • HH:mm");
+
+            java.util.List<Order> orders = orderRepo.findAll();
             java.util.List<Map<String, Object>> orderDetails = new java.util.ArrayList<>();
+            int newOrders = 0, processingOrders = 0, completedOrders = 0;
 
             for (Order order : orders) {
                 Map<String, Object> detail = new java.util.HashMap<>();
                 detail.put("order", order);
-
-                // Get payment info
-                com.combiphar.core.repository.PaymentRepository paymentRepo = new com.combiphar.core.repository.PaymentRepository();
-                paymentRepo.findByOrderId(order.getId()).ifPresent(payment -> {
-                    detail.put("payment", payment);
-                });
-
+                detail.put("customerName", com.combiphar.core.util.CustomerUtil.getCustomerName(order.getUserId()));
+                if (order.getCreatedAt() != null) {
+                    detail.put("formattedDate", order.getCreatedAt().format(formatter));
+                }
+                paymentRepo.findByOrderId(order.getId()).ifPresent(payment -> detail.put("payment", payment));
                 orderDetails.add(detail);
+
+                String status = order.getStatusOrder();
+                if ("NEW".equals(status)) {
+                    newOrders++;
+                } else if ("PROCESSING".equals(status)) {
+                    processingOrders++;
+                } else if ("COMPLETED".equals(status)) {
+                    completedOrders++;
+                }
             }
 
-            model.put("orders", orderDetails);
+            // Pagination
+            com.combiphar.core.util.Pagination<Map<String, Object>> pagination
+                    = new com.combiphar.core.util.Pagination<>(orderDetails, page, 5);
+
+            model.put("orders", pagination.getItems());
+            model.put("currentPage", pagination.getCurrentPage());
+            model.put("totalPages", pagination.getTotalPages());
+            model.put("hasNext", pagination.hasNext());
+            model.put("hasPrevious", pagination.hasPrevious());
+
+            Map<String, Integer> stats = new java.util.HashMap<>();
+            stats.put("total", orderDetails.size());
+            stats.put("newOrders", newOrders);
+            stats.put("processing", processingOrders);
+            stats.put("completed", completedOrders);
+            model.put("stats", stats);
             ctx.render("admin/order", model);
         });
 
-        // Admin transaction page (English route)
-        app.get("/admin/transactions", ctx -> {
-            Map<String, Object> model = buildModel(
-                    "Daftar Transaksi",
-                    "transactions",
-                    ctx.sessionAttribute("currentUser"));
-            model.put("pageTitle", "Daftar Transaksi");
-            ctx.render("admin/transaction", model);
-        });
+        // Admin payment page (English route) - delegated to controller
+        app.get("/admin/payments", adminPaymentController::showPaymentPage);
+        app.get("/admin/payments/proof/{id}", adminPaymentController::showPaymentProof);
 
-        // Admin payment page (English route)
-        app.get("/admin/payments", ctx -> {
-            Map<String, Object> model = buildModel(
-                    "Verifikasi Pembayaran",
-                    "payments",
-                    ctx.sessionAttribute("currentUser"));
-            model.put("pageTitle", "Verifikasi Pembayaran");
-            ctx.render("admin/payment", model);
-        });
+        // Admin shipment page (English route) - delegated to controller
+        app.get("/admin/shipment", adminShipmentController::showShipmentPage);
 
-        // Admin shipping page (English route) - delegated to controller
-        app.get("/admin/shipping", adminShippingController::showShippingPage);
-
-        // Admin shipping API routes
-        app.post("/api/admin/shipping/{id}/tracking", adminShippingController::updateTrackingNumber);
-        app.post("/api/admin/shipping/{id}/status", adminShippingController::updateStatus);
-        app.post("/api/admin/shipping/create", adminShippingController::createShipment);
+        // Admin shipment API routes
+        app.post("/api/admin/shipment/{id}/tracking", adminShipmentController::updateTrackingNumber);
+        app.post("/api/admin/shipment/{id}/status", adminShipmentController::updateStatus);
+        app.post("/api/admin/shipment/create", adminShipmentController::createShipment);
 
         // Admin user page (English route)
         app.get("/admin/users", ctx -> {

@@ -1,0 +1,148 @@
+{# ========================================================================== #}
+{# ADDRESS FORM PAGE - Add new address form                                  #}
+{# ========================================================================== #}
+{% extends "customer/layout" %}
+
+{% block styles %}
+<link rel="stylesheet" href="/css/pages/customer/address.css">
+{% endblock %}
+
+{% block content %}
+<section class="address-page">
+  <div class="address-page__container address-page__container--narrow">
+    
+    {# Page Header #}
+    <div class="address-page__header">
+      <div class="address-page__header-left">
+        <h1 class="address-page__title">Tambah Alamat Baru</h1>
+        <p class="address-page__subtitle">Isi data alamat pengiriman Anda</p>
+      </div>
+    </div>
+
+    {# Error Message #}
+    {% if error is not empty %}
+    <div class="address-alert address-alert--error">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <path d="M10 18a8 8 0 100-16 8 8 0 000 16zM10 6v4m0 4h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>{{ error }}</span>
+    </div>
+    {% endif %}
+
+    {# Address Form Card #}
+    <div class="address-form-card">
+      <form action="/addresses/add" method="post" class="address-form">
+        
+        {# Recipient Name #}
+        <div class="address-form__field">
+          <label for="recipientName" class="address-form__label">Nama Lengkap Penerima <span class="required">*</span></label>
+          <input
+            type="text"
+            id="recipientName"
+            name="recipientName"
+            class="address-form__input"
+            placeholder="Masukkan nama penerima"
+            required
+          >
+        </div>
+
+        {# Phone #}
+        <div class="address-form__field">
+          <label for="phone" class="address-form__label">Nomor Telepon <span class="required">*</span></label>
+          <input
+            type="tel"
+            id="phone"
+            name="phone"
+            class="address-form__input"
+            placeholder="08xx xxxx xxxx"
+            required
+          >
+        </div>
+
+        {# Address #}
+        <div class="address-form__field">
+          <label for="address" class="address-form__label">Alamat Lengkap <span class="required">*</span></label>
+          <textarea
+            id="address"
+            name="address"
+            class="address-form__textarea"
+            placeholder="Jl. Melati No. 45, Cluster Harmoni"
+            rows="3"
+            required
+          ></textarea>
+        </div>
+
+        {# Subdistrict & District Row #}
+        <div class="address-form__row">
+          <div class="address-form__field">
+            <label for="subdistrict" class="address-form__label">Kelurahan/Desa</label>
+            <input
+              type="text"
+              id="subdistrict"
+              name="subdistrict"
+              class="address-form__input"
+              placeholder="Kelurahan atau desa"
+            >
+          </div>
+          <div class="address-form__field">
+            <label for="district" class="address-form__label">Kecamatan</label>
+            <input
+              type="text"
+              id="district"
+              name="district"
+              class="address-form__input"
+              placeholder="Kecamatan"
+            >
+          </div>
+        </div>
+
+        {# City & Province Row #}
+        <div class="address-form__row">
+          <div class="address-form__field">
+            <label for="city" class="address-form__label">Kota <span class="required">*</span></label>
+            <input
+              type="text"
+              id="city"
+              name="city"
+              class="address-form__input"
+              placeholder="Nama kota"
+              required
+            >
+          </div>
+          <div class="address-form__field">
+            <label for="province" class="address-form__label">Provinsi</label>
+            <input
+              type="text"
+              id="province"
+              name="province"
+              class="address-form__input"
+              placeholder="Provinsi"
+            >
+          </div>
+        </div>
+
+        {# Postal Code #}
+        <div class="address-form__field address-form__field--half">
+          <label for="postalCode" class="address-form__label">Kode Pos <span class="required">*</span></label>
+          <input
+            type="text"
+            id="postalCode"
+            name="postalCode"
+            class="address-form__input"
+            placeholder="12345"
+            maxlength="10"
+            required
+          >
+        </div>
+
+        {# Form Actions #}
+        <div class="address-form__actions">
+          <a href="/addresses" class="btn btn--secondary">Batal</a>
+          <button type="submit" class="btn btn--primary">Simpan Alamat</button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+</section>
+{% endblock %}

@@ -1,193 +1,126 @@
 package com.combiphar.core.controller;
 
 import java.math.BigDecimal;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
+import com.combiphar.core.model.Address;
 import com.combiphar.core.model.Cart;
 import com.combiphar.core.model.OrderSummary;
 import com.combiphar.core.model.ShippingAddress;
 import com.combiphar.core.model.User;
+import com.combiphar.core.repository.AddressRepository;
 import com.combiphar.core.service.OrderService;
 
 import io.javalin.http.Context;
 
 /**
- * Controller for checkout and order placement. Follows MVC pattern - handles
- * HTTP layer for checkout.
+ * Controller for checkout and order placement.
  */
 public class CheckoutController {
 
     private final OrderService orderService;
-    private static final String SESSION_USER = "currentUser";
-    private static final String SESSION_CART = "cart";
-    private static final String SESSION_SHIPPING = "shippingAddress";
-    private static final String SESSION_COURIER = "selectedCourier";
+    private final AddressRepository addressRepository;
 
-    public CheckoutController(OrderService orderService) {
-        this.orderService = Objects.requireNonNull(orderService, "OrderService tidak boleh null");
+    public CheckoutController(OrderService orderService, AddressRepository addressRepository) {
+        this.orderService = Objects.requireNonNull(orderService);
+        this.addressRepository = Objects.requireNonNull(addressRepository);
     }
 
-    /**
-     * GET /checkout - Displays the checkout page.
-     */
     public void showCheckout(Context ctx) {
-        User user = ctx.sessionAttribute(SESSION_USER);
-        Cart cart = ctx.sessionAttribute(SESSION_CART);
-
+        Cart cart = ctx.sessionAttribute("cart");
         if (cart == null || cart.isEmpty()) {
             ctx.redirect("/cart?error=empty");
             return;
         }
 
-        Map<String, Object> model = new HashMap<>();
-        Map<String, BigDecimal> couriers = orderService.getAvailableCouriers();
-        String defaultCourier = resolveDefaultCourier(couriers);
-        OrderSummary summary = orderService.calculateOrderSummary(cart, defaultCourier);
+        User user = ctx.sessionAttribute("currentUser");
+        if (user == null) {
+            ctx.redirect("/login");
+            return;
+        }
 
+        Map<String, BigDecimal> couriers = orderService.getAvailableCouriers();
+        String defaultCourier = couriers.containsKey("Premium Logistics (2-3 hari)")
+                ? "Premium Logistics (2-3 hari)" : couriers.keySet().stream().findFirst().orElse("");
+
+        Map<String, Object> model = new HashMap<>();
         model.put("title", "Checkout Pesanan");
         model.put("currentUser", user);
         model.put("activePage", "checkout");
         model.put("cart", cart);
-        model.put("courierOptions", buildCourierOptions(couriers));
+        model.put("courierOptions", couriers.entrySet().stream()
+                .map(e -> Map.of("name", e.getKey(), "rate", e.getValue())).toList());
         model.put("selectedCourier", defaultCourier);
-        model.put("orderSummary", summary);
-        model.put("shippingAddress", ctx.sessionAttribute(SESSION_SHIPPING));
-        model.put("addressSettings", ctx.sessionAttribute("addressSettings"));
-
+        model.put("orderSummary", orderService.calculateOrderSummary(cart, defaultCourier));
+        loadAddresses(model, user.getId());
         ctx.render("customer/checkout", model);
     }
 
-    /**
-     * POST /api/checkout/calculate - Calculates order summary.
-     */
     public void calculateOrder(Context ctx) {
-        try {
-            Cart cart = ctx.sessionAttribute(SESSION_CART);
-            if (cart == null || cart.isEmpty()) {
-                ctx.status(400).json(Map.of(
-                        "success", false,
-                        "message", "Keranjang belanja kosong"
-                ));
-                return;
-            }
-
-            String courierName = ctx.formParam("courier");
-            OrderSummary summary = orderService.calculateOrderSummary(cart, courierName);
-
-            ctx.json(Map.of(
-                    "success", true,
-                    "subtotal", summary.getSubtotal(),
-                    "shippingCost", summary.getShippingCost(),
-                    "totalPrice", summary.getTotalPrice(),
-                    "courierName", summary.getCourierName()
-            ));
-        } catch (IllegalArgumentException e) {
-            ctx.status(400).json(Map.of(
-                    "success", false,
-                    "message", e.getMessage()
-            ));
-        }
-    }
-
-    /**
-     * POST /api/checkout/validate-address - Validates shipping address. Also
-     * stores selected courier in session.
-     */
-    public void validateAddress(Context ctx) {
-        try {
-            String recipientName = ctx.formParam("recipientName");
-            String address = ctx.formParam("address");
-            String city = ctx.formParam("city");
-            String postalCode = ctx.formParam("postalCode");
-            String phone = ctx.formParam("phone");
-            String courier = ctx.formParam("courier");
-
-            if (phone == null || phone.isBlank()) {
-                throw new IllegalArgumentException("Nomor telepon wajib diisi");
-            }
-
-            ShippingAddress shippingAddress = new ShippingAddress(
-                    recipientName, address, city, postalCode, phone
-            );
-
-            orderService.validateShippingAddress(shippingAddress);
-            ctx.sessionAttribute(SESSION_SHIPPING, shippingAddress);
-
-            // Simpan courier yang dipilih ke session
-            if (courier != null && !courier.isBlank()) {
-                ctx.sessionAttribute(SESSION_COURIER, courier);
-            }
-
-            ctx.json(Map.of(
-                    "success", true,
-                    "message", "Alamat pengiriman valid",
-                    "formattedAddress", shippingAddress.getFormattedAddress()
-            ));
-        } catch (IllegalArgumentException e) {
-            ctx.status(400).json(Map.of(
-                    "success", false,
-                    "message", e.getMessage()
-            ));
-        }
-    }
-
-    /**
-     * GET /checkout/summary - Shows order summary before payment.
-     */
-    public void showOrderSummary(Context ctx) {
-        User user = ctx.sessionAttribute(SESSION_USER);
-        Cart cart = ctx.sessionAttribute(SESSION_CART);
-        ShippingAddress shippingAddress = ctx.sessionAttribute(SESSION_SHIPPING);
-
+        Cart cart = ctx.sessionAttribute("cart");
         if (cart == null || cart.isEmpty()) {
-            ctx.redirect("/cart?error=empty");
+            ctx.status(400).json(Map.of("success", false, "message", "Keranjang belanja kosong"));
+            return;
+        }
+        try {
+            OrderSummary summary = orderService.calculateOrderSummary(cart, ctx.formParam("courier"));
+            ctx.json(Map.of("success", true, "subtotal", summary.getSubtotal(),
+                    "shippingCost", summary.getShippingCost(), "totalPrice", summary.getTotalPrice(),
+                    "courierName", summary.getCourierName()));
+        } catch (IllegalArgumentException e) {
+            ctx.status(400).json(Map.of("success", false, "message", e.getMessage()));
+        }
+    }
+
+    public void validateAddress(Context ctx) {
+        User user = ctx.sessionAttribute("currentUser");
+        if (user == null) {
+            ctx.redirect("/login");
             return;
         }
 
-        if (shippingAddress == null) {
-            ctx.redirect("/checkout?error=no_address");
+        String addressId = ctx.formParam("addressId");
+        if (addressId == null || addressId.isBlank()) {
+            redirectError(ctx, "/checkout", "Alamat pengiriman wajib dipilih");
             return;
         }
 
-        String courierName = ctx.queryParam("courier");
-        OrderSummary summary = orderService.calculateOrderSummary(cart, courierName);
+        try {
+            Address address = addressRepository.findById(addressId)
+                    .filter(a -> a.getUserId().equals(user.getId()))
+                    .orElseThrow(() -> new IllegalArgumentException("Alamat tidak valid"));
 
-        Map<String, Object> model = new HashMap<>();
-        model.put("title", "Ringkasan Pesanan");
-        model.put("currentUser", user);
-        model.put("activePage", "checkout");
-        model.put("cart", cart);
-        model.put("shippingAddress", shippingAddress);
-        model.put("orderSummary", summary);
+            ctx.sessionAttribute("shippingAddress", new ShippingAddress(
+                    address.getRecipientName(), address.getFullAddress(),
+                    address.getCity(), address.getPostalCode(), address.getPhone()));
+            ctx.sessionAttribute("selectedAddressId", addressId);
 
-        ctx.render("customer/order-summary", model);
+            String courier = ctx.formParam("courier");
+            if (courier != null && !courier.isBlank()) {
+                ctx.sessionAttribute("selectedCourier", courier);
+            }
+            ctx.redirect("/payment");
+        } catch (Exception e) {
+            redirectError(ctx, "/checkout", e.getMessage());
+        }
     }
 
-    private String resolveDefaultCourier(Map<String, BigDecimal> couriers) {
-        if (couriers == null || couriers.isEmpty()) {
-            return "";
+    private void loadAddresses(Map<String, Object> model, String userId) {
+        try {
+            List<Address> addresses = addressRepository.findByUserId(userId);
+            model.put("addresses", addresses);
+            addressRepository.findPrimaryByUserId(userId).ifPresent(a -> model.put("selectedAddress", a));
+        } catch (Exception e) {
+            model.put("addresses", List.of());
         }
-        if (couriers.containsKey("Premium Logistics (2-3 hari)")) {
-            return "Premium Logistics (2-3 hari)";
-        }
-        return couriers.keySet().iterator().next();
     }
 
-    private List<Map<String, Object>> buildCourierOptions(Map<String, BigDecimal> couriers) {
-        if (couriers == null || couriers.isEmpty()) {
-            return List.of();
-        }
-        return couriers.entrySet().stream()
-                .map(entry -> {
-                    Map<String, Object> option = new HashMap<>();
-                    option.put("name", entry.getKey());
-                    option.put("rate", entry.getValue());
-                    return option;
-                })
-                .collect(Collectors.toList());
+    private void redirectError(Context ctx, String path, String message) {
+        ctx.redirect(path + "?error=" + URLEncoder.encode(message, StandardCharsets.UTF_8));
     }
 }

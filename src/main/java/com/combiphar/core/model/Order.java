@@ -12,6 +12,7 @@ public class Order {
 
     private final String id;
     private final String userId;
+    private final String addressId;
     private final String orderNumber;
     private final BigDecimal totalPrice;
     private final String paymentMethod;
@@ -24,15 +25,16 @@ public class Order {
     /**
      * Constructor untuk membuat order baru.
      */
-    public Order(String userId, BigDecimal totalPrice, String courierName) {
+    public Order(String userId, String addressId, BigDecimal totalPrice, String courierName) {
         this.id = UUID.randomUUID().toString();
         this.userId = Objects.requireNonNull(userId, "User ID required");
+        this.addressId = addressId;
         this.orderNumber = generateOrderNumber();
         this.totalPrice = Objects.requireNonNull(totalPrice, "Total price required");
         this.paymentMethod = "TRANSFER";
         this.pickupMethod = "DELIVERY";
         this.statusPayment = "PENDING";
-        this.statusOrder = "PENDING";
+        this.statusOrder = "NEW";
         this.note = courierName;
         this.createdAt = LocalDateTime.now();
     }
@@ -40,11 +42,12 @@ public class Order {
     /**
      * Constructor untuk load dari database.
      */
-    public Order(String id, String userId, String orderNumber, BigDecimal totalPrice,
+    public Order(String id, String userId, String addressId, String orderNumber, BigDecimal totalPrice,
             String paymentMethod, String pickupMethod, String statusPayment,
             String statusOrder, String note, LocalDateTime createdAt) {
         this.id = id;
         this.userId = userId;
+        this.addressId = addressId;
         this.orderNumber = orderNumber;
         this.totalPrice = totalPrice;
         this.paymentMethod = paymentMethod;
@@ -65,6 +68,10 @@ public class Order {
 
     public String getUserId() {
         return userId;
+    }
+
+    public String getAddressId() {
+        return addressId;
     }
 
     public String getOrderNumber() {

@@ -5,7 +5,7 @@
 
 .payment-transfer {
   min-height: 100vh;
-  background-color: #f8f9fa;
+  background: linear-gradient(135deg, #faf5ff 0%, #f5f3ff 100%);
   padding: 2rem 1rem;
 }
 
@@ -104,13 +104,15 @@
 }
 
 .bank-item:hover {
-  background: #f3f4f6;
-  border-color: #9333ea;
+  background: #fdf4ff;
+  border-color: #ec4899;
+  box-shadow: 0 4px 12px rgba(236, 72, 153, 0.15);
 }
 
 .bank-item--active {
   background: #faf5ff;
   border-color: #9333ea;
+  box-shadow: 0 4px 12px rgba(147, 51, 234, 0.15);
 }
 
 .bank-item__logo {
@@ -207,7 +209,7 @@
 
 /* Transfer Account Info */
 .transfer-account {
-  background: linear-gradient(135deg, #9333ea 0%, #7c3aed 100%);
+  background: linear-gradient(135deg, #EC4899 0%, #9333EA 100%);
   border-radius: 0.75rem;
   padding: 1.5rem;
   color: white;
@@ -274,7 +276,10 @@
 
 .transfer-amount__value {
   display: block;
-  color: #9333ea;
+  background: linear-gradient(135deg, #9333ea, #ec4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   font-size: 1.5rem;
   font-weight: 700;
 }
@@ -308,80 +313,142 @@
   gap: 1.5rem;
 }
 
-.order-card {
+.order-summary {
   background: white;
   border-radius: 1rem;
+  padding: 2rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
 }
-
-.order-card__header {
-  padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid #e5e7eb;
+.order-summary__header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 1.5rem;
 }
-
-.order-card__header h3 {
-  font-size: 1.1rem;
+.order-summary__header h3 {
+  font-size: 1.125rem;
   font-weight: 600;
   color: #1f2937;
   margin: 0;
 }
-
-.order-card__count {
+.order-summary__header .item-count {
+  background: rgba(147, 51, 234, 0.1);
+  color: #9333ea;
+  padding: 0.25rem 0.625rem;
+  border-radius: 9999px;
   font-size: 0.85rem;
-  color: #6b7280;
+  font-weight: 600;
 }
-
-.order-card__items {
-  padding: 1rem 1.5rem;
+.order-summary__items {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
   border-bottom: 1px solid #e5e7eb;
 }
-
-.order-item {
+.order-summary__item {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.5rem 0;
-  font-size: 0.9rem;
+  gap: 0.875rem;
 }
-
-.order-item__name {
+.order-summary__item img {
+  width: 60px;
+  height: 60px;
+  border-radius: 0.5rem;
+  object-fit: cover;
+  background: #f8f9fa;
+}
+.order-summary__item-details {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.order-summary__item-details h4 {
+  font-size: 0.95rem;
+  font-weight: 600;
   color: #1f2937;
+  line-height: 1.4;
+  margin: 0;
 }
-
-.order-item__qty {
+.order-summary__item-details .qty {
+  font-size: 0.85rem;
   color: #6b7280;
-  margin: 0 1rem;
+  margin: 0;
 }
-
-.order-item__price {
+.order-summary__item-price {
+  font-size: 0.95rem;
   font-weight: 600;
   color: #1f2937;
 }
-
-.order-card__totals {
-  padding: 1rem 1.5rem;
+.order-summary__breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  margin-bottom: 1.5rem;
 }
-
-.order-row {
+.order-summary__row {
   display: flex;
   justify-content: space-between;
-  padding: 0.5rem 0;
-  font-size: 0.9rem;
-  color: #4b5563;
+  align-items: center;
+  font-size: 0.95rem;
 }
-
-.order-row--total {
-  border-top: 1px solid #e5e7eb;
-  margin-top: 0.5rem;
-  padding-top: 1rem;
-  font-weight: 700;
+.order-summary__row .label {
+  color: #6b7280;
+}
+.order-summary__row .value {
   color: #1f2937;
+  font-weight: 500;
+}
+.order-summary__total {
+  padding-top: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+.order-summary__total .label {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+.order-summary__total .value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #9333ea, #ec4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.order-summary__cta a {
+  display: block;
+  width: 100%;
+  padding: 1rem;
+  background: linear-gradient(135deg, #9333ea, #ec4899);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
   font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+  text-decoration: none;
+}
+.order-summary__cta a:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+.order-summary__cta a:active {
+  transform: translateY(0);
+}
+.order-summary__note {
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  color: #6b7280;
+  text-align: center;
+  line-height: 1.5;
 }
 
 /* Help Card */
@@ -400,12 +467,13 @@
 }
 
 .help-card a {
-  color: #9333ea;
+  color: #ec4899;
   font-weight: 600;
   text-decoration: none;
 }
 
 .help-card a:hover {
+  color: #9333ea;
   text-decoration: underline;
 }
 
@@ -427,13 +495,18 @@
 }
 
 .btn--primary {
-  background: linear-gradient(135deg, #9333ea 0%, #7c3aed 100%);
+  background: linear-gradient(135deg, #EC4899 0%, #9333EA 100%);
   color: white;
 }
 
 .btn--primary:hover {
-  background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+  opacity: 0.9;
   transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.btn--primary:active {
+  transform: translateY(0);
 }
 
 .btn--secondary {

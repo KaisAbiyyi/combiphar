@@ -96,42 +96,49 @@
       {# ORDER SUMMARY (RIGHT)                                             #}
       {# ================================================================== #}
       <aside class="order-summary-section">
-        <div class="order-card">
-          <div class="order-card__header">
+        <div class="order-summary">
+          <div class="order-summary__header">
             <h3>Ringkasan Pesanan</h3>
-            <span class="order-card__count">{{ cart.itemCount }} barang</span>
+            <span class="item-count">{{ cart.itemCount }} barang</span>
           </div>
 
-          <div class="order-card__items">
+          <div class="order-summary__items">
             {% for item in cart.items %}
-            <div class="order-item">
-              <span class="order-item__name">{{ item.itemName }}</span>
-              <span class="order-item__qty">{{ item.quantity }}x</span>
-              <span class="order-item__price">Rp {{ item.subtotal | numberformat("#,###") }}</span>
+            <div class="order-summary__item">
+              <img src="{% if item.imageUrl is not null %}{{ item.imageUrl }}{% else %}/images/products/placeholder.png{% endif %}" alt="{{ item.itemName }}">
+              <div class="order-summary__item-details">
+                <h4>{{ item.itemName }}</h4>
+                <p class="qty">Qty: {{ item.quantity }} unit</p>
+              </div>
+              <div class="order-summary__item-price">Rp {{ item.subtotal | numberformat("#,###") }}</div>
             </div>
             {% endfor %}
           </div>
 
-          <div class="order-card__totals">
-            <div class="order-row">
-              <span>Subtotal</span>
-              <span>Rp {{ orderSummary.subtotal | numberformat("#,###") }}</span>
+          <div class="order-summary__breakdown">
+            <div class="order-summary__row">
+              <span class="label">Subtotal</span>
+              <span class="value">Rp {{ orderSummary.subtotal | numberformat("#,###") }}</span>
             </div>
-            <div class="order-row">
-              <span>Ongkos Kirim</span>
-              <span>Rp {{ orderSummary.shippingCost | numberformat("#,###") }}</span>
-            </div>
-            <div class="order-row order-row--total">
-              <span>Total</span>
-              <span>Rp {{ orderSummary.totalPrice | numberformat("#,###") }}</span>
+            <div class="order-summary__row">
+              <span class="label">Biaya Pengiriman</span>
+              <span class="value">Rp {{ orderSummary.shippingCost | numberformat("#,###") }}</span>
             </div>
           </div>
-        </div>
 
-        {# Upload Button #}
-        <a href="/payment/upload" class="btn btn--primary btn--full">
-          Unggah Bukti Pembayaran
-        </a>
+          <div class="order-summary__total">
+            <span class="label">Total</span>
+            <span class="value">Rp {{ orderSummary.totalPrice | numberformat("#,###") }}</span>
+          </div>
+
+          <div class="order-summary__cta">
+            <a href="/payment/upload">Unggah Bukti Pembayaran</a>
+          </div>
+
+          <p class="order-summary__note">
+            Total akan diperbarui otomatis setelah memilih kurir.
+          </p>
+        </div>
 
         {# Help Section #}
         <div class="help-card">

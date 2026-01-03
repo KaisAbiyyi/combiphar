@@ -4,245 +4,92 @@
 <div class="admin-payment">
   {# Header Section with Stats #}
   <div class="admin-payment__header">
-    {# Stat Card 1 #}
     <div class="stat-card stat-card--compact">
       <div class="stat-card__label">MENUNGGU KONFIRMASI</div>
-      <div class="stat-card__value">12</div>
-      <div class="stat-card__description">Transfer tunai & QR</div>
+      <div class="stat-card__value">{{ stats.pending | default(0) }}</div>
+      <div class="stat-card__description">Transfer</div>
     </div>
 
-    {# Stat Card 2 #}
     <div class="stat-card stat-card--compact">
-      <div class="stat-card__label">PEMBAYARAN TUNAI</div>
-      <div class="stat-card__value">4</div>
-      <div class="stat-card__description">Menunggu validasi fisik</div>
+      <div class="stat-card__label">BERHASIL</div>
+      <div class="stat-card__value">{{ stats.success | default(0) }}</div>
+      <div class="stat-card__description">Pembayaran terverifikasi</div>
     </div>
 
-    {# Stat Card 3 #}
     <div class="stat-card stat-card--compact">
-      <div class="stat-card__label">TOTAL USER</div>
-      <div class="stat-card__value">Rp 1,4BM</div>
-      <div class="stat-card__description stat-card__description--success">+18% dari kemarin</div>
+      <div class="stat-card__label">TOTAL TRANSAKSI</div>
+      <div class="stat-card__value">{{ stats.total | default(0) }}</div>
+      <div class="stat-card__description stat-card__description--success">Semua pembayaran</div>
     </div>
 
-    {# Stat Card 4 #}
     <div class="stat-card stat-card--compact">
-      <div class="stat-card__label">DISPUTE</div>
-      <div class="stat-card__value">2</div>
+      <div class="stat-card__label">DITOLAK</div>
+      <div class="stat-card__value">{{ stats.failed | default(0) }}</div>
       <div class="stat-card__description stat-card__description--alert">Butuh review segera</div>
     </div>
   </div>
 
   {# Main Content Area #}
   <div class="admin-payment__content">
-    {# Left Section - Payment Queue Table #}
-    <div class="admin-payment__table-section">
-      <div class="payment-table">
-        {# Table Header #}
-        <div class="payment-table__header">
-          <div class="payment-table__header-top">
-            <div>
-              <h3 class="payment-table__title">Antrian Konfirmasi</h3>
-              <p class="payment-table__subtitle">Validasi pembayaran</p>
-            </div>
-            <div class="payment-table__actions-top">
-              <button class="btn btn--secondary">
-                <span>Jenis Pembayaran</span>
-              </button>
-              <button class="btn btn--secondary">
-                <span>Status Bank</span>
-              </button>
-              <button class="btn btn--secondary">
-                <span>Batch Approval</span>
-              </button>
-              <button class="btn btn--secondary">
-                <span>Export</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {# Table Content #}
-        <div class="payment-table__body">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>INVOICE</th>
-                <th>CUSTOMER</th>
-                <th>NILAI</th>
-                <th>METODE</th>
-                <th>STATUS</th>
-                <th>TGL TRANSFER</th>
-                <th>AKSI</th>
-              </tr>
-            </thead>
-            <tbody>
-              {# Row 1 #}
-              <tr>
-                <td class="payment-invoice">INV-239027</td>
-                <td>PT Sinar Digital</td>
-                <td class="payment-value">Rp 30.300.000</td>
-                <td>Transfer</td>
-                <td>
-                  <span class="badge badge--warning">Menunggu Bukti</span>
-                </td>
-                <td class="payment-date">25 Sep • 18:15</td>
-                <td>
-                  <button class="btn-text btn-text--primary">Lihat Bukti</button>
-                </td>
-              </tr>
-
-              {# Row 2 #}
-              <tr>
-                <td class="payment-invoice">INV-239039</td>
-                <td>CV Adikarma</td>
-                <td class="payment-value">Rp 12.970.000</td>
-                <td>Debit/Kredit</td>
-                <td>
-                  <span class="badge badge--success">Approve</span>
-                </td>
-                <td class="payment-date">25 Sep • 12:05</td>
-                <td>
-                  <button class="btn-text btn-text--primary">Input Bukti</button>
-                </td>
-              </tr>
-
-              {# Row 3 #}
-              <tr>
-                <td class="payment-invoice">INV-239050</td>
-                <td>PT Sagara</td>
-                <td class="payment-value">Rp 37.500.000</td>
-                <td>Qris</td>
-                <td>
-                  <span class="badge badge--success">Approve</span>
-                </td>
-                <td class="payment-date">25 Sep • 17:50</td>
-                <td>
-                  <button class="btn-text btn-text--secondary">Lihat Invoice</button>
-                </td>
-              </tr>
-
-              {# Row 4 #}
-              <tr>
-                <td class="payment-invoice">INV-238992</td>
-                <td>PT Globetek</td>
-                <td class="payment-value">Rp 24.600.000</td>
-                <td>Debit/Kredit</td>
-                <td>
-                  <span class="badge badge--warning">Menunggu Bukti</span>
-                </td>
-                <td class="payment-date">24 Sep • 04:15</td>
-                <td>
-                  <button class="btn-text btn-text--primary">Cek Midtrans</button>
-                </td>
-              </tr>
-
-              {# Row 5 #}
-              <tr>
-                <td class="payment-invoice">INV-238995</td>
-                <td>PT Mandiri Kreatif</td>
-                <td class="payment-value">Rp 39.200.000</td>
-                <td>Transfer</td>
-                <td>
-                  <span class="badge badge--danger">Ditolak</span>
-                </td>
-                <td class="payment-date">23 Sep • 17:44</td>
-                <td>
-                  <button class="btn-text btn-text--primary">Buat Dispute</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        
-        {# Pagination / Footer #}
-        <div class="payment-table__footer">
-          <div class="pagination">
-            <div class="pagination__controls">
-              <button class="pagination__btn pagination__btn--icon">‹</button>
-              <button class="pagination__btn pagination__btn--active">1</button>
-              <button class="pagination__btn">2</button>
-              <button class="pagination__btn">3</button>
-              <span class="pagination__ellipsis">…</span>
-              <button class="pagination__btn">31</button>
-              <button class="pagination__btn pagination__btn--icon">›</button>
-            </div>
-          </div>
+    <div class="payment-table">
+      <div class="payment-table__header">
+        <div>
+          <h3 class="payment-table__title">Antrian Konfirmasi</h3>
+          <p class="payment-table__subtitle">Validasi pembayaran</p>
         </div>
       </div>
-    </div>
 
-    {# Right Section - Validation Form #}
-    <div class="admin-payment__sidebar">
-      <div class="payment-validation-card">
-        <div class="payment-validation-card__header payment-validation-card__header--active-invoice">
-          <div class="payment-validation-card__header-left">
-            <div class="payment-validation-card__small">Invoice aktif</div>
-            <div class="payment-validation-card__invoice">INV-239027</div>
-          </div>
-          <div class="payment-validation-card__header-right">
-            <span class="badge badge--warning">Menunggu Bukti</span>
-          </div>
+      <div class="payment-table__body">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>ORDER ID</th>
+              <th>CUSTOMER</th>
+              <th>NILAI</th>
+              <th>METODE</th>
+              <th>STATUS</th>
+              <th>TGL TRANSFER</th>
+              <th>BUKTI</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if payments is empty %}
+            <tr>
+              <td colspan="7" class="empty-state">Belum ada data pembayaran</td>
+            </tr>
+            {% else %}
+            {% for detail in payments %}
+            <tr>
+              <td class="payment-invoice">{{ detail.invoiceNumber }}</td>
+              <td>{{ detail.customerName }}</td>
+              <td class="payment-value">{{ detail.formattedAmount }}</td>
+              <td>{{ detail.paymentMethod }}</td>
+              <td>{{ detail.statusBadge | raw }}</td>
+              <td class="payment-date">{{ detail.formattedDate }}</td>
+              <td>
+                {% if detail.payment.proofFilePath is not null %}
+                <button class="btn-text btn-text--primary" onclick="window.open('/admin/payments/proof/{{ detail.order.id }}', '_blank')">Lihat Bukti</button>
+                {% else %}
+                <span class="text-muted">-</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+            {% endif %}
+          </tbody>
+        </table>
+
+        {% if totalPages > 1 %}
+        <div class="pagination">
+          {% if hasPrevious %}
+          <a href="?page={{ currentPage - 1 }}" class="pagination__btn">‹</a>
+          {% endif %}
+          <span class="pagination__btn pagination__btn--active">{{ currentPage }}</span>
+          {% if hasNext %}
+          <a href="?page={{ currentPage + 1 }}" class="pagination__btn">›</a>
+          {% endif %}
         </div>
-
-        <div class="payment-validation-card__body">
-          {# Invoice display removed per request #}
-
-          {# Customer Info #}
-          <div class="payment-info-section">
-            <div class="payment-info-row">
-              <span class="payment-info-row__label">Kuitansi Setoran</span>
-            </div>
-            <div class="payment-info-row">
-              <span class="payment-info-row__label">Kode:</span>
-              <span class="payment-info-row__value">c857855xcvE</span>
-            </div>
-            <div class="payment-info-row">
-              <span class="payment-info-row__label">Tanggal:</span>
-              <span class="payment-info-row__value">24 Sep 2025 JAM 23:01</span>
-            </div>
-            <div class="payment-info-row">
-              <span class="payment-info-row__label">Bank:</span>
-              <span class="payment-info-row__value">Bank Sahabat Rek 2651 232111</span>
-            </div>
-          </div>
-
-          {# Receipt Box removed per request #}
-
-          {# Finance Notes (editable) #}
-          <div class="payment-finance-notes">
-            <div class="payment-finance-notes__title">Catatan Finance</div>
-            <div class="payment-finance-notes__content">
-              <textarea class="payment-finance-notes__textarea" rows="4" placeholder="Contoh: Uang diterima jam 12:10 WIB, selisih Rp 50.000 karena biaya admin."></textarea>
-            </div>
-          </div>
-
-          {# Form Fields #}
-          <div class="payment-form payment-form--two-col">
-            <div class="payment-form__field">
-              <label class="payment-form__label">Status Keputusan</label>
-              <select class="payment-form__select">
-                <option>Approve</option>
-                <option>Ditolak</option>
-              </select>
-            </div>
-
-            <div class="payment-form__field">
-              <label class="payment-form__label">PIC Penanggung Jawab</label>
-              <select class="payment-form__select">
-                <option>Nadya Putri</option>
-                <option>Admin Finance 1</option>
-                <option>Admin Finance 2</option>
-              </select>
-            </div>
-          </div>
-
-          {# Action Buttons (side-by-side) #}
-          <div class="payment-validation-actions payment-validation-actions--row">
-            <button class="btn btn--secondary btn-secondary--full">Minta Bukti Ulang</button>
-            <button class="btn btn--primary btn-primary--full">Simpan Status</button>
-          </div>
-        </div>
+        {% endif %}
       </div>
     </div>
   </div>

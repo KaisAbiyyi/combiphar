@@ -30,6 +30,22 @@ public class Payment {
         this.createdAt = LocalDateTime.now();
     }
 
+    /**
+     * Constructor untuk membuat payment dengan status SUCCESS (untuk order
+     * langsung paid).
+     */
+    public Payment(String orderId, BigDecimal amount, String bank, String proofFilePath, String status) {
+        this.id = UUID.randomUUID().toString();
+        this.orderId = Objects.requireNonNull(orderId);
+        this.type = "TRANSFER";
+        this.bank = bank;
+        this.amount = Objects.requireNonNull(amount);
+        this.status = status;
+        this.proofFilePath = proofFilePath;
+        this.paidAt = "SUCCESS".equals(status) ? LocalDateTime.now() : null;
+        this.createdAt = LocalDateTime.now();
+    }
+
     public Payment(String id, String orderId, String type, String bank, BigDecimal amount,
             String status, String proofFilePath, LocalDateTime paidAt,
             LocalDateTime createdAt) {

@@ -19,8 +19,8 @@ public class PaymentRepository {
      * Menyimpan payment baru ke database.
      */
     public void save(Payment payment) {
-        String sql = "INSERT INTO payments (id, order_id, type, bank, amount, status, created_at) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO payments (id, order_id, type, bank, amount, status, proof, paid_at, created_at) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
@@ -30,7 +30,15 @@ public class PaymentRepository {
             stmt.setString(4, payment.getBank());
             stmt.setBigDecimal(5, payment.getAmount());
             stmt.setString(6, payment.getStatus());
-            stmt.setTimestamp(7, Timestamp.valueOf(payment.getCreatedAt()));
+            stmt.setString(7, payment.getProofFilePath());
+
+            if (payment.getPaidAt() != null) {
+                stmt.setTimestamp(8, Timestamp.valueOf(payment.getPaidAt()));
+            } else {
+                stmt.setTimestamp(8, null);
+            }
+
+            stmt.setTimestamp(9, Timestamp.valueOf(payment.getCreatedAt()));
 
             stmt.executeUpdate();
         } catch (SQLException e) {

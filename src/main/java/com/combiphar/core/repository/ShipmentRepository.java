@@ -25,20 +25,21 @@ public class ShipmentRepository {
      * @param shipment shipment yang akan disimpan
      */
     public void save(Shipment shipment) {
-        String sql = "INSERT INTO shipments (id, order_id, courier_name, tracking_number, "
+        String sql = "INSERT INTO shipments (id, order_id, address_id, courier_name, tracking_number, "
                 + "shipment_status, shipped_at, delivered_at, created_at) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, shipment.getId());
             stmt.setString(2, shipment.getOrderId());
-            stmt.setString(3, shipment.getCourierName());
-            stmt.setString(4, shipment.getTrackingNumber());
-            stmt.setString(5, shipment.getStatus().name());
-            stmt.setTimestamp(6, toTimestamp(shipment.getShippedAt()));
-            stmt.setTimestamp(7, toTimestamp(shipment.getDeliveredAt()));
-            stmt.setTimestamp(8, Timestamp.valueOf(shipment.getCreatedAt()));
+            stmt.setString(3, shipment.getAddressId());
+            stmt.setString(4, shipment.getCourierName());
+            stmt.setString(5, shipment.getTrackingNumber());
+            stmt.setString(6, shipment.getStatus().name());
+            stmt.setTimestamp(7, toTimestamp(shipment.getShippedAt()));
+            stmt.setTimestamp(8, toTimestamp(shipment.getDeliveredAt()));
+            stmt.setTimestamp(9, Timestamp.valueOf(shipment.getCreatedAt()));
 
             stmt.executeUpdate();
         } catch (SQLException e) {
@@ -191,6 +192,7 @@ public class ShipmentRepository {
         return new Shipment(
                 rs.getString("id"),
                 rs.getString("order_id"),
+                rs.getString("address_id"),
                 rs.getString("courier_name"),
                 rs.getString("tracking_number"),
                 parseStatus(rs.getString("shipment_status")),

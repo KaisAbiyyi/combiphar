@@ -119,12 +119,14 @@ CREATE TABLE IF NOT EXISTS addresses (
     city VARCHAR(100) NOT NULL,
     province VARCHAR(100),
     postal_code VARCHAR(10) NOT NULL,
+    is_primary BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     INDEX idx_user_id (user_id),
     INDEX idx_city (city),
-    INDEX idx_province (province)
+    INDEX idx_province (province),
+    INDEX idx_is_primary (is_primary)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ================================================================

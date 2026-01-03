@@ -1,6 +1,5 @@
 package com.combiphar.core.repository;
 
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,56 +14,24 @@ import com.combiphar.core.model.Cart;
 import com.combiphar.core.model.CartItem;
 
 /**
- * Simple repository to persist/load a user's cart. Designed to be minimal,
- * defensive and follow the project's DB access style (uses DatabaseConfig).
+ * Repository to persist/load a user's cart. Minimal and defensive.
  */
 public class CartRepository {
 
-    /**
-     * Loads cart for a given user if exists.
-     */
     public Optional<Cart> findByUserId(String userId) throws SQLException {
         if (userId == null || userId.isBlank()) {
             return Optional.empty();
         }
 
         try (Connection conn = DatabaseConfig.getConnection()) {
-            String sql = "SELECT id FROM carts WHERE user_id = ?";
-            try (PreparedStatement ps = conn.prepareStatement(sql)) {
-                ps.setString(1, userId);
-                try (ResultSet rs = ps.executeQuery()) {
-                    if (!rs.next()) {
-                        return Optional.empty();
-                    }
-                    String cartId = rs.getString("id");
-
-                    // Now load items
-                    Cart cart = new Cart();
-                    String itemsSql = "SELECT ci.item_id, ci.quantity, ci.price, i.name "
-                            + "FROM cart_items ci LEFT JOIN items i ON ci.item_id = i.id "
-                            + "WHERE ci.cart_id = ?";
-                    try (PreparedStatement ips = conn.prepareStatement(itemsSql)) {
-                        ips.setString(1, cartId);
-                        try (ResultSet irs = ips.executeQuery()) {
-                            while (irs.next()) {
-                                String itemId = irs.getString("item_id");
-                                String itemName = irs.getString("name");
-                                BigDecimal price = irs.getBigDecimal("price");
-                                int qty = irs.getInt("quantity");
-                                cart.addItem(new CartItem(itemId, itemName != null ? itemName : "", price, qty));
-                            }
-                        }
-                    }
-                    return Optional.of(cart);
-                }
+            String cartId = findCartId(conn, userId);
+            if (cartId == null) {
+                return Optional.empty();
             }
+            return Optional.of(loadCartItems(conn, cartId));
         }
     }
 
-    /**
-     * Persists the given cart for the user. This is best-effort and
-     * transactional.
-     */
     public void saveCartForUser(String userId, Cart cart) throws SQLException {
         if (userId == null || userId.isBlank() || cart == null) {
             throw new IllegalArgumentException("userId and cart are required");
@@ -73,58 +40,9 @@ public class CartRepository {
         try (Connection conn = DatabaseConfig.getConnection()) {
             conn.setAutoCommit(false);
             try {
-                String findSql = "SELECT id FROM carts WHERE user_id = ?";
-                String cartId = null;
-                try (PreparedStatement fps = conn.prepareStatement(findSql)) {
-                    fps.setString(1, userId);
-                    try (ResultSet frs = fps.executeQuery()) {
-                        if (frs.next()) {
-                            cartId = frs.getString("id");
-                        }
-                    }
-                }
-
-                if (cartId == null) {
-                    cartId = UUID.randomUUID().toString();
-                    String insertCart = "INSERT INTO carts (id, user_id, created_at, updated_at) VALUES (?, ?, ?, ?)";
-                    try (PreparedStatement ips = conn.prepareStatement(insertCart)) {
-                        Timestamp now = Timestamp.from(Instant.now());
-                        ips.setString(1, cartId);
-                        ips.setString(2, userId);
-                        ips.setTimestamp(3, now);
-                        ips.setTimestamp(4, now);
-                        ips.executeUpdate();
-                    }
-                } else {
-                    String upd = "UPDATE carts SET updated_at = ? WHERE id = ?";
-                    try (PreparedStatement ups = conn.prepareStatement(upd)) {
-                        ups.setTimestamp(1, Timestamp.from(Instant.now()));
-                        ups.setString(2, cartId);
-                        ups.executeUpdate();
-                    }
-                }
-
-                // Remove existing items and re-insert (simple, clear approach)
-                try (PreparedStatement dps = conn.prepareStatement("DELETE FROM cart_items WHERE cart_id = ?")) {
-                    dps.setString(1, cartId);
-                    dps.executeUpdate();
-                }
-
-                String insertItem = "INSERT INTO cart_items (cart_id, item_id, quantity, price, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)";
-                try (PreparedStatement ips = conn.prepareStatement(insertItem)) {
-                    Timestamp now = Timestamp.from(Instant.now());
-                    for (CartItem ci : cart.getItems()) {
-                        ips.setString(1, cartId);
-                        ips.setString(2, ci.getItemId());
-                        ips.setInt(3, ci.getQuantity());
-                        ips.setBigDecimal(4, ci.getItemPrice());
-                        ips.setTimestamp(5, now);
-                        ips.setTimestamp(6, now);
-                        ips.addBatch();
-                    }
-                    ips.executeBatch();
-                }
-
+                String cartId = findCartId(conn, userId);
+                cartId = cartId != null ? updateCart(conn, cartId) : createCart(conn, userId);
+                replaceItems(conn, cartId, cart);
                 conn.commit();
             } catch (SQLException e) {
                 conn.rollback();
@@ -132,6 +50,96 @@ public class CartRepository {
             } finally {
                 conn.setAutoCommit(true);
             }
+        }
+    }
+
+    private String findCartId(Connection conn, String userId) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement("SELECT id FROM carts WHERE user_id = ?")) {
+            ps.setString(1, userId);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? rs.getString("id") : null;
+            }
+        }
+    }
+
+    private Cart loadCartItems(Connection conn, String cartId) throws SQLException {
+        Cart cart = new Cart();
+        String sql = "SELECT ci.item_id, ci.quantity, ci.price, i.name, i.image_url "
+                + "FROM cart_items ci LEFT JOIN items i ON ci.item_id = i.id WHERE ci.cart_id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, cartId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    cart.addItem(new CartItem(
+                            rs.getString("item_id"),
+                            rs.getString("name") != null ? rs.getString("name") : "",
+                            rs.getBigDecimal("price"),
+                            rs.getInt("quantity"),
+                            rs.getString("image_url")));
+                }
+            }
+        }
+        return cart;
+    }
+
+    private String createCart(Connection conn, String userId) throws SQLException {
+        String cartId = UUID.randomUUID().toString();
+        Timestamp now = Timestamp.from(Instant.now());
+        try (PreparedStatement ps = conn.prepareStatement(
+                "INSERT INTO carts (id, user_id, created_at, updated_at) VALUES (?, ?, ?, ?)")) {
+            ps.setString(1, cartId);
+            ps.setString(2, userId);
+            ps.setTimestamp(3, now);
+            ps.setTimestamp(4, now);
+            ps.executeUpdate();
+        }
+        return cartId;
+    }
+
+    private String updateCart(Connection conn, String cartId) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement("UPDATE carts SET updated_at = ? WHERE id = ?")) {
+            ps.setTimestamp(1, Timestamp.from(Instant.now()));
+            ps.setString(2, cartId);
+            ps.executeUpdate();
+        }
+        return cartId;
+    }
+
+    public void clearCartForUser(String userId) throws SQLException {
+        if (userId == null || userId.isBlank()) {
+            return;
+        }
+
+        try (Connection conn = DatabaseConfig.getConnection()) {
+            String cartId = findCartId(conn, userId);
+            if (cartId != null) {
+                try (PreparedStatement ps = conn.prepareStatement("DELETE FROM cart_items WHERE cart_id = ?")) {
+                    ps.setString(1, cartId);
+                    ps.executeUpdate();
+                }
+            }
+        }
+    }
+
+    private void replaceItems(Connection conn, String cartId, Cart cart) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement("DELETE FROM cart_items WHERE cart_id = ?")) {
+            ps.setString(1, cartId);
+            ps.executeUpdate();
+        }
+
+        String sql = "INSERT INTO cart_items (cart_id, item_id, quantity, price, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            Timestamp now = Timestamp.from(Instant.now());
+            for (CartItem ci : cart.getItems()) {
+                ps.setString(1, cartId);
+                ps.setString(2, ci.getItemId());
+                ps.setInt(3, ci.getQuantity());
+                ps.setBigDecimal(4, ci.getItemPrice());
+                ps.setTimestamp(5, now);
+                ps.setTimestamp(6, now);
+                ps.addBatch();
+            }
+            ps.executeBatch();
         }
     }
 }

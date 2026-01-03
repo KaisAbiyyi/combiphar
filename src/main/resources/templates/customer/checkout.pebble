@@ -16,107 +16,46 @@
       <div class="shipping-section">
         <div class="shipping-section__header">
           <h2>Alamat Pengiriman</h2>
-          <span class="badge">Customer</span>
+          <a href="/addresses/add" class="shipping-section__add-link">+ Tambah alamat baru</a>
         </div>
 
-        <form id="checkoutForm" class="shipping-section__form" action="/api/checkout/validate-address" method="post">
+        <form id="checkoutForm" class="shipping-section__form" action="/checkout/validate-address" method="post">
+          
+          {% if addresses is not empty %}
+          {# Dropdown untuk pilih alamat #}
           <div class="shipping-section__field">
-            <label for="recipientName">Nama Lengkap Penerima</label>
-            <input
-              type="text"
-              id="recipientName"
-              name="recipientName"
-              value="{{ shippingAddress is not null ? shippingAddress.recipientName : '' }}"
-              placeholder="Nama lengkap"
-              required
-            >
+            <label for="addressSelect">Pilih Alamat Pengiriman</label>
+            <select id="addressSelect" name="addressId" required>
+              {% for addr in addresses %}
+              <option value="{{ addr.id }}" 
+                data-recipient="{{ addr.recipientName }}"
+                data-phone="{{ addr.phone }}"
+                data-address="{{ addr.fullAddress }}"
+                data-is-primary="{{ addr.primary }}"
+                {% if selectedAddress is not null and addr.id == selectedAddress.id %}selected{% endif %}>
+                {% if addr.primary %}[Utama] {% endif %}{{ addr.recipientName }} - {{ addr.phone }}
+              </option>
+              {% endfor %}
+            </select>
           </div>
 
-          <div class="shipping-section__row">
-            <div class="shipping-section__field shipping-section__field--wide">
-              <label for="phone">Nomor Telepon</label>
-              <input
-                type="tel"
-                id="phone"
-                name="phone"
-                value="{{ shippingAddress is not null ? shippingAddress.phone : '' }}"
-                placeholder="08xx xxxx xxxx"
-                required
-              >
+          {# Card preview alamat terpilih #}
+          <div class="address-preview" id="addressPreview">
+            {% if selectedAddress is not null %}
+            <div class="address-preview__badge" style="{% if not selectedAddress.primary %}display:none;{% endif %}">Alamat Utama</div>
+            <div class="address-preview__content">
+              <h3 class="address-preview__name">{{ selectedAddress.recipientName }}</h3>
+              <p class="address-preview__phone">{{ selectedAddress.phone }}</p>
+              <p class="address-preview__address">{{ selectedAddress.fullAddress }}</p>
             </div>
+            {% endif %}
           </div>
-
-          <div class="shipping-section__field">
-            <label for="address">Alamat Lengkap</label>
-            <textarea
-              id="address"
-              name="address"
-              placeholder="Jl. Melati No. 45, Cluster Harmoni"
-              required
-            >{{ shippingAddress is not null ? shippingAddress.address : '' }}</textarea>
+          {% else %}
+          <div class="shipping-section__empty">
+            <p>Anda belum memiliki alamat tersimpan.</p>
+            <a href="/addresses/add" class="btn btn--primary">Tambah Alamat</a>
           </div>
-
-          <div class="shipping-section__row">
-            <div class="shipping-section__field">
-              <label for="subdistrict">Kelurahan/Desa</label>
-              <input
-                type="text"
-                id="subdistrict"
-                name="subdistrict"
-                value="{{ shippingAddress is not null ? shippingAddress.subdistrict : '' }}"
-                placeholder="Kelurahan atau desa"
-                required
-              >
-            </div>
-            <div class="shipping-section__field">
-              <label for="district">Kecamatan</label>
-              <input
-                type="text"
-                id="district"
-                name="district"
-                value="{{ shippingAddress is not null ? shippingAddress.district : '' }}"
-                placeholder="Kecamatan"
-                required
-              >
-            </div>
-          </div>
-
-          <div class="shipping-section__row">
-            <div class="shipping-section__field">
-              <label for="city">Kota</label>
-              <input
-                type="text"
-                id="city"
-                name="city"
-                value="{{ shippingAddress is not null ? shippingAddress.city : '' }}"
-                placeholder="Nama kota"
-                required
-              >
-            </div>
-            <div class="shipping-section__field">
-              <label for="province">Provinsi</label>
-              <input
-                type="text"
-                id="province"
-                name="province"
-                value="{{ shippingAddress is not null ? shippingAddress.province : '' }}"
-                placeholder="Provinsi"
-                required
-              >
-            </div>
-          </div>
-
-          <div class="shipping-section__field shipping-section__field--wide">
-            <label for="postalCode">Kode Pos</label>
-            <input
-              type="text"
-              id="postalCode"
-              name="postalCode"
-              value="{{ shippingAddress is not null ? shippingAddress.postalCode : '' }}"
-              placeholder="12345"
-              required
-            >
-          </div>
+          {% endif %}
 
           <div class="shipping-section__field">
             <label for="courier">Metode Pengiriman</label>
@@ -150,7 +89,7 @@
           <div class="order-summary__items">
             {% for item in cart.items %}
             <div class="order-summary__item">
-              <img src="/static/images/products/placeholder.png" alt="{{ item.itemName }}">
+              <img src="{% if item.imageUrl is not null %}{{ item.imageUrl }}{% else %}/images/products/placeholder.png{% endif %}" alt="{{ item.itemName }}">
               <div class="order-summary__item-details">
                 <h4>{{ item.itemName }}</h4>
                 <p class="qty">Qty: {{ item.quantity }} unit</p>
@@ -166,7 +105,7 @@
               <span class="value" data-summary="subtotal">Rp {{ orderSummary.subtotal | numberformat("#,###") }}</span>
             </div>
             <div class="order-summary__row">
-              <span class="label">Biaya logistik</span>
+              <span class="label">Biaya Pengiriman</span>
               <span class="value" data-summary="shipping">Rp {{ orderSummary.shippingCost | numberformat("#,###") }}</span>
             </div>
           </div>
@@ -201,5 +140,27 @@
 {% endblock %}
 
 {% block scripts %}
+<script>
+// Update address preview when dropdown changes
+(function() {
+  const addressSelect = document.getElementById('addressSelect');
+  const addressPreview = document.getElementById('addressPreview');
+  
+  if (!addressSelect || !addressPreview) return;
+
+  addressSelect.addEventListener('change', function() {
+    const option = this.options[this.selectedIndex];
+    const isPrimary = option.dataset.isPrimary === 'true';
+    
+    addressPreview.innerHTML = 
+      (isPrimary ? '<div class="address-preview__badge">Alamat Utama</div>' : '') +
+      '<div class="address-preview__content">' +
+        '<h3 class="address-preview__name">' + option.dataset.recipient + '</h3>' +
+        '<p class="address-preview__phone">' + option.dataset.phone + '</p>' +
+        '<p class="address-preview__address">' + option.dataset.address + '</p>' +
+      '</div>';
+  });
+})();
+</script>
 <script src="/js/pages/checkout.js"></script>
 {% endblock %}

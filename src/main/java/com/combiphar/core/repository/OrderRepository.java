@@ -20,22 +20,23 @@ public class OrderRepository {
      * Menyimpan order baru ke database.
      */
     public void save(Order order) {
-        String sql = "INSERT INTO orders (id, user_id, order_number, total_price, "
+        String sql = "INSERT INTO orders (id, user_id, address_id, order_number, total_price, "
                 + "payment_method, pickup_method, status_payment, status_order, note, created_at) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, order.getId());
             stmt.setString(2, order.getUserId());
-            stmt.setString(3, order.getOrderNumber());
-            stmt.setBigDecimal(4, order.getTotalPrice());
-            stmt.setString(5, order.getPaymentMethod());
-            stmt.setString(6, order.getPickupMethod());
-            stmt.setString(7, order.getStatusPayment());
-            stmt.setString(8, order.getStatusOrder());
-            stmt.setString(9, order.getNote());
-            stmt.setTimestamp(10, Timestamp.valueOf(order.getCreatedAt()));
+            stmt.setString(3, order.getAddressId());
+            stmt.setString(4, order.getOrderNumber());
+            stmt.setBigDecimal(5, order.getTotalPrice());
+            stmt.setString(6, order.getPaymentMethod());
+            stmt.setString(7, order.getPickupMethod());
+            stmt.setString(8, order.getStatusPayment());
+            stmt.setString(9, order.getStatusOrder());
+            stmt.setString(10, order.getNote());
+            stmt.setTimestamp(11, Timestamp.valueOf(order.getCreatedAt()));
 
             stmt.executeUpdate();
         } catch (SQLException e) {
@@ -80,11 +81,12 @@ public class OrderRepository {
     }
 
     /**
-     * Mencari semua order milik user, diurutkan dari yang terbaru.
+     * Mencari semua order milik user yang sudah PAID, diurutkan dari yang
+     * terbaru.
      */
     public java.util.List<Order> findByUserId(String userId) {
         java.util.List<Order> orders = new java.util.ArrayList<>();
-        String sql = "SELECT * FROM orders WHERE user_id = ? ORDER BY created_at DESC";
+        String sql = "SELECT * FROM orders WHERE user_id = ? AND status_payment = 'PAID' ORDER BY created_at DESC";
 
         try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
@@ -123,6 +125,7 @@ public class OrderRepository {
         return new Order(
                 rs.getString("id"),
                 rs.getString("user_id"),
+                rs.getString("address_id"),
                 rs.getString("order_number"),
                 rs.getBigDecimal("total_price"),
                 rs.getString("payment_method"),

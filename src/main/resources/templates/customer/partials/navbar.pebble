@@ -34,6 +34,7 @@
               <hr class="navbar__dropdown-divider">
               {% endif %}
               <a href="/profile" class="navbar__dropdown-item" role="menuitem">Profil Saya</a>
+              <a href="/addresses" class="navbar__dropdown-item" role="menuitem">Daftar Alamat</a>
               <a href="/history" class="navbar__dropdown-item" role="menuitem">Riwayat Pembelian</a>
               <hr class="navbar__dropdown-divider">
               <form action="/logout" method="post" style="display: contents;">

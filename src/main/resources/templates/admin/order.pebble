@@ -4,111 +4,107 @@
 <div class="admin-order">
   {# Header Section with Stats #}
   <div class="admin-order__header">
-    {# Stat Card 1 #}
     <div class="stat-card stat-card--compact">
-      <div class="stat-card__label">PESANAN AKTIF</div>
-      <div class="stat-card__value">58</div>
-      <div class="stat-card__description">Dalam 7 hari terakhir</div>
+      <div class="stat-card__label">TOTAL PESANAN</div>
+      <div class="stat-card__value">{{ stats.total | default(0) }}</div>
+      <div class="stat-card__description">Semua pesanan</div>
     </div>
 
-    {# Stat Card 2 #}
     <div class="stat-card stat-card--compact">
-      <div class="stat-card__label">BUTUH AKSI</div>
-      <div class="stat-card__value">9</div>
-      <div class="stat-card__description stat-card__description--alert">3 belum verifikasi pembayaran</div>
+      <div class="stat-card__label">BARU</div>
+      <div class="stat-card__value">{{ stats.newOrders | default(0) }}</div>
+      <div class="stat-card__description stat-card__description--alert">Menunggu diproses</div>
     </div>
 
-    {# Stat Card 3 #}
     <div class="stat-card stat-card--compact">
-      <div class="stat-card__label">RATA-RATA LEAD TIME</div>
-      <div class="stat-card__value">2.4 hari</div>
-      <div class="stat-card__description">Order masuk hingga pickup</div>
+      <div class="stat-card__label">DIPROSES</div>
+      <div class="stat-card__value">{{ stats.processing | default(0) }}</div>
+      <div class="stat-card__description">Sedang dikerjakan</div>
     </div>
 
-    {# Stat Card 4 #}
     <div class="stat-card stat-card--compact">
-      <div class="stat-card__label">BACKORDER</div>
-      <div class="stat-card__value">4</div>
-      <div class="stat-card__description">Menunggu restock furnitur</div>
+      <div class="stat-card__label">SELESAI</div>
+      <div class="stat-card__value">{{ stats.completed | default(0) }}</div>
+      <div class="stat-card__description stat-card__description--success">Pesanan selesai</div>
     </div>
   </div>
 
-  {# Main Content Area #}
+  {# Main Content Area - Two Column Layout #}
   <div class="admin-order__content">
     {# Left Section - Order Table #}
     <div class="admin-order__table-section">
       <div class="order-table">
-        {# Table Header #}
+        {# Table Header with Filter #}
         <div class="order-table__header">
           <div class="order-table__header-top">
             <div>
               <h3 class="order-table__title">Daftar Pesanan</h3>
-              <p class="order-table__subtitle">Kelola transaksi pesanan dan pickup</p>
-            </div>
-            <div class="order-table__actions-top">
-              <button class="btn btn--secondary">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M2 4H14M4 4V2H12V4M4 6L5 14H11L12 6H4Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                <span>Filter Terapkan</span>
-              </button>
-              <button class="btn btn--secondary">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M8 2V10M8 10L11 7M8 10L5 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  <path d="M2 14H14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-                <span>Export XLSX</span>
-              </button>
+              <p class="order-table__subtitle">Kelola transaksi pesanan</p>
             </div>
           </div>
           
-          <div class="order-table__tabs-row">
+          {# Filter Section #}
+          <div class="order-table__filter">
             <div class="order-table__search">
-              <input type="search" class="search-input" placeholder="Cari order, customer, ID..." aria-label="Cari" />
+              <input type="search" id="searchInput" class="search-input" placeholder="Cari order, customer..." aria-label="Cari" onkeyup="filterTable()" />
             </div>
-            <div class="order-table__tabs">
-              <button class="order-tab order-tab--active">Tag Gudang</button>
-              <button class="order-tab">Status Pembayaran</button>
+            <div class="order-table__filter-buttons">
+              <select id="statusOrderFilter" class="filter-select" onchange="filterTable()">
+                <option value="">Semua Status Order</option>
+                <option value="NEW">Baru</option>
+                <option value="PROCESSING">Diproses</option>
+                <option value="READY">Siap Kirim</option>
+                <option value="COMPLETED">Selesai</option>
+                <option value="CANCELLED">Dibatalkan</option>
+              </select>
+              <select id="statusPaymentFilter" class="filter-select" onchange="filterTable()">
+                <option value="">Semua Status Pembayaran</option>
+                <option value="PENDING">Pending</option>
+                <option value="PAID">Paid</option>
+                <option value="FAILED">Failed</option>
+              </select>
             </div>
           </div>
         </div>
 
         {# Table Content #}
         <div class="order-table__body">
-          <table class="data-table">
+          <table class="data-table" id="ordersTable">
             <thead>
               <tr>
                 <th>ORDER ID</th>
                 <th>CUSTOMER</th>
                 <th>NILAI</th>
-                <th>TANGGAPAN</th>
+                <th>STATUS ORDER</th>
                 <th>PAYMENT</th>
-                <th>PEMBAHARUAN</th>
+                <th>TANGGAL</th>
                 <th>AKSI</th>
               </tr>
             </thead>
             <tbody>
               {% if orders is empty %}
               <tr>
-                <td colspan="7" style="text-align: center; padding: 2rem;">Belum ada order</td>
+                <td colspan="7" class="empty-state">Belum ada order</td>
               </tr>
               {% else %}
               {% for item in orders %}
-              <tr>
+              <tr data-status-order="{{ item.order.statusOrder }}" data-status-payment="{{ item.order.statusPayment }}">
                 <td class="order-id">{{ item.order.orderNumber }}</td>
-                <td>{{ item.order.userId }}</td>
+                <td>{{ item.customerName | default('Customer') }}</td>
                 <td class="order-value">Rp {{ item.order.totalPrice | numberformat("#,###") }}</td>
-                <td class="order-response">
-                  {% if item.order.statusOrder == 'PENDING' %}
-                  <span class="badge badge--pending">Menunggu Konfirmasi</span>
+                <td>
+                  {% if item.order.statusOrder == 'NEW' %}
+                  <span class="badge badge--info">Baru</span>
                   {% elseif item.order.statusOrder == 'PROCESSING' %}
                   <span class="badge badge--warning">Diproses</span>
                   {% elseif item.order.statusOrder == 'READY' %}
-                  <span class="badge badge--info">Siap Kirim</span>
+                  <span class="badge badge--primary">Siap Kirim</span>
                   {% elseif item.order.statusOrder == 'COMPLETED' %}
                   <span class="badge badge--success">Selesai</span>
+                  {% elseif item.order.statusOrder == 'CANCELLED' %}
+                  <span class="badge badge--danger">Dibatalkan</span>
                   {% else %}
-                  <span class="badge badge--danger">{{ item.order.statusOrder }}</span>
+                  <span class="badge">{{ item.order.statusOrder }}</span>
                   {% endif %}
                 </td>
                 <td>
@@ -120,12 +116,12 @@
                   <span class="badge badge--danger">{{ item.order.statusPayment }}</span>
                   {% endif %}
                 </td>
-                <td class="order-date">{{ item.order.createdAt }}</td>
+                <td class="order-date">{{ item.formattedDate | default(item.order.createdAt) }}</td>
                 <td>
-                  {% if item.payment %}
-                  <button class="btn-text btn-text--primary" onclick="showDetail('{{ item.order.id }}', '{{ item.order.orderNumber }}', '{{ item.payment.bank }}', '{{ item.payment.proof }}', '{{ item.payment.status }}')">Detail</button>
+                  {% if item.payment is not null %}
+                  <button class="btn-text btn-text--primary" onclick="showDetail('{{ item.order.id }}', '{{ item.order.orderNumber }}', '{{ item.customerName | default("Customer") }}', '{{ item.payment.bank }}', '{{ item.payment.proof }}', '{{ item.payment.status }}')">Detail</button>
                   {% else %}
-                  <button class="btn-text btn-text--primary">Detail</button>
+                  <button class="btn-text btn-text--primary" onclick="showDetail('{{ item.order.id }}', '{{ item.order.orderNumber }}', '{{ item.customerName | default("Customer") }}', '', '', 'PENDING')">Detail</button>
                   {% endif %}
                 </td>
               </tr>
@@ -134,14 +130,26 @@
             </tbody>
           </table>
         </div>
+        
+        {% if totalPages > 1 %}
+        <div class="pagination">
+          {% if hasPrevious %}
+          <a href="?page={{ currentPage - 1 }}" class="pagination__btn">‹</a>
+          {% endif %}
+          <span class="pagination__btn pagination__btn--active">{{ currentPage }}</span>
+          {% if hasNext %}
+          <a href="?page={{ currentPage + 1 }}" class="pagination__btn">›</a>
+          {% endif %}
+        </div>
+        {% endif %}
       </div>
     </div>
 
-    {# Right Section - Order Detail #}
+    {# Right Section - Order Detail Sidebar #}
     <div class="admin-order__sidebar">
       <div class="order-detail-card">
         <div class="order-detail-card__header">
-          <h3 class="order-detail-card__title">Detail Pembayaran</h3>
+          <h3 class="order-detail-card__title">Detail Pesanan</h3>
           <p class="order-detail-card__subtitle">Informasi order dan bukti transfer</p>
         </div>
 
@@ -153,8 +161,58 @@
   </div>
 </div>
 
+<style>
+.order-table__filter {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+.order-table__filter-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+.filter-select {
+  padding: 0.5rem 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  background: #fff;
+  cursor: pointer;
+}
+.filter-select:focus {
+  outline: none;
+  border-color: #9333ea;
+}
+.empty-state {
+  text-align: center;
+  padding: 2rem;
+  color: #6b7280;
+}
+</style>
+
 <script>
-function showDetail(orderId, orderNumber, bank, proof, status) {
+function filterTable() {
+  const searchInput = document.getElementById('searchInput').value.toLowerCase();
+  const statusOrder = document.getElementById('statusOrderFilter').value;
+  const statusPayment = document.getElementById('statusPaymentFilter').value;
+  const rows = document.querySelectorAll('#ordersTable tbody tr');
+  
+  rows.forEach(row => {
+    const text = row.textContent.toLowerCase();
+    const rowStatusOrder = row.getAttribute('data-status-order') || '';
+    const rowStatusPayment = row.getAttribute('data-status-payment') || '';
+    
+    const matchesSearch = text.includes(searchInput);
+    const matchesStatusOrder = !statusOrder || rowStatusOrder === statusOrder;
+    const matchesStatusPayment = !statusPayment || rowStatusPayment === statusPayment;
+    
+    row.style.display = (matchesSearch && matchesStatusOrder && matchesStatusPayment) ? '' : 'none';
+  });
+}
+
+function showDetail(orderId, orderNumber, customerName, bank, proof, status) {
   const detailBody = document.getElementById('orderDetailBody');
   detailBody.innerHTML = `
     <div class="order-detail-info">
@@ -163,6 +221,10 @@ function showDetail(orderId, orderNumber, bank, proof, status) {
     </div>
     
     <div class="order-detail-section">
+      <div class="order-detail-row">
+        <span class="order-detail-row__label">Customer:</span>
+        <span class="order-detail-row__value">${customerName || 'Customer'}</span>
+      </div>
       <div class="order-detail-row">
         <span class="order-detail-row__label">Bank:</span>
         <span class="order-detail-row__value">${bank || '-'}</span>
@@ -178,9 +240,8 @@ function showDetail(orderId, orderNumber, bank, proof, status) {
       <div class="order-detail-row__label" style="margin-bottom: 0.5rem;">Bukti Transfer:</div>
       <img src="${proof}" alt="Bukti Transfer" style="width: 100%; border-radius: 0.5rem; border: 1px solid #e5e7eb;">
     </div>
-    ` : '<p style="color: #6b7280; padding: 1rem; text-align: center;">Belum ada bukti pembayaran</p>'}
+    ` : ''}
   `;
 }
 </script>
-
 {% endblock %}

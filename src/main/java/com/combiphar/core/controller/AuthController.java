@@ -1,10 +1,14 @@
 package com.combiphar.core.controller;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
+import com.combiphar.core.model.Address;
 import com.combiphar.core.model.Role;
 import com.combiphar.core.model.User;
+import com.combiphar.core.repository.AddressRepository;
 import com.combiphar.core.service.AuthService;
 
 import io.javalin.http.Context;
@@ -16,10 +20,12 @@ import io.javalin.http.Context;
 public class AuthController {
 
     private final AuthService authService;
+    private final AddressRepository addressRepository;
     private static final String SESSION_USER = "currentUser";
 
-    public AuthController(AuthService authService) {
+    public AuthController(AuthService authService, AddressRepository addressRepository) {
         this.authService = Objects.requireNonNull(authService, "AuthService cannot be null");
+        this.addressRepository = Objects.requireNonNull(addressRepository, "AddressRepository cannot be null");
     }
 
     /**
@@ -113,11 +119,21 @@ public class AuthController {
             return;
         }
 
-        ctx.render("customer/profile", Map.of(
-                "title", "Profil Saya",
-                "currentUser", user,
-                "activePage", "profile"
-        ));
+        Map<String, Object> model = new HashMap<>();
+        model.put("title", "Profil Saya");
+        model.put("currentUser", user);
+        model.put("activePage", "profile");
+
+        // Load primary address if exists
+        try {
+            Optional<Address> primaryAddress = addressRepository.findPrimaryByUserId(user.getId());
+            primaryAddress.ifPresent(addr -> model.put("primaryAddress", addr));
+        } catch (Exception e) {
+            // If address loading fails, just skip it - not critical for profile display
+            System.err.println("[AuthController] Failed to load primary address: " + e.getMessage());
+        }
+
+        ctx.render("customer/profile", model);
     }
 
     /**

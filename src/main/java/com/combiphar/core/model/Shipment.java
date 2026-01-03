@@ -33,6 +33,7 @@ public class Shipment {
 
     private final String id;
     private final String orderId;
+    private final String addressId;
     private final String courierName;
     private final String trackingNumber;
     private final Status status;
@@ -44,11 +45,13 @@ public class Shipment {
      * Constructor untuk membuat shipment baru.
      *
      * @param orderId ID order yang dikirim
+     * @param addressId ID alamat pengiriman
      * @param courierName nama kurir
      */
-    public Shipment(String orderId, String courierName) {
+    public Shipment(String orderId, String addressId, String courierName) {
         this.id = UUID.randomUUID().toString();
         this.orderId = Objects.requireNonNull(orderId, "Order ID wajib diisi");
+        this.addressId = addressId;
         this.courierName = courierName;
         this.trackingNumber = null;
         this.status = Status.PENDING;
@@ -60,12 +63,13 @@ public class Shipment {
     /**
      * Constructor untuk load dari database.
      */
-    public Shipment(String id, String orderId, String courierName,
+    public Shipment(String id, String orderId, String addressId, String courierName,
             String trackingNumber, Status status,
             LocalDateTime shippedAt, LocalDateTime deliveredAt,
             LocalDateTime createdAt) {
         this.id = id;
         this.orderId = orderId;
+        this.addressId = addressId;
         this.courierName = courierName;
         this.trackingNumber = trackingNumber;
         this.status = status;
@@ -81,6 +85,10 @@ public class Shipment {
 
     public String getOrderId() {
         return orderId;
+    }
+
+    public String getAddressId() {
+        return addressId;
     }
 
     public String getCourierName() {

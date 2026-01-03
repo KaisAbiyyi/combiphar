@@ -1,0 +1,117 @@
+{# ========================================================================== #}
+{# ADDRESS LIST PAGE - List of user's saved addresses                        #}
+{# ========================================================================== #}
+{% extends "customer/layout" %}
+
+{% block styles %}
+<link rel="stylesheet" href="/css/pages/customer/address.css">
+{% endblock %}
+
+{% block content %}
+<section class="address-page">
+  <div class="address-page__container">
+    
+    {# Page Header #}
+    <div class="address-page__header">
+      <div class="address-page__header-left">
+        <h1 class="address-page__title">Daftar Alamat</h1>
+        <p class="address-page__subtitle">Kelola alamat pengiriman Anda</p>
+      </div>
+      <a href="/addresses/add" class="btn btn--primary">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10 4V16M4 10H16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Tambah Alamat
+      </a>
+    </div>
+
+    {# Alert Messages #}
+    {% if success is not empty %}
+    <div class="address-alert address-alert--success">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3-9l-4 4-2-2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>{{ success }}</span>
+    </div>
+    {% endif %}
+
+    {% if error is not empty %}
+    <div class="address-alert address-alert--error">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <path d="M10 18a8 8 0 100-16 8 8 0 000 16zM10 6v4m0 4h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>{{ error }}</span>
+    </div>
+    {% endif %}
+
+    {# Address Cards Grid #}
+    <div class="address-grid">
+      {% if addresses is not empty %}
+        {% for address in addresses %}
+        <div class="address-card{% if address.primary %} address-card--primary{% endif %}">
+          
+          {# Primary Badge #}
+          {% if address.primary %}
+          <div class="address-card__badge">Alamat Utama</div>
+          {% endif %}
+
+          {# Address Content #}
+          <div class="address-card__content">
+            <h3 class="address-card__name">{{ address.recipientName }}</h3>
+            <p class="address-card__phone">{{ address.phone }}</p>
+            <p class="address-card__address">{{ address.fullAddress }}</p>
+          </div>
+
+          {# Actions #}
+          <div class="address-card__actions">
+            {% if address.primary %}
+            <button class="btn btn--secondary btn--sm" disabled>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M13.333 4L6 11.333 2.667 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Alamat Utama
+            </button>
+            {% else %}
+            <form action="/addresses/set-primary" method="post" style="display: inline;">
+              <input type="hidden" name="addressId" value="{{ address.id }}">
+              <button type="submit" class="btn btn--outline btn--sm">
+                Jadikan Utama
+              </button>
+            </form>
+            {% endif %}
+
+            <form action="/addresses/delete" method="post" style="display: inline;" onsubmit="return confirm('Apakah Anda yakin ingin menghapus alamat ini?');">
+              <input type="hidden" name="addressId" value="{{ address.id }}">
+              <button type="submit" class="btn btn--ghost btn--sm btn--danger">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path d="M2 4h12M5.333 4V2.667a1.333 1.333 0 011.334-1.334h2.666a1.333 1.333 0 011.334 1.334V4m2 0v9.333a1.333 1.333 0 01-1.334 1.334H4.667a1.333 1.333 0 01-1.334-1.334V4h9.334z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </form>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        {# Empty State #}
+        <div class="address-empty">
+          <div class="address-empty__icon">
+            <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M32 56C45.2548 56 56 45.2548 56 32C56 18.7452 45.2548 8 32 8C18.7452 8 8 18.7452 8 32C8 45.2548 18.7452 56 32 56Z" stroke="#D1D5DB" stroke-width="2"/>
+              <path d="M32 20V32M32 44H32.02" stroke="#D1D5DB" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h3 class="address-empty__title">Belum Ada Alamat</h3>
+          <p class="address-empty__text">Tambahkan alamat pengiriman untuk mempermudah proses checkout.</p>
+          <a href="/addresses/add" class="btn btn--primary">Tambah Alamat Pertama</a>
+        </div>
+      {% endif %}
+    </div>
+
+    {# Back Link #}
+    <div class="address-page__footer">
+      <a href="/profile" class="address-page__back">← Kembali ke Profil</a>
+    </div>
+
+  </div>
+</section>
+{% endblock %}

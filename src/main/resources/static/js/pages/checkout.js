@@ -1,10 +1,9 @@
 /**
- * Checkout page interactions: validate address and refresh order summary.
+ * Checkout page interactions: refresh order summary when courier changes.
  */
 (function() {
   'use strict';
 
-  const form = document.getElementById('checkoutForm');
   const courierSelect = document.getElementById('courier');
   const subtotalEl = document.querySelector('[data-summary="subtotal"]');
   const shippingEl = document.querySelector('[data-summary="shipping"]');
@@ -49,43 +48,10 @@
       });
   }
 
-  function submitAddress(event) {
-    event.preventDefault();
-    if (!form || !form.reportValidity()) {
-      return;
-    }
-
-    const data = new FormData(form);
-    fetch(form.action, {
-      method: 'POST',
-      body: data,
-      credentials: 'same-origin'
-    })
-      .then(res => res.json())
-      .then(json => {
-        if (json && json.success) {
-          const message = json.message || 'Alamat pengiriman tersimpan';
-          window.showToast && showToast(message, 'success');
-          // Redirect ke halaman pembayaran
-          setTimeout(function() {
-            window.location.href = '/payment';
-          }, 500);
-          return;
-        }
-        const message = json && json.message ? json.message : 'Alamat tidak valid';
-        window.showToast && showToast(message, 'error');
-      })
-      .catch(() => {
-        window.showToast && showToast('Terjadi kesalahan saat menyimpan alamat', 'error');
-      });
-  }
-
   if (courierSelect) {
     courierSelect.addEventListener('change', fetchSummary);
     fetchSummary();
   }
 
-  if (form) {
-    form.addEventListener('submit', submitAddress);
-  }
+  // Form submit normal (tidak perlu AJAX, langsung redirect)
 })();

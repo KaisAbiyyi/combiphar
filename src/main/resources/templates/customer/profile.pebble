@@ -88,14 +88,17 @@
                 type="tel" 
                 id="phone" 
                 class="profile-form__input" 
-                value="{{ currentUser.phone | default('-') }}"
+                value="{% if primaryAddress is not null %}{{ primaryAddress.phone }}{% else %}{{ currentUser.phone | default('-') }}{% endif %}"
                 readonly
               >
             </div>
 
             <div class="profile-form__group">
               <label class="profile-form__label" for="address">Alamat</label>
-              <textarea id="address" class="profile-form__input" readonly>{{ currentUser.address | default('-') }}</textarea>
+              <textarea id="address" class="profile-form__input" readonly>{% if primaryAddress is not null %}{{ primaryAddress.fullAddress }}{% else %}{{ currentUser.address | default('-') }}{% endif %}</textarea>
+              <small style="display: block; margin-top: 0.5rem; color: #6B7280;">
+                <a href="/addresses" style="color: #9333EA; text-decoration: none;">Kelola alamat pengiriman →</a>
+              </small>
             </div>
           </form>
         </div>

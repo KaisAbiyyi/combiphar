@@ -18,11 +18,22 @@ import com.combiphar.core.config.DatabaseConfig;
  */
 public final class MigrationRunner {
 
+    private static final String[] MIGRATION_FILES = {
+        "migration_add_cart.sql",
+        "migration_add_address_primary.sql"
+    };
+
     private MigrationRunner() {
     }
 
     public static void runMigrations() {
-        Path migrationFile = Path.of(System.getProperty("user.dir"), "database", "migration_add_cart.sql");
+        for (String fileName : MIGRATION_FILES) {
+            runSingleMigration(fileName);
+        }
+    }
+
+    private static void runSingleMigration(String fileName) {
+        Path migrationFile = Path.of(System.getProperty("user.dir"), "database", fileName);
         if (!Files.exists(migrationFile)) {
             System.out.println("[MigrationRunner] No migration file found at: " + migrationFile);
             return;
@@ -65,7 +76,7 @@ public final class MigrationRunner {
                 }
             }
 
-            System.out.println("[MigrationRunner] Migration finished (best-effort)");
+            System.out.println("[MigrationRunner] Migration finished (best-effort): " + fileName);
         } catch (IOException e) {
             System.err.println("[MigrationRunner] Failed to read migration file: " + e.getMessage());
         } catch (SQLException e) {

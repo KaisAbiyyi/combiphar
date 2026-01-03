@@ -39,7 +39,15 @@
 @media (min-width: 1024px) {
   .checkout-page__content {
     grid-template-columns: 1.2fr 0.8fr;
+    align-items: start;
   }
+}
+
+/* Sidebar (Aside) - Order Summary & Checkout Notes */
+aside {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .shipping-section {
@@ -59,32 +67,67 @@
   font-weight: 600;
   color: #1f2937;
 }
-.shipping-section__header .badge {
-  background: rgba(147, 51, 234, 0.1);
+.shipping-section__add-link {
+  font-size: 0.9rem;
   color: #9333ea;
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
-  font-size: 0.85rem;
-  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s ease;
 }
+.shipping-section__add-link:hover {
+  color: #7e22ce;
+  text-decoration: underline;
+}
+.shipping-section__empty {
+  text-align: center;
+  padding: 3rem 1rem;
+}
+.shipping-section__empty p {
+  color: #6b7280;
+  margin-bottom: 1rem;
+}
+
+/* Address Preview Card */
+.address-preview {
+  background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
+  border: 2px solid #9333ea;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+.address-preview__badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #9333ea 0%, #7e22ce 100%);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+.address-preview__content {
+  color: #1f2937;
+}
+.address-preview__name {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+.address-preview__phone {
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin-bottom: 0.5rem;
+}
+.address-preview__address {
+  font-size: 0.9rem;
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+/* Shipping Section Form */
 .shipping-section__form {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
-}
-.shipping-section__row {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.25rem;
-}
-@media (min-width: 768px) {
-  .shipping-section__row {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-.shipping-section__field.shipping-section__field--wide {
-  /* allow specific fields to span the full row */
-  grid-column: 1 / -1;
 }
 .shipping-section__field {
   display: flex;
@@ -96,30 +139,13 @@
   font-weight: 500;
   color: #1f2937;
 }
-.shipping-section__field input,
-.shipping-section__field select,
-.shipping-section__field textarea {
+.shipping-section__field select {
   padding: 0.875rem 1rem;
   border: 1px solid #e5e7eb;
   border-radius: 0.5rem;
   font-size: 0.95rem;
   background: #f8f9fa;
   transition: all 0.2s;
-}
-.shipping-section__field input:focus,
-.shipping-section__field select:focus,
-.shipping-section__field textarea:focus {
-  outline: none;
-  border-color: #9333ea;
-  background: white;
-  box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.1);
-}
-.shipping-section__field input::placeholder,
-.shipping-section__field select::placeholder,
-.shipping-section__field textarea::placeholder {
-  color: #9ca3af;
-}
-.shipping-section__field select {
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%236b7280' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
@@ -127,9 +153,11 @@
   padding-right: 3rem;
   cursor: pointer;
 }
-.shipping-section__field textarea {
-  resize: vertical;
-  min-height: 100px;
+.shipping-section__field select:focus {
+  outline: none;
+  border-color: #9333ea;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.1);
 }
 .shipping-section__note {
   display: flex;
@@ -155,9 +183,6 @@
   border-radius: 1rem;
   padding: 2rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  height: fit-content;
-  position: sticky;
-  top: 2rem;
 }
 .order-summary__header {
   display: flex;
@@ -292,7 +317,6 @@
   background: linear-gradient(135deg, #9333ea, #ec4899);
   border-radius: 1rem;
   padding: 1.5rem;
-  margin-top: 1.5rem;
   color: white;
 }
 .checkout-notes__title {

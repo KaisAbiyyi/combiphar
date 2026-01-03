@@ -1,0 +1,341 @@
+/* ==========================================================================
+   ADDRESS PAGES - List and Form styles for customer addresses
+   ========================================================================== */
+
+/* -----------------------------------------------------------------------------
+   Page Layout
+   ----------------------------------------------------------------------------- */
+.address-page {
+  padding: 2rem 0 3rem;
+  min-height: calc(100vh - 64px);
+  background: linear-gradient(135deg, #FAF5FF 0%, #F5F3FF 100%);
+}
+
+.address-page__container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.address-page__container--narrow {
+  max-width: 720px;
+}
+
+/* -----------------------------------------------------------------------------
+   Page Header
+   ----------------------------------------------------------------------------- */
+.address-page__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.address-page__header-left {
+  flex: 1;
+}
+
+.address-page__title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #1F2937;
+  margin: 0 0 0.25rem 0;
+}
+
+.address-page__subtitle {
+  font-size: 0.9375rem;
+  color: #6B7280;
+  margin: 0;
+}
+
+/* -----------------------------------------------------------------------------
+   Alert Messages
+   ----------------------------------------------------------------------------- */
+.address-alert {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.9375rem;
+}
+
+.address-alert--success {
+  background: #D1FAE5;
+  color: #065F46;
+  border: 1px solid #A7F3D0;
+}
+
+.address-alert--error {
+  background: #FEE2E2;
+  color: #991B1B;
+  border: 1px solid #FECACA;
+}
+
+/* -----------------------------------------------------------------------------
+   Address Cards Grid
+   ----------------------------------------------------------------------------- */
+.address-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.25rem;
+}
+
+/* -----------------------------------------------------------------------------
+   Address Card
+   ----------------------------------------------------------------------------- */
+.address-card {
+  background: #FFFFFF;
+  border-radius: 0.75rem;
+  border: 1px solid #E5E7EB;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.address-card:hover {
+  border-color: #D1D5DB;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.address-card--primary {
+  border-color: #9333EA;
+  border-width: 2px;
+}
+
+.address-card--primary:hover {
+  border-color: #9333EA;
+}
+
+/* Primary Badge */
+.address-card__badge {
+  position: absolute;
+  top: -0.5rem;
+  left: 1rem;
+  background: linear-gradient(135deg, #9333EA, #EC4899);
+  color: #FFFFFF;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Card Content */
+.address-card__content {
+  flex: 1;
+  padding-top: 0.5rem;
+}
+
+.address-card__name {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  color: #1F2937;
+  margin: 0 0 0.375rem 0;
+}
+
+.address-card__phone {
+  font-size: 0.875rem;
+  color: #6B7280;
+  margin: 0 0 0.75rem 0;
+}
+
+.address-card__address {
+  font-size: 0.875rem;
+  color: #374151;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Card Actions */
+.address-card__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #F3F4F6;
+}
+
+/* -----------------------------------------------------------------------------
+   Empty State
+   ----------------------------------------------------------------------------- */
+.address-empty {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  background: #FFFFFF;
+  border-radius: 0.75rem;
+  border: 1px dashed #D1D5DB;
+  text-align: center;
+}
+
+.address-empty__icon {
+  margin-bottom: 1.5rem;
+}
+
+.address-empty__title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #374151;
+  margin: 0 0 0.5rem 0;
+}
+
+.address-empty__text {
+  font-size: 0.9375rem;
+  color: #6B7280;
+  margin: 0 0 1.5rem 0;
+  max-width: 300px;
+}
+
+/* -----------------------------------------------------------------------------
+   Page Footer
+   ----------------------------------------------------------------------------- */
+.address-page__footer {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #E5E7EB;
+}
+
+.address-page__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #9333EA;
+  text-decoration: none;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  transition: color 0.15s ease;
+}
+
+.address-page__back:hover {
+  color: #7C22CE;
+}
+
+/* -----------------------------------------------------------------------------
+   Address Form Card
+   ----------------------------------------------------------------------------- */
+.address-form-card {
+  background: #FFFFFF;
+  border-radius: 0.75rem;
+  border: 1px solid #E5E7EB;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+/* -----------------------------------------------------------------------------
+   Address Form
+   ----------------------------------------------------------------------------- */
+.address-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.address-form__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.address-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.address-form__field--half {
+  max-width: 200px;
+}
+
+.address-form__label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.address-form__label .required {
+  color: #EF4444;
+}
+
+.address-form__input,
+.address-form__textarea {
+  padding: 0.75rem 1rem;
+  border: 1px solid #D1D5DB;
+  border-radius: 0.5rem;
+  font-size: 0.9375rem;
+  font-family: inherit;
+  color: #1F2937;
+  background: #FFFFFF;
+  transition: all 0.15s ease;
+}
+
+.address-form__input:focus,
+.address-form__textarea:focus {
+  outline: none;
+  border-color: #9333EA;
+  box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.1);
+}
+
+.address-form__input::placeholder,
+.address-form__textarea::placeholder {
+  color: #9CA3AF;
+}
+
+.address-form__textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.address-form__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #F3F4F6;
+}
+
+/* -----------------------------------------------------------------------------
+   Responsive adjustments
+   ----------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+  .address-page__header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .address-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .address-form__row {
+    grid-template-columns: 1fr;
+  }
+
+  .address-form__field--half {
+    max-width: 100%;
+  }
+
+  .address-form-card {
+    padding: 1.25rem;
+  }
+
+  .address-form__actions {
+    flex-direction: column-reverse;
+  }
+
+  .address-form__actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
