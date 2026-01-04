@@ -54,6 +54,11 @@
   color: #991B1B;
 }
 
+.badge--danger {
+  background: #FEE2E2;
+  color: #DC2626;
+}
+
 .filter-tabs {
   display: flex;
   align-items: center;

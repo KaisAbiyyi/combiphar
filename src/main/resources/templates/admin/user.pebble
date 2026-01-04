@@ -103,9 +103,8 @@
         </thead>
         <tbody>
           {% for user in users %}
-          {% set userIdShort = user.id.uncapitalize() %}
           <tr>
-            <td><span class="user-id-badge">{{ userIdShort.substring(0, 8) }}</span></td>
+            <td><span class="user-id-badge">{{ user.id.substring(0, 8) }}</span></td>
             <td>{{ user.name }}</td>
             <td>{{ user.email }}</td>
             <td>
@@ -129,7 +128,7 @@
             <td>
               <div class="user-actions">
                 {% if user.status == 'PENDING' %}
-                <button class="btn-text btn-text--secondary" onclick="approveUser('{{ userIdShort }}')">Setujui</button>
+                <button class="btn-text btn-text--secondary" onclick="approveUser('{{ user.id }}')">Setujui</button>
                 {% else %}
                 <span class="role-badge--disabled" title="Role tidak dapat diubah">
                   <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
@@ -137,10 +136,10 @@
                   </svg>
                   {{ user.role.name == 'ADMIN' ? 'Administrator' : 'Customer' }}
                 </span>
-                {% if user.status == 'ACTIVE' %}
-                <button class="btn-text btn-text--secondary" onclick="changeStatus('{{ userIdShort }}', 'INACTIVE')">Nonaktifkan</button>
-                {% else %}
-                <button class="btn-text btn-text--secondary" onclick="changeStatus('{{ userIdShort }}', 'ACTIVE')">Aktifkan</button>
+                {% if user.status == 'ACTIVE' and user.role.name != 'ADMIN' %}
+                <button class="btn-text btn-text--secondary" onclick="changeStatus('{{ user.id }}', 'INACTIVE')">Nonaktifkan</button>
+                {% elseif user.status == 'INACTIVE' %}
+                <button class="btn-text btn-text--secondary" onclick="changeStatus('{{ user.id }}', 'ACTIVE')">Aktifkan</button>
                 {% endif %}
                 {% endif %}
               </div>
