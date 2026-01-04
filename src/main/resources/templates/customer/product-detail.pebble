@@ -168,11 +168,21 @@
         }).then(function(res){
           return res.json();
         }).then(function(json){
+          // Check if user is not authenticated
+          if (json && json.authenticated === false) {
+            window.showToast && showToast('Silakan login terlebih dahulu', 'warning');
+            // Redirect to login page after a short delay
+            setTimeout(function() {
+              window.location.href = json.redirect || '/login';
+            }, 1000);
+            return;
+          }
+
           if (json && json.success) {
             // Show success toast
             var message = json.message || 'Produk ditambahkan ke keranjang';
             window.showToast && showToast(message, 'success');
-            
+
             // Update cart badge
             if (json.cartItemCount != null) {
               window.updateCartBadge && updateCartBadge(json.cartItemCount);

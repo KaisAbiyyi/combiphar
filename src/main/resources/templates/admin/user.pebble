@@ -23,9 +23,9 @@
     </div>
 
     <div class="stat-card stat-card--compact">
-      <div class="stat-card__label">AKTIF HARI INI</div>
-      <div class="stat-card__value">{{ activeToday }}</div>
-      <div class="stat-card__description">Pengguna yang login atau terdaftar hari ini</div>
+      <div class="stat-card__label">AKUN AKTIF</div>
+      <div class="stat-card__value">{{ activeCount }}</div>
+      <div class="stat-card__description">Pengguna dengan status aktif</div>
     </div>
   </div>
 
@@ -40,26 +40,56 @@
           <p class="user-table__subtitle">Manajemen hak akses dan data pengguna</p>
         </div>
         <div class="user-table__actions-top">
-          <div class="search-box">
-            <input type="search" class="search-box__input" placeholder="Cari nama atau email pengguna" aria-label="Cari" />
-          </div>
-          <button class="btn btn--secondary">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M2 4H14M4 4V2H12V4M4 6L5 14H11L12 6H4Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <span>Filter Role</span>
-          </button>
-          <button class="btn btn--primary">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M8 3V13M3 8H13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-            <span>Tambah Pengguna</span>
-          </button>
+          <form action="/admin/users" method="GET" class="filter-form">
+            <div class="search-box">
+              <input type="search" name="search" class="search-box__input" placeholder="Cari nama atau email pengguna..." value="{{ searchQuery }}" aria-label="Cari" />
+            </div>
+
+            <div class="filter-dropdown">
+              <select name="role" class="form-select">
+                <option value="all" {{ roleFilter == 'all' ? 'selected' : '' }}>Semua Role</option>
+                <option value="CUSTOMER" {{ roleFilter == 'CUSTOMER' ? 'selected' : '' }}>Customer</option>
+                <option value="ADMIN" {{ roleFilter == 'ADMIN' ? 'selected' : '' }}>Admin</option>
+              </select>
+            </div>
+
+            <div class="filter-dropdown">
+              <select name="status" class="form-select">
+                <option value="all" {{ statusFilter == 'all' ? 'selected' : '' }}>Semua Status</option>
+                <option value="ACTIVE" {{ statusFilter == 'ACTIVE' ? 'selected' : '' }}>Aktif</option>
+                <option value="INACTIVE" {{ statusFilter == 'INACTIVE' ? 'selected' : '' }}>Tidak Aktif</option>
+                <option value="PENDING" {{ statusFilter == 'PENDING' ? 'selected' : '' }}>Verifikasi</option>
+              </select>
+            </div>
+
+            <button type="submit" class="btn btn--primary btn--sm">Terapkan Filter</button>
+
+            {% if roleFilter != 'all' or statusFilter != 'all' or searchQuery != '' %}
+            <a href="/admin/users" class="btn btn--secondary btn--sm">
+              <svg class="btn__icon" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M10 4l-6 6M4 4l6 6"/>
+              </svg>
+              Reset
+            </a>
+            {% endif %}
+          </form>
         </div>
       </div>
     </div>
 
     <div class="user-table__body">
+      {% if users is empty %}
+      <div class="empty-state">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="1.5">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+        <h3 class="empty-state__title">Tidak ada pengguna ditemukan</h3>
+        <p class="empty-state__text">Coba ubah filter atau kata kunci pencarian.</p>
+      </div>
+      {% else %}
       <table class="data-table">
         <thead>
           <tr>
@@ -72,174 +102,54 @@
           </tr>
         </thead>
         <tbody>
-          {# Row 1 #}
+          {% for user in users %}
+          {% set userIdShort = user.id.uncapitalize() %}
           <tr>
-            <td class="user-id">USR-001</td>
-            <td>Nashya Putri</td>
-            <td>nashya.putri@combiphar.id</td>
+            <td><span class="user-id-badge">{{ userIdShort.substring(0, 8) }}</span></td>
+            <td>{{ user.name }}</td>
+            <td>{{ user.email }}</td>
             <td>
+              {% if user.role.name == 'ADMIN' %}
               <span class="badge badge--purple">Admin</span>
-            </td>
-            <td>
-              <span class="badge badge--success">Aktif</span>
-            </td>
-            <td>
-              <div class="user-actions">
-                <button class="btn-text btn-text--primary">Atur Role</button>
-                <button class="btn-text btn-text--secondary">Nonaktifkan</button>
-              </div>
-            </td>
-          </tr>
-
-          {# Row 2 #}
-          <tr>
-            <td class="user-id">USR-002</td>
-            <td>Babu Purnomo</td>
-            <td>babu@paramdigital.co.id</td>
-            <td>
+              {% else %}
               <span class="badge badge--info">Customer</span>
+              {% endif %}
             </td>
             <td>
+              {% if user.status == 'ACTIVE' %}
               <span class="badge badge--success">Aktif</span>
-            </td>
-            <td>
-              <div class="user-actions">
-                <button class="btn-text btn-text--primary">Atur Role</button>
-                <button class="btn-text btn-text--secondary">Nonaktifkan</button>
-              </div>
-            </td>
-          </tr>
-
-          {# Row 3 #}
-          <tr>
-            <td class="user-id">USR-003</td>
-            <td>Cilna Lestari</td>
-            <td>cimalestari@combiphar.id</td>
-            <td>
-              <span class="badge badge--purple">Admin</span>
-            </td>
-            <td>
-              <span class="badge badge--success">Aktif</span>
-            </td>
-            <td>
-              <div class="user-actions">
-                <button class="btn-text btn-text--primary">Atur Role</button>
-                <button class="btn-text btn-text--secondary">Nonaktifkan</button>
-              </div>
-            </td>
-          </tr>
-
-          {# Row 4 #}
-          <tr>
-            <td class="user-id">USR-004</td>
-            <td>Arman Wijaya</td>
-            <td>arman.wijaya@harmonimedia.co.id</td>
-            <td>
-              <span class="badge badge--info">Customer</span>
-            </td>
-            <td>
+              {% elseif user.status == 'INACTIVE' %}
+              <span class="badge badge--danger">Tidak Aktif</span>
+              {% elseif user.status == 'PENDING' %}
               <span class="badge badge--warning">Verifikasi</span>
+              {% else %}
+              <span class="badge badge--secondary">{{ user.status }}</span>
+              {% endif %}
             </td>
             <td>
               <div class="user-actions">
-                <button class="btn-text btn-text--primary">Hubungi</button>
-                <button class="btn-text btn-text--secondary">Setujui</button>
+                {% if user.status == 'PENDING' %}
+                <button class="btn-text btn-text--secondary" onclick="approveUser('{{ userIdShort }}')">Setujui</button>
+                {% else %}
+                <span class="role-badge--disabled" title="Role tidak dapat diubah">
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M8 1a7 7 0 100 14A7 7 0 008 1zM7 4a1 1 0 112 0 1 1 0 01-2 0zm1 9a1 1 0 01-1-1v-4a1 1 0 012 0v4a1 1 0 01-1 1z"/>
+                  </svg>
+                  {{ user.role.name == 'ADMIN' ? 'Administrator' : 'Customer' }}
+                </span>
+                {% if user.status == 'ACTIVE' %}
+                <button class="btn-text btn-text--secondary" onclick="changeStatus('{{ userIdShort }}', 'INACTIVE')">Nonaktifkan</button>
+                {% else %}
+                <button class="btn-text btn-text--secondary" onclick="changeStatus('{{ userIdShort }}', 'ACTIVE')">Aktifkan</button>
+                {% endif %}
+                {% endif %}
               </div>
             </td>
           </tr>
-
-          {# Row 5 #}
-          <tr>
-            <td class="user-id">USR-005</td>
-            <td>Maria Sebasella</td>
-            <td>maria@globetek.id</td>
-            <td>
-              <span class="badge badge--info">Customer</span>
-            </td>
-            <td>
-              <span class="badge badge--success">Aktif</span>
-            </td>
-            <td>
-              <div class="user-actions">
-                <button class="btn-text btn-text--primary">Atur Role</button>
-                <button class="btn-text btn-text--secondary">Nonaktifkan</button>
-              </div>
-            </td>
-          </tr>
-
-          {# Row 6 #}
-          <tr>
-            <td class="user-id">USR-006</td>
-            <td>Hendra Saputra</td>
-            <td>hendra.saputra@combiphar.id</td>
-            <td>
-              <span class="badge badge--purple">Admin</span>
-            </td>
-            <td>
-              <span class="badge badge--success">Aktif</span>
-            </td>
-            <td>
-              <div class="user-actions">
-                <button class="btn-text btn-text--primary">Atur Role</button>
-                <button class="btn-text btn-text--secondary">Nonaktifkan</button>
-              </div>
-            </td>
-          </tr>
-
-          {# Row 7 #}
-          <tr>
-            <td class="user-id">USR-007</td>
-            <td>Sasha Andini</td>
-            <td>sasha.andini@mandirikresatif.co.id</td>
-            <td>
-              <span class="badge badge--info">Customer</span>
-            </td>
-            <td>
-              <span class="badge badge--success">Aktif</span>
-            </td>
-            <td>
-              <div class="user-actions">
-                <button class="btn-text btn-text--primary">Atur Role</button>
-                <button class="btn-text btn-text--secondary">Nonaktifkan</button>
-              </div>
-            </td>
-          </tr>
-
-          {# Row 8 #}
-          <tr>
-            <td class="user-id">USR-008</td>
-            <td>Dhimas Aksi</td>
-            <td>dhimas.aksi@bintangretail.com</td>
-            <td>
-              <span class="badge badge--info">Customer</span>
-            </td>
-            <td>
-              <span class="badge badge--warning">Verifikasi</span>
-            </td>
-            <td>
-              <div class="user-actions">
-                <button class="btn-text btn-text--primary">Hubungi</button>
-                <button class="btn-text btn-text--secondary">Setujui</button>
-              </div>
-            </td>
-          </tr>
+          {% endfor %}
         </tbody>
       </table>
-    </div>
-
-    {# Pagination #}
-    <div class="user-table__footer">
-      <div class="pagination">
-        <div class="pagination__controls">
-          <button class="pagination__btn pagination__btn--icon">‹</button>
-          <button class="pagination__btn pagination__btn--active">1</button>
-          <button class="pagination__btn">2</button>
-          <button class="pagination__btn">3</button>
-          <span class="pagination__ellipsis">…</span>
-          <button class="pagination__btn">12</button>
-          <button class="pagination__btn pagination__btn--icon">›</button>
-        </div>
-      </div>
+      {% endif %}
     </div>
   </div>
 
@@ -247,9 +157,41 @@
   <div class="user-info-box">
     <h4 class="user-info-box__title">Info Akses</h4>
     <p class="user-info-box__content">
-      Pastikan hanya pengguna terdaftar yang dapat mengakses sistem. 
+      Pastikan hanya pengguna terdaftar yang dapat mengakses sistem.
       Selalu verifikasi identitas sebelum mengaktifkan akun.
     </p>
   </div>
 </div>
+
+<script>
+function changeStatus(userId, newStatus) {
+  const statusText = newStatus === 'ACTIVE' ? 'mengaktifkan' : 'menonaktifkan';
+  if (confirm(`Apakah Anda yakin ingin ${statusText} pengguna ini?`)) {
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '/admin/users/status';
+
+    const userIdInput = document.createElement('input');
+    userIdInput.type = 'hidden';
+    userIdInput.name = 'userId';
+    userIdInput.value = userId;
+
+    const statusInput = document.createElement('input');
+    statusInput.type = 'hidden';
+    statusInput.name = 'status';
+    statusInput.value = newStatus;
+
+    form.appendChild(userIdInput);
+    form.appendChild(statusInput);
+    document.body.appendChild(form);
+    form.submit();
+  }
+}
+
+function approveUser(userId) {
+  if (confirm('Apakah Anda yakin ingin menyetujui pengguna ini?')) {
+    changeStatus(userId, 'ACTIVE');
+  }
+}
+</script>
 {% endblock %}

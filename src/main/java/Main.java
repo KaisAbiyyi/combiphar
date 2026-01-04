@@ -4,6 +4,7 @@ import java.util.Map;
 import com.combiphar.core.controller.AddressController;
 import com.combiphar.core.controller.AdminPaymentController;
 import com.combiphar.core.controller.AdminShipmentController;
+import com.combiphar.core.controller.AdminUserController;
 import com.combiphar.core.controller.AuthController;
 import com.combiphar.core.controller.CartController;
 import com.combiphar.core.controller.CatalogController;
@@ -77,6 +78,7 @@ public class Main {
         ShipmentService shipmentService = new ShipmentService();
         AdminShipmentController adminShipmentController = new AdminShipmentController(shipmentService);
         AdminPaymentController adminPaymentController = new AdminPaymentController();
+        AdminUserController adminUserController = new AdminUserController(userRepository);
 
         // Initialize Address controller
         AddressController addressController = new AddressController(addressRepository);
@@ -87,8 +89,8 @@ public class Main {
         registerRoutes(app, authController, categoryController,
                 itemController, qcController, catalogController, cartController,
                 checkoutController, paymentController, paymentUploadController,
-                adminShipmentController, adminPaymentController, shipmentService,
-                cartRepository, orderService, addressController);
+                adminShipmentController, adminPaymentController, adminUserController,
+                shipmentService, cartRepository, orderService, addressController);
 
         // Run DB migrations (best-effort). This will create carts/cart_items if missing.
         com.combiphar.core.migration.MigrationRunner.runMigrations();
@@ -173,6 +175,7 @@ public class Main {
             PaymentUploadController paymentUploadController,
             AdminShipmentController adminShipmentController,
             AdminPaymentController adminPaymentController,
+            AdminUserController adminUserController,
             ShipmentService shipmentService,
             CartRepository cartRepository,
             OrderService orderService,
@@ -237,6 +240,8 @@ public class Main {
         // ====== PHASE 4: Cart & Checkout Routes ======
         // Cart management
         app.get("/cart", cartController::showCart);
+        // API cart endpoints require authentication
+        app.before("/api/cart/*", AuthMiddleware.authenticatedApi);
         app.post("/api/cart/add", cartController::addToCart);
         app.post("/api/cart/update", cartController::updateCartItem);
         app.post("/api/cart/remove", cartController::removeFromCart);
@@ -495,19 +500,9 @@ public class Main {
         app.post("/api/admin/shipment/{id}/status", adminShipmentController::updateStatus);
         app.post("/api/admin/shipment/create", adminShipmentController::createShipment);
 
-        // Admin user page (English route)
-        app.get("/admin/users", ctx -> {
-            Map<String, Object> model = buildModel(
-                    "Manajemen Pengguna",
-                    "users",
-                    ctx.sessionAttribute("currentUser"));
-            model.put("pageTitle", "Manajemen Pengguna");
-            model.put("totalUsers", 128);
-            model.put("customerCount", 102);
-            model.put("adminCount", 6);
-            model.put("activeToday", 5);
-            ctx.render("admin/user", model);
-        });
+        // Admin user page (English route) - delegated to controller
+        app.get("/admin/users", adminUserController::showUsers);
+        app.post("/admin/users/status", adminUserController::updateStatus);
 
         // Admin reports page (English route)
         app.get("/admin/reports", ctx -> {

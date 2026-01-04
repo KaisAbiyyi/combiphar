@@ -51,23 +51,28 @@ public class OrderHistory {
             return "pending";
         }
         if (shipment != null && "PAID".equals(order.getStatusPayment())) {
-            return switch (shipment.getStatus()) {
-                case RECEIVED, DELIVERED ->
-                    "selesai";
-                case SHIPPED, PROCESSING ->
-                    "processing";
-                default ->
-                    "pending";
-            };
+            Shipment.Status status = shipment.getStatus();
+            switch (status) {
+                case RECEIVED:
+                case DELIVERED:
+                    return "selesai";
+                case SHIPPED:
+                case PROCESSING:
+                    return "processing";
+                default:
+                    return "pending";
+            }
         }
-        return switch (order.getStatusOrder()) {
-            case "READY", "COMPLETED" ->
-                "selesai";
-            case "CANCELLED" ->
-                "cancelled";
-            default ->
-                "pending";
-        };
+        String statusOrder = order.getStatusOrder();
+        switch (statusOrder) {
+            case "READY":
+            case "COMPLETED":
+                return "selesai";
+            case "CANCELLED":
+                return "cancelled";
+            default:
+                return "pending";
+        }
     }
 
     public String getStatusText() {
@@ -75,31 +80,34 @@ public class OrderHistory {
             return "Menunggu Pembayaran";
         }
         if (shipment != null && "PAID".equals(order.getStatusPayment())) {
-            return switch (shipment.getStatus()) {
-                case RECEIVED ->
-                    "Pesanan Selesai";
-                case DELIVERED ->
-                    "Paket Terkirim";
-                case SHIPPED ->
-                    "Dalam Perjalanan";
-                case PROCESSING ->
-                    "Diproses";
-                default ->
-                    "Menunggu Konfirmasi";
-            };
+            Shipment.Status status = shipment.getStatus();
+            switch (status) {
+                case RECEIVED:
+                    return "Pesanan Selesai";
+                case DELIVERED:
+                    return "Paket Terkirim";
+                case SHIPPED:
+                    return "Dalam Perjalanan";
+                case PROCESSING:
+                    return "Diproses";
+                default:
+                    return "Menunggu Konfirmasi";
+            }
         }
-        return switch (order.getStatusOrder()) {
-            case "NEW", "PROCESSING" ->
-                "Diproses";
-            case "READY" ->
-                "Siap Dikirim";
-            case "COMPLETED" ->
-                "Selesai";
-            case "CANCELLED" ->
-                "Dibatalkan";
-            default ->
-                order.getStatusOrder();
-        };
+        String statusOrder = order.getStatusOrder();
+        switch (statusOrder) {
+            case "NEW":
+            case "PROCESSING":
+                return "Diproses";
+            case "READY":
+                return "Siap Dikirim";
+            case "COMPLETED":
+                return "Selesai";
+            case "CANCELLED":
+                return "Dibatalkan";
+            default:
+                return statusOrder;
+        }
     }
 
     public String getFormattedPrice() {
@@ -110,14 +118,15 @@ public class OrderHistory {
         if ("PENDING".equals(order.getStatusPayment())) {
             return "Bayar Sekarang";
         }
-        return switch (order.getStatusOrder()) {
-            case "COMPLETED" ->
-                "Beri Penilaian";
-            case "CANCELLED" ->
-                "Pesan Lagi";
-            default ->
-                "Lihat Detail";
-        };
+        String statusOrder = order.getStatusOrder();
+        switch (statusOrder) {
+            case "COMPLETED":
+                return "Beri Penilaian";
+            case "CANCELLED":
+                return "Pesan Lagi";
+            default:
+                return "Lihat Detail";
+        }
     }
 
     public String getOrderId() {

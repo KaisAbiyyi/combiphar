@@ -180,6 +180,7 @@
  * - Posts to /api/cart/add
  * - Shows success toast with cart count
  * - Updates navbar cart badge
+ * - Redirects to login if not authenticated
  * - Defensive: handles errors gracefully
  */
 function addToCart(itemId) {
@@ -195,11 +196,21 @@ function addToCart(itemId) {
   fetch('/api/cart/add', { method: 'POST', body: data, credentials: 'same-origin' })
     .then(res => res.json())
     .then(json => {
+      // Check if user is not authenticated
+      if (json && json.authenticated === false) {
+        window.showToast && showToast('Silakan login terlebih dahulu', 'warning');
+        // Redirect to login page after a short delay
+        setTimeout(function() {
+          window.location.href = json.redirect || '/login';
+        }, 1000);
+        return;
+      }
+
       if (json && json.success) {
         // Show success toast
         const message = json.message || 'Produk berhasil ditambahkan ke keranjang';
         window.showToast && showToast(message, 'success');
-        
+
         // Update cart badge
         if (json.cartItemCount != null) {
           window.updateCartBadge && updateCartBadge(json.cartItemCount);

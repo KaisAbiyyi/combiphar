@@ -1,5 +1,7 @@
 package com.combiphar.core.middleware;
 
+import java.util.Map;
+
 import com.combiphar.core.model.Role;
 import com.combiphar.core.model.User;
 
@@ -22,6 +24,24 @@ public class AuthMiddleware {
     public static Handler authenticated = ctx -> {
         if (ctx.sessionAttribute(SESSION_USER) == null) {
             throw new RedirectResponse(HttpStatus.FOUND, "/login");
+        }
+    };
+
+    /**
+     * Middleware to ensure the user is authenticated for API calls.
+     * Returns JSON response with redirect URL instead of throwing RedirectResponse.
+     * Use this for AJAX/API endpoints that need to handle unauthenticated state.
+     */
+    public static Handler authenticatedApi = ctx -> {
+        if (ctx.sessionAttribute(SESSION_USER) == null) {
+            ctx.status(HttpStatus.UNAUTHORIZED)
+               .json(Map.of(
+                   "success", false,
+                   "authenticated", false,
+                   "redirect", "/login"
+               ));
+            // Stop execution - don't proceed to the controller
+            ctx.skipRemainingHandlers();
         }
     };
 
