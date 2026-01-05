@@ -297,22 +297,22 @@ public class ReportService {
         if (value >= 1_000_000_000_000.0) {
             double trillions = value / 1_000_000_000_000.0;
             return String.format("Rp %.1f T", trillions);
-        } 
+        }
         // Miliar (Billion) - 1,000,000,000+
         else if (value >= 1_000_000_000.0) {
             double billions = value / 1_000_000_000.0;
             return String.format("Rp %.1f M", billions);
-        } 
+        }
         // Juta (Million) - 1,000,000+
         else if (value >= 1_000_000.0) {
             double millions = value / 1_000_000.0;
             return String.format("Rp %.1f Jt", millions);
-        } 
+        }
         // Ribu (Thousand) - 1,000+
         else if (value >= 1_000.0) {
             double thousands = value / 1_000.0;
             return String.format("Rp %.1f Rb", thousands);
-        } 
+        }
         // Less than 1,000
         else {
             return String.format("Rp %.0f", value);

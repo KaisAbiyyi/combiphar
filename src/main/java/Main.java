@@ -96,7 +96,7 @@ public class Main {
                 itemController, qcController, catalogController, cartController,
                 checkoutController, paymentController, paymentUploadController,
                 adminShipmentController, adminPaymentController, adminOrderController, adminUserController,
-                shipmentService, cartRepository, orderService, addressController, reportController, 
+                shipmentService, cartRepository, orderService, addressController, reportController,
                 dashboardController);
 
         // Run DB migrations (best-effort). This will create carts/cart_items if

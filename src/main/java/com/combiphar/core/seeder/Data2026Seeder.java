@@ -28,17 +28,17 @@ public class Data2026Seeder {
 
             // Split by semicolon and execute each statement
             String[] statements = content.split(";");
-            
+
             int successCount = 0;
             int skipCount = 0;
 
             try (Statement stmt = conn.createStatement()) {
                 for (String sql : statements) {
                     sql = sql.trim();
-                    
+
                     // Skip empty statements and comments
-                    if (sql.isEmpty() || sql.startsWith("--") || sql.startsWith("SELECT '===") 
-                        || sql.startsWith("SELECT 'Summary") || sql.startsWith("SELECT CONCAT")) {
+                    if (sql.isEmpty() || sql.startsWith("--") || sql.startsWith("SELECT '===")
+                            || sql.startsWith("SELECT 'Summary") || sql.startsWith("SELECT CONCAT")) {
                         continue;
                     }
 
@@ -63,25 +63,25 @@ public class Data2026Seeder {
 
             // Print summary
             try (Statement stmt = conn.createStatement();
-                 var rs = stmt.executeQuery("SELECT COUNT(*) as total FROM orders WHERE YEAR(created_at) = 2026")) {
+                    var rs = stmt.executeQuery("SELECT COUNT(*) as total FROM orders WHERE YEAR(created_at) = 2026")) {
                 if (rs.next()) {
                     System.out.println("\n✓ Total orders for 2026: " + rs.getInt("total"));
                 }
             }
 
             try (Statement stmt = conn.createStatement();
-                 var rs = stmt.executeQuery(
-                     "SELECT SUM(oi.quantity) as total FROM order_items oi " +
-                     "JOIN orders o ON oi.order_id = o.id WHERE YEAR(o.created_at) = 2026")) {
+                    var rs = stmt.executeQuery(
+                            "SELECT SUM(oi.quantity) as total FROM order_items oi " +
+                                    "JOIN orders o ON oi.order_id = o.id WHERE YEAR(o.created_at) = 2026")) {
                 if (rs.next()) {
                     System.out.println("✓ Total units sold 2026: " + rs.getInt("total"));
                 }
             }
 
             try (Statement stmt = conn.createStatement();
-                 var rs = stmt.executeQuery(
-                     "SELECT SUM(total_price) as revenue FROM orders " +
-                     "WHERE status_payment = 'PAID' AND YEAR(created_at) = 2026")) {
+                    var rs = stmt.executeQuery(
+                            "SELECT SUM(total_price) as revenue FROM orders " +
+                                    "WHERE status_payment = 'PAID' AND YEAR(created_at) = 2026")) {
                 if (rs.next()) {
                     double revenue = rs.getDouble("revenue");
                     System.out.println("✓ Total revenue 2026: Rp " + String.format("%,.0f", revenue));

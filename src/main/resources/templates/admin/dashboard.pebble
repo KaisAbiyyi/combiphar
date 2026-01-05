@@ -360,8 +360,7 @@
       <div class="transactions-card__header">
         <div>
           <h3 class="transactions-card__title">Transaksi Terbaru</h3>
-          <p class="transactions-card__subtitle">Pembaruan terakhir: 21
-            September 2025 - 13:48 WIB</p>
+          <p class="transactions-card__subtitle">Pembaruan terakhir: {{ lastUpdate | default("N/A") }}</p>
         </div>
         <div class="transactions-card__actions">
           <button class="btn-secondary">Ekspor CSV</button>
@@ -382,56 +381,26 @@
             </tr>
           </thead>
           <tbody class="table__body">
+            {% if recentTransactions is empty %}
             <tr class="table__row">
-              <td class="table__cell">INV-229021</td>
-              <td class="table__cell">PT Silver Elicit</td>
-              <td class="table__cell">Mealy Frostacuff + Kuret (L)</td>
-              <td class="table__cell">Rp 30.350.000</td>
-              <td class="table__cell">
-                <span class="badge badge--proses">Proses Kirim</span>
+              <td class="table__cell" colspan="6" style="text-align: center; padding: 40px; color: #9CA3AF;">
+                Belum ada transaksi
               </td>
-              <td class="table__cell">26 Sep 2025 • 18:32</td>
             </tr>
+            {% else %}
+            {% for transaction in recentTransactions %}
             <tr class="table__row">
-              <td class="table__cell">INV-229018</td>
-              <td class="table__cell">CV Harmoni Medita</td>
-              <td class="table__cell">Monitor LCD (12)</td>
-              <td class="table__cell">Rp 21.400.000</td>
+              <td class="table__cell">{{ transaction.invoice }}</td>
+              <td class="table__cell">{{ transaction.customerName }}</td>
+              <td class="table__cell">{{ transaction.items | default("N/A") }}</td>
+              <td class="table__cell">{{ transaction.totalPriceDisplay }}</td>
               <td class="table__cell">
-                <span class="badge badge--selesai">Selesai</span>
+                <span class="badge {{ transaction.statusClass }}">{{ transaction.statusText }}</span>
               </td>
-              <td class="table__cell">25 Sep 2025 • 15:08</td>
+              <td class="table__cell">{{ transaction.timestamp }}</td>
             </tr>
-            <tr class="table__row">
-              <td class="table__cell">INV-229010</td>
-              <td class="table__cell">PT Sagara Fintech</td>
-              <td class="table__cell">Kursi Lemhure + (20)</td>
-              <td class="table__cell">Rp 37.500.000</td>
-              <td class="table__cell">
-                <span class="badge badge--selesai">Selesai</span>
-              </td>
-              <td class="table__cell">24 Sep 2025 • 17:44</td>
-            </tr>
-            <tr class="table__row">
-              <td class="table__cell">INV-228952</td>
-              <td class="table__cell">PT Globalat</td>
-              <td class="table__cell">Lemari Arsip (7)</td>
-              <td class="table__cell">Rp 24.850.000</td>
-              <td class="table__cell">
-                <span class="badge badge--dikemas">Menunggu Pickup</span>
-              </td>
-              <td class="table__cell">24 Sep 2025 • 09:15</td>
-            </tr>
-            <tr class="table__row">
-              <td class="table__cell">INV-228955</td>
-              <td class="table__cell">PT Mandiri Kwartl</td>
-              <td class="table__cell">Tinta camp Focus Pro (40)</td>
-              <td class="table__cell">Rp 39.200.000</td>
-              <td class="table__cell">
-                <span class="badge badge--pending">Menunggu Pembayaran</span>
-              </td>
-              <td class="table__cell">23 Sep 2025 • 16:27</td>
-            </tr>
+            {% endfor %}
+            {% endif %}
           </tbody>
         </table>
       </div>

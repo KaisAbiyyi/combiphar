@@ -1,5 +1,8 @@
 package com.combiphar.core.controller;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Map;
 
 import com.combiphar.core.service.DashboardService;
@@ -31,6 +34,14 @@ public class DashboardController extends BaseAdminController {
         // Get dashboard statistics
         Map<String, Object> dashboardStats = dashboardService.getDashboardStats();
         model.putAll(dashboardStats);
+
+        // Get recent transactions
+        List<Map<String, Object>> recentTransactions = dashboardService.getRecentTransactions();
+        model.put("recentTransactions", recentTransactions);
+
+        // Last update timestamp
+        String lastUpdate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd MMMM yyyy"));
+        model.put("lastUpdate", lastUpdate);
 
         ctx.render("admin/dashboard", model);
     }

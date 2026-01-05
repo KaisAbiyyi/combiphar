@@ -8,7 +8,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.combiphar.core.config.DatabaseConfig;
@@ -59,19 +61,19 @@ public class DashboardService {
 
         // Get current year revenue (2026)
         String currentSql = """
-            SELECT SUM(total_price) as revenue 
-            FROM orders 
-            WHERE status_payment = 'PAID' 
-            AND YEAR(created_at) = ?
-        """;
-        
+                    SELECT SUM(total_price) as revenue
+                    FROM orders
+                    WHERE status_payment = 'PAID'
+                    AND YEAR(created_at) = ?
+                """;
+
         // Get previous year revenue (2025) for comparison
         String previousSql = """
-            SELECT SUM(total_price) as revenue 
-            FROM orders 
-            WHERE status_payment = 'PAID' 
-            AND YEAR(created_at) = ?
-        """;
+                    SELECT SUM(total_price) as revenue
+                    FROM orders
+                    WHERE status_payment = 'PAID'
+                    AND YEAR(created_at) = ?
+                """;
 
         try (Connection conn = DatabaseConfig.getConnection()) {
             // Current year
@@ -80,7 +82,8 @@ public class DashboardService {
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (rs.next()) {
                         totalRevenue = rs.getBigDecimal("revenue");
-                        if (totalRevenue == null) totalRevenue = BigDecimal.ZERO;
+                        if (totalRevenue == null)
+                            totalRevenue = BigDecimal.ZERO;
                     }
                 }
             }
@@ -91,7 +94,8 @@ public class DashboardService {
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (rs.next()) {
                         previousYearRevenue = rs.getBigDecimal("revenue");
-                        if (previousYearRevenue == null) previousYearRevenue = BigDecimal.ZERO;
+                        if (previousYearRevenue == null)
+                            previousYearRevenue = BigDecimal.ZERO;
                     }
                 }
             }
@@ -104,8 +108,8 @@ public class DashboardService {
         if (previousYearRevenue.compareTo(BigDecimal.ZERO) > 0) {
             BigDecimal growth = totalRevenue.subtract(previousYearRevenue);
             growthPercentage = growth.divide(previousYearRevenue, 4, RoundingMode.HALF_UP)
-                                     .multiply(BigDecimal.valueOf(100))
-                                     .doubleValue();
+                    .multiply(BigDecimal.valueOf(100))
+                    .doubleValue();
         } else if (totalRevenue.compareTo(BigDecimal.ZERO) > 0) {
             growthPercentage = 100.0; // If no previous data but current has revenue
         }
@@ -115,7 +119,7 @@ public class DashboardService {
         stats.put("salesGrowth", growthPercentage);
         stats.put("salesGrowthDisplay", String.format("%.0f%% dari", Math.abs(growthPercentage)));
         stats.put("salesGrowthDirection", growthPercentage >= 0 ? "up" : "down");
-        
+
         // Update footer with current year
         stats.put("salesFooter", String.format("Penjualan semua gudang tahun %d", currentYear));
 
@@ -137,23 +141,23 @@ public class DashboardService {
 
         // Current year units (2026)
         String currentSql = """
-            SELECT 
-                SUM(oi.quantity) as total_units,
-                COUNT(DISTINCT o.id) as total_orders
-            FROM order_items oi
-            JOIN orders o ON oi.order_id = o.id
-            WHERE o.status_payment = 'PAID'
-            AND YEAR(o.created_at) = ?
-        """;
+                    SELECT
+                        SUM(oi.quantity) as total_units,
+                        COUNT(DISTINCT o.id) as total_orders
+                    FROM order_items oi
+                    JOIN orders o ON oi.order_id = o.id
+                    WHERE o.status_payment = 'PAID'
+                    AND YEAR(o.created_at) = ?
+                """;
 
         // Previous year units (2025) for comparison
         String previousSql = """
-            SELECT SUM(oi.quantity) as total_units
-            FROM order_items oi
-            JOIN orders o ON oi.order_id = o.id
-            WHERE o.status_payment = 'PAID'
-            AND YEAR(o.created_at) = ?
-        """;
+                    SELECT SUM(oi.quantity) as total_units
+                    FROM order_items oi
+                    JOIN orders o ON oi.order_id = o.id
+                    WHERE o.status_payment = 'PAID'
+                    AND YEAR(o.created_at) = ?
+                """;
 
         try (Connection conn = DatabaseConfig.getConnection()) {
             // Current year
@@ -196,8 +200,8 @@ public class DashboardService {
             changeText = String.format("%.0f%% dari tahun lalu", Math.abs(changePercentage));
         }
 
-        String footerText = String.format("Terdapat %d unit dalam %d pesanan berhasil tahun %d", 
-                                         totalUnits, totalOrders, currentYear);
+        String footerText = String.format("Terdapat %d unit dalam %d pesanan berhasil tahun %d",
+                totalUnits, totalOrders, currentYear);
 
         stats.put("totalUnits", totalUnits);
         stats.put("totalUnitsDisplay", String.format("%,d", totalUnits));
@@ -221,10 +225,10 @@ public class DashboardService {
 
         // Count active users (who made orders in last 30 days)
         String activeSql = """
-            SELECT COUNT(DISTINCT o.user_id) as active_count
-            FROM orders o
-            WHERE o.created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)
-        """;
+                    SELECT COUNT(DISTINCT o.user_id) as active_count
+                    FROM orders o
+                    WHERE o.created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)
+                """;
 
         // Count total users with CUSTOMER role
         String totalSql = "SELECT COUNT(id) as total_count FROM users WHERE role = 'CUSTOMER'";
@@ -232,7 +236,7 @@ public class DashboardService {
         try (Connection conn = DatabaseConfig.getConnection()) {
             // Active users
             try (PreparedStatement stmt = conn.prepareStatement(activeSql);
-                 ResultSet rs = stmt.executeQuery()) {
+                    ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     activeUsers = rs.getInt("active_count");
                 }
@@ -240,7 +244,7 @@ public class DashboardService {
 
             // Total users
             try (PreparedStatement stmt = conn.prepareStatement(totalSql);
-                 ResultSet rs = stmt.executeQuery()) {
+                    ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     totalUsers = rs.getInt("total_count");
                 }
@@ -276,16 +280,16 @@ public class DashboardService {
         int deliveredShipments = 0;
 
         String sql = """
-            SELECT 
-                COUNT(*) as total_shipments,
-                SUM(CASE WHEN shipment_status = 'DELIVERED' THEN 1 ELSE 0 END) as delivered_count
-            FROM shipments
-        """;
+                    SELECT
+                        COUNT(*) as total_shipments,
+                        SUM(CASE WHEN shipment_status = 'DELIVERED' THEN 1 ELSE 0 END) as delivered_count
+                    FROM shipments
+                """;
 
         try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-            
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery()) {
+
             if (rs.next()) {
                 totalShipments = rs.getInt("total_shipments");
                 deliveredShipments = rs.getInt("delivered_count");
@@ -315,7 +319,8 @@ public class DashboardService {
 
     /**
      * Format currency to Indonesian display format.
-     * Uses Indonesian abbreviations: Jt (Juta/Million), M (Miliar/Billion), T (Triliun/Trillion)
+     * Uses Indonesian abbreviations: Jt (Juta/Million), M (Miliar/Billion), T
+     * (Triliun/Trillion)
      * 
      * @param amount BigDecimal amount
      * @return Formatted string
@@ -331,25 +336,148 @@ public class DashboardService {
         if (value >= 1_000_000_000_000.0) {
             double trillions = value / 1_000_000_000_000.0;
             return String.format("Rp %.1f T", trillions);
-        } 
+        }
         // Miliar (Billion) - 1,000,000,000+
         else if (value >= 1_000_000_000.0) {
             double billions = value / 1_000_000_000.0;
             return String.format("Rp %.1f M", billions);
-        } 
+        }
         // Juta (Million) - 1,000,000+
         else if (value >= 1_000_000.0) {
             double millions = value / 1_000_000.0;
             return String.format("Rp %.1f Jt", millions);
-        } 
+        }
         // Ribu (Thousand) - 1,000+
         else if (value >= 1_000.0) {
             double thousands = value / 1_000.0;
             return String.format("Rp %.1f Rb", thousands);
-        } 
+        }
         // Less than 1,000
         else {
             return String.format("Rp %.0f", value);
         }
+    }
+
+    /**
+     * Get recent transactions for dashboard.
+     * Returns last 5 transactions with order details.
+     * 
+     * @return List of recent transactions
+     */
+    public List<Map<String, Object>> getRecentTransactions() {
+        List<Map<String, Object>> transactions = new ArrayList<>();
+
+        String sql = """
+                    SELECT
+                        o.order_number as invoice,
+                        u.name as customer_name,
+                        o.total_price,
+                        o.status_order,
+                        o.status_payment,
+                        o.created_at,
+                        GROUP_CONCAT(
+                            CONCAT(i.name, ' (', oi.quantity, ')')
+                            SEPARATOR ', '
+                        ) as items
+                    FROM orders o
+                    JOIN users u ON o.user_id = u.id
+                    LEFT JOIN order_items oi ON o.id = oi.order_id
+                    LEFT JOIN items i ON oi.item_id = i.id
+                    WHERE DATE(o.created_at) = CURDATE()
+                    GROUP BY o.id
+                    ORDER BY o.created_at DESC
+                    LIMIT 5
+                """;
+
+        try (Connection conn = DatabaseConfig.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery()) {
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy");
+
+            while (rs.next()) {
+                Map<String, Object> transaction = new HashMap<>();
+
+                transaction.put("invoice", rs.getString("invoice"));
+                transaction.put("customerName", rs.getString("customer_name"));
+                transaction.put("items", rs.getString("items"));
+                transaction.put("totalPrice", rs.getBigDecimal("total_price"));
+                transaction.put("totalPriceDisplay", formatCurrency(rs.getBigDecimal("total_price")));
+
+                // Map status order to badge display
+                String statusOrder = rs.getString("status_order");
+                String statusPayment = rs.getString("status_payment");
+                Map<String, String> statusInfo = mapOrderStatus(statusOrder, statusPayment);
+                transaction.put("statusText", statusInfo.get("text"));
+                transaction.put("statusClass", statusInfo.get("class"));
+
+                // Format timestamp
+                LocalDateTime createdAt = rs.getTimestamp("created_at").toLocalDateTime();
+                transaction.put("timestamp", createdAt.format(formatter));
+
+                transactions.add(transaction);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error fetching recent transactions: " + e.getMessage());
+        }
+
+        return transactions;
+    }
+
+    /**
+     * Map order status to display text and badge class.
+     */
+    private Map<String, String> mapOrderStatus(String statusOrder, String statusPayment) {
+        Map<String, String> result = new HashMap<>();
+
+        // Check payment status first
+        if ("PENDING".equals(statusPayment)) {
+            result.put("text", "Menunggu Pembayaran");
+            result.put("class", "badge--pending");
+            return result;
+        }
+
+        if ("FAILED".equals(statusPayment)) {
+            result.put("text", "Pembayaran Gagal");
+            result.put("class", "badge--dibatalkan");
+            return result;
+        }
+
+        // If paid, check order status
+        switch (statusOrder) {
+            case "PENDING":
+                result.put("text", "Pesanan Baru");
+                result.put("class", "badge--pending");
+                break;
+            case "PROCESSING":
+                result.put("text", "Diproses");
+                result.put("class", "badge--dikemas");
+                break;
+            case "READY":
+                result.put("text", "Menunggu Pickup");
+                result.put("class", "badge--dikemas");
+                break;
+            case "SHIPPED":
+                result.put("text", "Proses Kirim");
+                result.put("class", "badge--proses");
+                break;
+            case "DELIVERED":
+                result.put("text", "Terkirim");
+                result.put("class", "badge--selesai");
+                break;
+            case "COMPLETED":
+                result.put("text", "Selesai");
+                result.put("class", "badge--selesai");
+                break;
+            case "CANCELLED":
+                result.put("text", "Dibatalkan");
+                result.put("class", "badge--dibatalkan");
+                break;
+            default:
+                result.put("text", statusOrder);
+                result.put("class", "badge--pending");
+        }
+
+        return result;
     }
 }
