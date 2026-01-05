@@ -214,6 +214,15 @@
   color: #111827;
   margin-bottom: 0.25rem;
 }
+.product-item__category {
+  font-size: 0.75rem;
+  color: #9333ea;
+  background: rgba(147, 51, 234, 0.1);
+  padding: 0.125rem 0.5rem;
+  border-radius: 0.25rem;
+  display: inline-block;
+  margin-bottom: 0.25rem;
+}
 .product-item__quantity {
   font-size: 0.875rem;
   color: #6b7280;
@@ -269,6 +278,7 @@ function showDetail(orderId, orderNumber, customerName, bank, proof, status) {
                 <div class="product-item">
                   <div class="product-item__info">
                     <div class="product-item__name">${item.name}</div>
+                    <div class="product-item__category">${item.category}</div>
                     <div class="product-item__quantity">${item.quantity}x @ Rp ${new Intl.NumberFormat('id-ID').format(item.unitPrice)}</div>
                   </div>
                   <div class="product-item__subtotal">Rp ${new Intl.NumberFormat('id-ID').format(item.subtotal)}</div>

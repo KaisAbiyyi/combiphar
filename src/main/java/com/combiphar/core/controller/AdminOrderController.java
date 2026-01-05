@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.combiphar.core.model.Order;
+import com.combiphar.core.repository.CategoryRepository;
 import com.combiphar.core.repository.ItemRepository;
 import com.combiphar.core.repository.OrderItemRepository;
 import com.combiphar.core.repository.OrderRepository;
@@ -28,6 +29,7 @@ public class AdminOrderController extends BaseAdminController {
     private final PaymentRepository paymentRepo = new PaymentRepository();
     private final OrderItemRepository orderItemRepo = new OrderItemRepository();
     private final ItemRepository itemRepo = new ItemRepository();
+    private final CategoryRepository categoryRepo = new CategoryRepository();
 
     public void showOrders(Context ctx) {
         int page = ctx.queryParamAsClass("page", Integer.class).getOrDefault(1);
@@ -53,11 +55,17 @@ public class AdminOrderController extends BaseAdminController {
         String orderId = ctx.pathParam("id");
         List<Map<String, Object>> items = orderItemRepo.findByOrderId(orderId).stream()
                 .map(oi -> itemRepo.findById(oi.getItemId())
-                .map(item -> Map.<String, Object>of(
-                        "name", item.getName(),
-                        "quantity", oi.getQuantity(),
-                        "unitPrice", oi.getUnitPrice(),
-                        "subtotal", oi.getSubtotal()))
+                .map(item -> {
+                    String categoryName = categoryRepo.findById(item.getCategoryId())
+                            .map(c -> c.getName())
+                            .orElse("Tanpa Kategori");
+                    return Map.<String, Object>of(
+                            "name", item.getName(),
+                            "category", categoryName,
+                            "quantity", oi.getQuantity(),
+                            "unitPrice", oi.getUnitPrice(),
+                            "subtotal", oi.getSubtotal());
+                })
                 .orElse(null))
                 .filter(m -> m != null)
                 .collect(Collectors.toList());
