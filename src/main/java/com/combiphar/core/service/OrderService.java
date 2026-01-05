@@ -74,8 +74,7 @@ public class OrderService {
             orderItemRepository.save(new OrderItem(order.getId(), ci.getItemId(), ci.getQuantity(), ci.getItemPrice()));
         }
 
-        paymentRepository.save(new Payment(order.getId(), summary.getTotalPrice(), bank, proofPath, "SUCCESS"));
-        orderRepository.updatePaymentStatus(order.getId(), "PAID");
+        paymentRepository.save(new Payment(order.getId(), summary.getTotalPrice(), bank, proofPath, "PENDING"));
         return order;
     }
 

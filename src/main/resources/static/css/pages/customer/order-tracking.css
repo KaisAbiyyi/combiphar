@@ -166,6 +166,11 @@
   color: #991B1B;
 }
 
+.order-status-badge--failed {
+  background: #FEE2E2;
+  color: #991B1B;
+}
+
 .order-status-badge--delivered {
   background: #D1FAE5;
   color: #065F46;
@@ -545,6 +550,10 @@
 
 .tracking-step--completed::before {
   background: linear-gradient(180deg, #F59E0B 0%, #E5E7EB 100%);
+}
+
+.tracking-step--failed::before {
+  background: #EF4444;
 }
 
 .tracking-step__indicator {

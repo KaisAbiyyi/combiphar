@@ -64,6 +64,30 @@ public class PaymentRepository {
     }
 
     /**
+     * Update status payment (SUCCESS/FAILED).
+     */
+    public void updateStatus(String orderId, String status) {
+        if (status == null || (!status.equals("SUCCESS") && !status.equals("FAILED"))) {
+            throw new IllegalArgumentException("Status must be SUCCESS or FAILED");
+        }
+
+        String sql = "UPDATE payments SET status = ?, paid_at = ? WHERE order_id = ?";
+
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, status);
+            stmt.setTimestamp(2, status.equals("SUCCESS") ? new Timestamp(System.currentTimeMillis()) : null);
+            stmt.setString(3, orderId);
+
+            int updated = stmt.executeUpdate();
+            if (updated == 0) {
+                throw new IllegalArgumentException("Payment not found for order: " + orderId);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error updating payment status: " + e.getMessage(), e);
+        }
+    }
+
+    /**
      * Mencari payment berdasarkan order ID.
      */
     public Optional<Payment> findByOrderId(String orderId) {

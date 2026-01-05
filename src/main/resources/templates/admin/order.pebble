@@ -112,6 +112,8 @@
                   <span class="badge badge--success">Paid</span>
                   {% elseif item.order.statusPayment == 'PENDING' %}
                   <span class="badge badge--pending">Pending</span>
+                  {% elseif item.order.statusPayment == 'FAILED' %}
+                  <span class="badge badge--danger">Failed</span>
                   {% else %}
                   <span class="badge badge--danger">{{ item.order.statusPayment }}</span>
                   {% endif %}

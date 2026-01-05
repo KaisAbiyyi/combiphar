@@ -275,6 +275,11 @@
   color: #991b1b;
 }
 
+.status-badge--failed {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
 /* Action button */
 .history-action-btn {
   padding: 0.5rem 1rem;

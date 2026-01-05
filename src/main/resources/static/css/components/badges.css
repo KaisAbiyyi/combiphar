@@ -50,8 +50,8 @@
 }
 
 .badge--pending {
-  background: #FEE2E2;
-  color: #991B1B;
+  background: rgba(245, 158, 11, 0.12); /* light yellow */
+  color: #F59E0B; /* yellow */
 }
 
 .badge--danger {

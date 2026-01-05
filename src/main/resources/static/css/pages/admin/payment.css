@@ -147,3 +147,132 @@
     justify-content: center;
   }
 }
+/* Modal Styles
+   ========================================================================== */
+.proof-modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  align-items: center;
+  justify-content: center;
+}
+
+.proof-modal__content {
+  background: #ffffff;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 800px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.proof-modal__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.proof-modal__header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.proof-modal__close {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+}
+
+.proof-modal__close:hover {
+  color: #111827;
+}
+
+.proof-modal__body {
+  padding: 1.5rem;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.proof-modal__body img {
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.proof-modal__body embed {
+  width: 100%;
+  height: 500px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.proof-modal__footer {
+  display: flex;
+  gap: 1rem;
+  padding: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+  justify-content: flex-end;
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn--success {
+  background: #10b981;
+  color: #ffffff;
+}
+
+.btn--success:hover {
+  background: #059669;
+}
+
+.btn--danger {
+  background: #ef4444;
+  color: #ffffff;
+}
+
+.btn--danger:hover {
+  background: #dc2626;
+}
+
+@media (max-width: 768px) {
+  .proof-modal__content {
+    width: 95%;
+    max-height: 95vh;
+  }
+
+  .proof-modal__footer {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}

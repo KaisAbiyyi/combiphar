@@ -61,21 +61,29 @@ public class ShipmentService {
     public void updateStatus(String shipmentId, Status status) {
         Objects.requireNonNull(shipmentId, "Shipment ID wajib diisi");
         Objects.requireNonNull(status, "Status wajib diisi");
-        findOrThrow(shipmentId);
+        Shipment shipment = findOrThrow(shipmentId);
         if (status == Status.DELIVERED) {
             shipmentRepository.markAsDelivered(shipmentId);
         } else {
             shipmentRepository.updateStatus(shipmentId, status);
         }
+
+        // Auto-update order status to COMPLETED when shipment is RECEIVED
+        if (status == Status.RECEIVED) {
+            orderRepository.updateOrderStatus(shipment.getOrderId(), "COMPLETED");
+        }
     }
 
     public void markAsReceived(String shipmentId) {
         Objects.requireNonNull(shipmentId, "Shipment ID wajib diisi");
-        findOrThrow(shipmentId);
+        Shipment shipment = findOrThrow(shipmentId);
         shipmentRepository.markAsReceived(shipmentId);
+
+        // Auto-update order status to COMPLETED when shipment is received
+        orderRepository.updateOrderStatus(shipment.getOrderId(), "COMPLETED");
     }
 
-    private void findOrThrow(String shipmentId) {
-        shipmentRepository.findById(shipmentId).orElseThrow(() -> new IllegalArgumentException("Shipment tidak ditemukan"));
+    private Shipment findOrThrow(String shipmentId) {
+        return shipmentRepository.findById(shipmentId).orElseThrow(() -> new IllegalArgumentException("Shipment tidak ditemukan"));
     }
 }

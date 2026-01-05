@@ -50,6 +50,9 @@ public class OrderHistory {
         if ("PENDING".equals(order.getStatusPayment())) {
             return "pending";
         }
+        if ("FAILED".equals(order.getStatusPayment())) {
+            return "failed";
+        }
         if (shipment != null && "PAID".equals(order.getStatusPayment())) {
             Shipment.Status status = shipment.getStatus();
             switch (status) {
@@ -77,7 +80,10 @@ public class OrderHistory {
 
     public String getStatusText() {
         if ("PENDING".equals(order.getStatusPayment())) {
-            return "Menunggu Pembayaran";
+            return "Menunggu Konfirmasi";
+        }
+        if ("FAILED".equals(order.getStatusPayment())) {
+            return "Ditolak";
         }
         if (shipment != null && "PAID".equals(order.getStatusPayment())) {
             Shipment.Status status = shipment.getStatus();
@@ -115,18 +121,7 @@ public class OrderHistory {
     }
 
     public String getActionButton() {
-        if ("PENDING".equals(order.getStatusPayment())) {
-            return "Bayar Sekarang";
-        }
-        String statusOrder = order.getStatusOrder();
-        switch (statusOrder) {
-            case "COMPLETED":
-                return "Beri Penilaian";
-            case "CANCELLED":
-                return "Pesan Lagi";
-            default:
-                return "Lihat Detail";
-        }
+        return "Detail Order";
     }
 
     public String getOrderId() {

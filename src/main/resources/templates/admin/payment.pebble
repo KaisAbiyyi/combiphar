@@ -68,7 +68,7 @@
               <td class="payment-date">{{ detail.formattedDate }}</td>
               <td>
                 {% if detail.payment.proofFilePath is not null %}
-                <button class="btn-text btn-text--primary" onclick="window.open('/admin/payments/proof/{{ detail.order.id }}', '_blank')">Lihat Bukti</button>
+                <button class="btn-text btn-text--primary" onclick="openProofModal('{{ detail.payment.proofFilePath }}', '{{ detail.order.id }}', {{ detail.isPdf }})">Lihat Bukti</button>
                 {% else %}
                 <span class="text-muted">-</span>
                 {% endif %}
@@ -94,4 +94,81 @@
     </div>
   </div>
 </div>
+
+{# Modal for Payment Proof #}
+<div id="proofModal" class="proof-modal">
+  <div class="proof-modal__content">
+    <div class="proof-modal__header">
+      <h3>Bukti Pembayaran</h3>
+      <button class="proof-modal__close" onclick="closeProofModal()">&times;</button>
+    </div>
+    <div class="proof-modal__body">
+      <img id="proofImage" src="" alt="Bukti Pembayaran" style="display:none;">
+      <embed id="proofPdf" src="" type="application/pdf" style="display:none;">
+    </div>
+    <div class="proof-modal__footer">
+      <button class="btn btn--primary" onclick="verifyPayment('approve')">Terima</button>
+      <button class="btn btn--danger" onclick="verifyPayment('reject')">Tolak</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentOrderId = null;
+
+function openProofModal(proofPath, orderId, isPdf) {
+  currentOrderId = orderId;
+  const modal = document.getElementById('proofModal');
+  const image = document.getElementById('proofImage');
+  const pdf = document.getElementById('proofPdf');
+  
+  if (isPdf) {
+    image.style.display = 'none';
+    pdf.style.display = 'block';
+    pdf.src = proofPath;
+  } else {
+    pdf.style.display = 'none';
+    image.style.display = 'block';
+    image.src = proofPath;
+  }
+  
+  modal.style.display = 'flex';
+}
+
+function closeProofModal() {
+  const modal = document.getElementById('proofModal');
+  modal.style.display = 'none';
+  currentOrderId = null;
+}
+
+function verifyPayment(action) {
+  if (!currentOrderId) return;
+  
+  fetch(`/api/admin/payments/${currentOrderId}/verify?action=${action}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' }
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      alert(data.message);
+      closeProofModal();
+      location.reload();
+    } else {
+      alert('Error: ' + data.message);
+    }
+  })
+  .catch(error => {
+    alert('Terjadi kesalahan: ' + error.message);
+  });
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+  const modal = document.getElementById('proofModal');
+  if (event.target === modal) {
+    closeProofModal();
+  }
+}
+</script>
 {% endblock %}

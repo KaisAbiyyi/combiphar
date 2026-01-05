@@ -491,6 +491,7 @@ public class Main {
         // Admin payment page (English route) - delegated to controller
         app.get("/admin/payments", adminPaymentController::showPaymentPage);
         app.get("/admin/payments/proof/{id}", adminPaymentController::showPaymentProof);
+        app.post("/api/admin/payments/{id}/verify", adminPaymentController::verifyPayment);
 
         // Admin shipment page (English route) - delegated to controller
         app.get("/admin/shipment", adminShipmentController::showShipmentPage);

@@ -24,8 +24,8 @@ public class AdminPaymentController extends BaseAdminController {
 
     private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("dd MMM yyyy • HH:mm");
     private static final Map<String, String> STATUS_BADGES = Map.of(
-            "PENDING", "<span class=\"badge badge--warning\">Menunggu Bukti</span>",
-            "SUCCESS", "<span class=\"badge badge--success\">Approve</span>",
+            "PENDING", "<span class=\"badge badge--warning\">Menunggu Konfirmasi</span>",
+            "SUCCESS", "<span class=\"badge badge--success\">Diterima</span>",
             "FAILED", "<span class=\"badge badge--danger\">Ditolak</span>");
 
     private final PaymentRepository paymentRepository = new PaymentRepository();
@@ -69,7 +69,37 @@ public class AdminPaymentController extends BaseAdminController {
         ctx.render("admin/payment-proof", model);
     }
 
+    public void verifyPayment(Context ctx) {
+        String orderId = ctx.pathParam("id");
+        String action = ctx.queryParam("action");
+
+        if (action == null || (!action.equals("approve") && !action.equals("reject"))) {
+            ctx.status(400).json(Map.of("success", false, "message", "Invalid action"));
+            return;
+        }
+
+        try {
+            String paymentStatus = action.equals("approve") ? "SUCCESS" : "FAILED";
+            paymentRepository.updateStatus(orderId, paymentStatus);
+
+            // Update order payment status dan order status
+            if (action.equals("approve")) {
+                orderRepository.updatePaymentStatus(orderId, "PAID");
+                orderRepository.updateOrderStatus(orderId, "PROCESSING");
+            } else {
+                orderRepository.updatePaymentStatus(orderId, "FAILED");
+            }
+
+            ctx.json(Map.of("success", true, "message", "Pembayaran berhasil di" + (action.equals("approve") ? "terima" : "tolak")));
+        } catch (Exception e) {
+            ctx.status(500).json(Map.of("success", false, "message", e.getMessage()));
+        }
+    }
+
     private Map<String, Object> buildPaymentDetail(Order order, Payment payment) {
+        String proofPath = payment.getProofFilePath();
+        boolean isPdf = proofPath != null && proofPath.toLowerCase().endsWith(".pdf");
+
         return Map.of(
                 "order", order,
                 "payment", payment,
@@ -79,7 +109,8 @@ public class AdminPaymentController extends BaseAdminController {
                 "paymentMethod", payment.getBank() != null ? "Transfer " + payment.getBank() : "Transfer",
                 "statusBadge", STATUS_BADGES.getOrDefault(payment.getStatus(), "<span class=\"badge\">Unknown</span>"),
                 "formattedDate", payment.getPaidAt() != null ? payment.getPaidAt().format(DATE_FMT)
-                : (payment.getCreatedAt() != null ? payment.getCreatedAt().format(DATE_FMT) : "-"));
+                : (payment.getCreatedAt() != null ? payment.getCreatedAt().format(DATE_FMT) : "-"),
+                "isPdf", isPdf);
     }
 
     private Map<String, Integer> calculateStats(List<Map<String, Object>> details) {

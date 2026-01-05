@@ -36,8 +36,10 @@
         <div class="order-info-card__badges">
           {% if order.statusPayment == 'PAID' %}
           <span class="order-status-badge order-status-badge--paid">Pembayaran Lunas ({{ payment.bank | default('Transfer') }})</span>
+          {% elseif order.statusPayment == 'FAILED' %}
+          <span class="order-status-badge order-status-badge--failed">Pembayaran Ditolak</span>
           {% else %}
-          <span class="order-status-badge order-status-badge--pending">Menunggu Pembayaran</span>
+          <span class="order-status-badge order-status-badge--pending">Menunggu Konfirmasi</span>
           {% endif %}
           
           {% if order.statusOrder == 'COMPLETED' %}
@@ -135,6 +137,22 @@
           <div class="tracking-timeline">
             {% set currentStatus = shipment.status.name | default('PENDING') %}
             
+            {# Jika pembayaran ditolak, tampilkan status ditolak #}
+            {% if order.statusPayment == 'FAILED' %}
+            <div class="tracking-step tracking-step--completed tracking-step--failed">
+              <div class="tracking-step__indicator">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="10" cy="10" r="10" fill="#EF4444"/>
+                  <path d="M7 7L13 13M13 7L7 13" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="tracking-step__content">
+                <div class="tracking-step__title">Ditolak</div>
+                <div class="tracking-step__time">{{ order.createdAt | default('-') }}</div>
+              </div>
+            </div>
+            {% else %}
+            
             {# Step 1: Menunggu Konfirmasi #}
             <div class="tracking-step tracking-step--completed">
               <div class="tracking-step__indicator">
@@ -150,15 +168,12 @@
             </div>
 
             {# Step 2: Diproses #}
-            <div class="tracking-step {% if currentStatus == 'PROCESSING' or currentStatus == 'SHIPPED' or currentStatus == 'DELIVERED' or currentStatus == 'RECEIVED' %}tracking-step--completed{% endif %}">
+            <div class="tracking-step {% if order.statusPayment == 'PAID' or currentStatus == 'PROCESSING' or currentStatus == 'SHIPPED' or currentStatus == 'DELIVERED' or currentStatus == 'RECEIVED' %}tracking-step--completed{% endif %}">
               <div class="tracking-step__indicator">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  {% if currentStatus == 'PROCESSING' or currentStatus == 'SHIPPED' or currentStatus == 'DELIVERED' or currentStatus == 'RECEIVED' %}
+                  {% if order.statusPayment == 'PAID' or currentStatus == 'PROCESSING' or currentStatus == 'SHIPPED' or currentStatus == 'DELIVERED' or currentStatus == 'RECEIVED' %}
                   <circle cx="10" cy="10" r="10" fill="#10B981"/>
                   <path d="M6 10L9 13L14 7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  {% elseif currentStatus == 'PROCESSING' %}
-                  <circle cx="10" cy="10" r="10" fill="#F59E0B"/>
-                  <circle cx="10" cy="10" r="4" fill="white"/>
                   {% else %}
                   <circle cx="10" cy="10" r="10" fill="#E5E7EB"/>
                   <circle cx="10" cy="10" r="4" fill="white"/>
@@ -167,7 +182,7 @@
               </div>
               <div class="tracking-step__content">
                 <div class="tracking-step__title">Diproses</div>
-                <div class="tracking-step__time">-</div>
+                <div class="tracking-step__time">{% if order.statusPayment == 'PAID' %}{{ order.createdAt | default('-') }}{% else %}-{% endif %}</div>
               </div>
             </div>
 
@@ -233,6 +248,7 @@
                 <div class="tracking-step__time">-</div>
               </div>
             </div>
+            {% endif %}
           </div>
 
           {# Button Selesaikan Pesanan - hanya muncul di status DELIVERED, hilang saat RECEIVED #}

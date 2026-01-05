@@ -81,12 +81,27 @@ public class OrderRepository {
     }
 
     /**
-     * Mencari semua order milik user yang sudah PAID, diurutkan dari yang
-     * terbaru.
+     * Update status order.
+     */
+    public void updateOrderStatus(String orderId, String status) {
+        String sql = "UPDATE orders SET status_order = ? WHERE id = ?";
+
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, status);
+            stmt.setString(2, orderId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Error updating order status: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Mencari semua order milik user, diurutkan dari yang terbaru.
      */
     public java.util.List<Order> findByUserId(String userId) {
         java.util.List<Order> orders = new java.util.ArrayList<>();
-        String sql = "SELECT * FROM orders WHERE user_id = ? AND status_payment = 'PAID' ORDER BY created_at DESC";
+        String sql = "SELECT * FROM orders WHERE user_id = ? ORDER BY created_at DESC";
 
         try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
