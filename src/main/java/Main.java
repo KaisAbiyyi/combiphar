@@ -14,6 +14,7 @@ import com.combiphar.core.controller.ItemController;
 import com.combiphar.core.controller.PaymentController;
 import com.combiphar.core.controller.PaymentUploadController;
 import com.combiphar.core.controller.QualityCheckController;
+import com.combiphar.core.controller.ReportController;
 import com.combiphar.core.middleware.AuthMiddleware;
 import com.combiphar.core.model.Order;
 import com.combiphar.core.repository.AddressRepository;
@@ -79,6 +80,7 @@ public class Main {
         AdminShipmentController adminShipmentController = new AdminShipmentController(shipmentService);
         AdminPaymentController adminPaymentController = new AdminPaymentController();
         AdminUserController adminUserController = new AdminUserController(userRepository);
+        ReportController reportController = new ReportController();
 
         // Initialize Address controller
         AddressController addressController = new AddressController(addressRepository);
@@ -90,7 +92,7 @@ public class Main {
                 itemController, qcController, catalogController, cartController,
                 checkoutController, paymentController, paymentUploadController,
                 adminShipmentController, adminPaymentController, adminUserController,
-                shipmentService, cartRepository, orderService, addressController);
+                shipmentService, cartRepository, orderService, addressController, reportController);
 
         // Run DB migrations (best-effort). This will create carts/cart_items if missing.
         com.combiphar.core.migration.MigrationRunner.runMigrations();
@@ -179,7 +181,8 @@ public class Main {
             ShipmentService shipmentService,
             CartRepository cartRepository,
             OrderService orderService,
-            AddressController addressController) {
+            AddressController addressController,
+            ReportController reportController) {
         // ====== PHASE 3: Customer Catalog Routes ======
         // Home / Catalog page - delegated to CatalogController
         app.get("/", catalogController::showCatalogPage);
@@ -505,14 +508,7 @@ public class Main {
         app.get("/admin/users", adminUserController::showUsers);
         app.post("/admin/users/status", adminUserController::updateStatus);
 
-        // Admin reports page (English route)
-        app.get("/admin/reports", ctx -> {
-            Map<String, Object> model = buildModel(
-                    "Laporan Kinerja",
-                    "reports",
-                    ctx.sessionAttribute("currentUser"));
-            model.put("pageTitle", "Laporan Kinerja");
-            ctx.render("admin/laporan", model);
-        });
+        // Admin reports page (English route) - delegated to controller
+        app.get("/admin/reports", reportController::showReports);
     }
 }

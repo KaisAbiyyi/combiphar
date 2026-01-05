@@ -91,37 +91,26 @@
       <div class="laporan-categories">
         <div class="laporan-categories__header">
           <h3 class="laporan-categories__title">Top Kategori</h3>
-          <a href="#" class="laporan-categories__link">Lihat semua</a>
+          <a href="/admin/category" class="laporan-categories__link">Lihat semua</a>
         </div>
         <div class="laporan-categories__body">
+          {% if topCategories is empty %}
           <div class="category-item">
             <div class="category-item__info">
-              <h4 class="category-item__name">Furnitur Eksekutif</h4>
-              <p class="category-item__meta">Rp 21,4M • 38% revenue</p>
+              <p class="category-item__meta">Belum ada data kategori</p>
             </div>
-            <div class="category-item__badge category-item__badge--success">+18% YoY</div>
           </div>
+          {% else %}
+          {% for category in topCategories %}
           <div class="category-item">
             <div class="category-item__info">
-              <h4 class="category-item__name">Elektronik Refurbished</h4>
-              <p class="category-item__meta">Rp 15,9M • 27% revenue</p>
+              <h4 class="category-item__name">{{ category.name }}</h4>
+              <p class="category-item__meta">{{ category.metaDisplay }}</p>
             </div>
-            <div class="category-item__badge category-item__badge--success">+9% YoY</div>
+            <div class="category-item__badge {{ category.badgeClass }}">{{ category.yoyGrowthDisplay }}</div>
           </div>
-          <div class="category-item">
-            <div class="category-item__info">
-              <h4 class="category-item__name">Perangkat Meeting</h4>
-              <p class="category-item__meta">Rp 8,3M • 14% revenue</p>
-            </div>
-            <div class="category-item__badge category-item__badge--warning">-3% YoY</div>
-          </div>
-          <div class="category-item">
-            <div class="category-item__info">
-              <h4 class="category-item__name">Aksesoris Kerja</h4>
-              <p class="category-item__meta">Rp 5,7M • 10% revenue</p>
-            </div>
-            <div class="category-item__badge category-item__Badge--success category-item__badge--success">+5% YoY</div>
-          </div>
+          {% endfor %}
+          {% endif %}
         </div>
       </div>
     </div>
