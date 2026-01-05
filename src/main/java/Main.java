@@ -2,6 +2,7 @@
 import java.util.Map;
 
 import com.combiphar.core.controller.AddressController;
+import com.combiphar.core.controller.AdminOrderController;
 import com.combiphar.core.controller.AdminPaymentController;
 import com.combiphar.core.controller.AdminShipmentController;
 import com.combiphar.core.controller.AdminUserController;
@@ -16,7 +17,6 @@ import com.combiphar.core.controller.PaymentUploadController;
 import com.combiphar.core.controller.QualityCheckController;
 import com.combiphar.core.controller.ReportController;
 import com.combiphar.core.middleware.AuthMiddleware;
-import com.combiphar.core.model.Order;
 import com.combiphar.core.repository.AddressRepository;
 import com.combiphar.core.repository.CartRepository;
 import com.combiphar.core.repository.ItemRepository;
@@ -79,6 +79,7 @@ public class Main {
         ShipmentService shipmentService = new ShipmentService();
         AdminShipmentController adminShipmentController = new AdminShipmentController(shipmentService);
         AdminPaymentController adminPaymentController = new AdminPaymentController();
+        AdminOrderController adminOrderController = new AdminOrderController();
         AdminUserController adminUserController = new AdminUserController(userRepository);
         ReportController reportController = new ReportController();
 
@@ -91,7 +92,7 @@ public class Main {
         registerRoutes(app, authController, categoryController,
                 itemController, qcController, catalogController, cartController,
                 checkoutController, paymentController, paymentUploadController,
-                adminShipmentController, adminPaymentController, adminUserController,
+                adminShipmentController, adminPaymentController, adminOrderController, adminUserController,
                 shipmentService, cartRepository, orderService, addressController, reportController);
 
         // Run DB migrations (best-effort). This will create carts/cart_items if missing.
@@ -177,6 +178,7 @@ public class Main {
             PaymentUploadController paymentUploadController,
             AdminShipmentController adminShipmentController,
             AdminPaymentController adminPaymentController,
+            AdminOrderController adminOrderController,
             AdminUserController adminUserController,
             ShipmentService shipmentService,
             CartRepository cartRepository,
@@ -434,62 +436,9 @@ public class Main {
         // ====== Customer API - Published Items ======
         app.get("/api/items/published", itemController::getPublishedItems);
 
-        // Admin order page (English route)
-        app.get("/admin/orders", ctx -> {
-            int page = ctx.queryParamAsClass("page", Integer.class).getOrDefault(1);
-
-            Map<String, Object> model = buildModel(
-                    "Monitoring Pesanan",
-                    "orders",
-                    ctx.sessionAttribute("currentUser"));
-            model.put("pageTitle", "Monitoring Pesanan");
-
-            com.combiphar.core.repository.OrderRepository orderRepo = new com.combiphar.core.repository.OrderRepository();
-            com.combiphar.core.repository.PaymentRepository paymentRepo = new com.combiphar.core.repository.PaymentRepository();
-            java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("dd MMM yyyy • HH:mm");
-
-            java.util.List<Order> orders = orderRepo.findAll();
-            java.util.List<Map<String, Object>> orderDetails = new java.util.ArrayList<>();
-            int newOrders = 0, processingOrders = 0, completedOrders = 0;
-
-            for (Order order : orders) {
-                Map<String, Object> detail = new java.util.HashMap<>();
-                detail.put("order", order);
-                detail.put("customerName", com.combiphar.core.util.CustomerUtil.getCustomerName(order.getUserId()));
-                if (order.getCreatedAt() != null) {
-                    detail.put("formattedDate", order.getCreatedAt().format(formatter));
-                }
-                paymentRepo.findByOrderId(order.getId()).ifPresent(payment -> detail.put("payment", payment));
-                orderDetails.add(detail);
-
-                String status = order.getStatusOrder();
-                if ("NEW".equals(status)) {
-                    newOrders++;
-                } else if ("PROCESSING".equals(status)) {
-                    processingOrders++;
-                } else if ("COMPLETED".equals(status)) {
-                    completedOrders++;
-                }
-            }
-
-            // Pagination
-            com.combiphar.core.util.Pagination<Map<String, Object>> pagination
-                    = new com.combiphar.core.util.Pagination<>(orderDetails, page, 5);
-
-            model.put("orders", pagination.getItems());
-            model.put("currentPage", pagination.getCurrentPage());
-            model.put("totalPages", pagination.getTotalPages());
-            model.put("hasNext", pagination.hasNext());
-            model.put("hasPrevious", pagination.hasPrevious());
-
-            Map<String, Integer> stats = new java.util.HashMap<>();
-            stats.put("total", orderDetails.size());
-            stats.put("newOrders", newOrders);
-            stats.put("processing", processingOrders);
-            stats.put("completed", completedOrders);
-            model.put("stats", stats);
-            ctx.render("admin/order", model);
-        });
+        // Admin order page - delegated to controller
+        app.get("/admin/orders", adminOrderController::showOrders);
+        app.get("/api/admin/orders/{id}/items", adminOrderController::getOrderItems);
 
         // Admin payment page (English route) - delegated to controller
         app.get("/admin/payments", adminPaymentController::showPaymentPage);

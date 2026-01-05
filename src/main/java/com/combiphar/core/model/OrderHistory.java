@@ -3,11 +3,25 @@ package com.combiphar.core.model;
 import java.math.BigDecimal;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 
 /**
  * DTO untuk menampilkan order history dengan detail items.
  */
 public class OrderHistory {
+
+    private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("dd MMM yyyy");
+    private static final Map<Shipment.Status, String> SHIPMENT_BADGE = Map.of(
+            Shipment.Status.RECEIVED, "selesai", Shipment.Status.DELIVERED, "selesai",
+            Shipment.Status.SHIPPED, "processing", Shipment.Status.PROCESSING, "processing");
+    private static final Map<Shipment.Status, String> SHIPMENT_TEXT = Map.of(
+            Shipment.Status.RECEIVED, "Pesanan Selesai", Shipment.Status.DELIVERED, "Paket Terkirim",
+            Shipment.Status.SHIPPED, "Dalam Perjalanan", Shipment.Status.PROCESSING, "Diproses");
+    private static final Map<String, String> ORDER_BADGE = Map.of(
+            "READY", "selesai", "COMPLETED", "selesai", "CANCELLED", "cancelled");
+    private static final Map<String, String> ORDER_TEXT = Map.of(
+            "NEW", "Diproses", "PROCESSING", "Diproses", "READY", "Siap Dikirim",
+            "COMPLETED", "Selesai", "CANCELLED", "Dibatalkan");
 
     private final Order order;
     private final List<OrderItem> items;
@@ -30,8 +44,7 @@ public class OrderHistory {
     }
 
     public String getFormattedDate() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy");
-        return order.getCreatedAt().format(formatter);
+        return order.getCreatedAt().format(DATE_FMT);
     }
 
     public String getFirstItemName() {
@@ -39,81 +52,35 @@ public class OrderHistory {
     }
 
     public String getItemCount() {
-        int count = items.size();
-        if (count > 1) {
-            return " (+" + (count - 1) + " item)";
-        }
-        return "";
+        return items.size() > 1 ? " (+" + (items.size() - 1) + " item)" : "";
     }
 
     public String getStatusBadge() {
-        if ("PENDING".equals(order.getStatusPayment())) {
+        String paymentStatus = order.getStatusPayment();
+        if ("PENDING".equals(paymentStatus)) {
             return "pending";
         }
-        if ("FAILED".equals(order.getStatusPayment())) {
+        if ("FAILED".equals(paymentStatus)) {
             return "failed";
         }
-        if (shipment != null && "PAID".equals(order.getStatusPayment())) {
-            Shipment.Status status = shipment.getStatus();
-            switch (status) {
-                case RECEIVED:
-                case DELIVERED:
-                    return "selesai";
-                case SHIPPED:
-                case PROCESSING:
-                    return "processing";
-                default:
-                    return "pending";
-            }
+        if (shipment != null && "PAID".equals(paymentStatus)) {
+            return SHIPMENT_BADGE.getOrDefault(shipment.getStatus(), "pending");
         }
-        String statusOrder = order.getStatusOrder();
-        switch (statusOrder) {
-            case "READY":
-            case "COMPLETED":
-                return "selesai";
-            case "CANCELLED":
-                return "cancelled";
-            default:
-                return "pending";
-        }
+        return ORDER_BADGE.getOrDefault(order.getStatusOrder(), "pending");
     }
 
     public String getStatusText() {
-        if ("PENDING".equals(order.getStatusPayment())) {
+        String paymentStatus = order.getStatusPayment();
+        if ("PENDING".equals(paymentStatus)) {
             return "Menunggu Konfirmasi";
         }
-        if ("FAILED".equals(order.getStatusPayment())) {
+        if ("FAILED".equals(paymentStatus)) {
             return "Ditolak";
         }
-        if (shipment != null && "PAID".equals(order.getStatusPayment())) {
-            Shipment.Status status = shipment.getStatus();
-            switch (status) {
-                case RECEIVED:
-                    return "Pesanan Selesai";
-                case DELIVERED:
-                    return "Paket Terkirim";
-                case SHIPPED:
-                    return "Dalam Perjalanan";
-                case PROCESSING:
-                    return "Diproses";
-                default:
-                    return "Menunggu Konfirmasi";
-            }
+        if (shipment != null && "PAID".equals(paymentStatus)) {
+            return SHIPMENT_TEXT.getOrDefault(shipment.getStatus(), "Menunggu Konfirmasi");
         }
-        String statusOrder = order.getStatusOrder();
-        switch (statusOrder) {
-            case "NEW":
-            case "PROCESSING":
-                return "Diproses";
-            case "READY":
-                return "Siap Dikirim";
-            case "COMPLETED":
-                return "Selesai";
-            case "CANCELLED":
-                return "Dibatalkan";
-            default:
-                return statusOrder;
-        }
+        return ORDER_TEXT.getOrDefault(order.getStatusOrder(), order.getStatusOrder());
     }
 
     public String getFormattedPrice() {

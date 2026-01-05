@@ -192,6 +192,37 @@
   padding: 2rem;
   color: #6b7280;
 }
+.product-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.product-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 0.75rem;
+  background: #f9fafb;
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
+}
+.product-item__info {
+  flex: 1;
+}
+.product-item__name {
+  font-weight: 500;
+  color: #111827;
+  margin-bottom: 0.25rem;
+}
+.product-item__quantity {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+.product-item__subtotal {
+  font-weight: 600;
+  color: #9333ea;
+  white-space: nowrap;
+}
 </style>
 
 <script>
@@ -216,34 +247,77 @@ function filterTable() {
 
 function showDetail(orderId, orderNumber, customerName, bank, proof, status) {
   const detailBody = document.getElementById('orderDetailBody');
+  
+  // Show loading state
   detailBody.innerHTML = `
-    <div class="order-detail-info">
-      <div class="order-detail-info__label">Order #</div>
-      <div class="order-detail-info__value order-detail-info__value--primary">${orderNumber}</div>
+    <div style="text-align: center; padding: 2rem; color: #6b7280;">
+      <p>Memuat detail pesanan...</p>
     </div>
-    
-    <div class="order-detail-section">
-      <div class="order-detail-row">
-        <span class="order-detail-row__label">Customer:</span>
-        <span class="order-detail-row__value">${customerName || 'Customer'}</span>
-      </div>
-      <div class="order-detail-row">
-        <span class="order-detail-row__label">Bank:</span>
-        <span class="order-detail-row__value">${bank || '-'}</span>
-      </div>
-      <div class="order-detail-row">
-        <span class="order-detail-row__label">Status:</span>
-        <span class="order-detail-row__value">${status || 'PENDING'}</span>
-      </div>
-    </div>
-    
-    ${proof ? `
-    <div class="order-detail-section">
-      <div class="order-detail-row__label" style="margin-bottom: 0.5rem;">Bukti Transfer:</div>
-      <img src="${proof}" alt="Bukti Transfer" style="width: 100%; border-radius: 0.5rem; border: 1px solid #e5e7eb;">
-    </div>
-    ` : ''}
   `;
+  
+  // Fetch order items
+  fetch('/api/admin/orders/' + orderId + '/items')
+    .then(response => response.json())
+    .then(items => {
+      let productsHtml = '';
+      if (items && items.length > 0) {
+        productsHtml = `
+          <div class="order-detail-section">
+            <div class="order-detail-row__label" style="margin-bottom: 0.75rem;">Produk yang dibeli:</div>
+            <div class="product-list">
+              ${items.map(item => `
+                <div class="product-item">
+                  <div class="product-item__info">
+                    <div class="product-item__name">${item.name}</div>
+                    <div class="product-item__quantity">${item.quantity}x @ Rp ${new Intl.NumberFormat('id-ID').format(item.unitPrice)}</div>
+                  </div>
+                  <div class="product-item__subtotal">Rp ${new Intl.NumberFormat('id-ID').format(item.subtotal)}</div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+      
+      detailBody.innerHTML = `
+        <div class="order-detail-info">
+          <div class="order-detail-info__label">Order #</div>
+          <div class="order-detail-info__value order-detail-info__value--primary">${orderNumber}</div>
+        </div>
+        
+        <div class="order-detail-section">
+          <div class="order-detail-row">
+            <span class="order-detail-row__label">Customer:</span>
+            <span class="order-detail-row__value">${customerName || 'Customer'}</span>
+          </div>
+          <div class="order-detail-row">
+            <span class="order-detail-row__label">Bank:</span>
+            <span class="order-detail-row__value">${bank || '-'}</span>
+          </div>
+          <div class="order-detail-row">
+            <span class="order-detail-row__label">Status:</span>
+            <span class="order-detail-row__value">${status || 'PENDING'}</span>
+          </div>
+        </div>
+        
+        ${productsHtml}
+        
+        ${proof ? `
+        <div class="order-detail-section">
+          <div class="order-detail-row__label" style="margin-bottom: 0.5rem;">Bukti Transfer:</div>
+          <img src="${proof}" alt="Bukti Transfer" style="width: 100%; border-radius: 0.5rem; border: 1px solid #e5e7eb;">
+        </div>
+        ` : ''}
+      `;
+    })
+    .catch(error => {
+      console.error('Error fetching order items:', error);
+      detailBody.innerHTML = `
+        <div style="text-align: center; padding: 2rem; color: #ef4444;">
+          <p>Gagal memuat detail pesanan</p>
+        </div>
+      `;
+    });
 }
 </script>
 {% endblock %}
