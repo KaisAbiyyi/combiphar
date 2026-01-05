@@ -24,7 +24,7 @@
 }
 
 .stat-card {
-  background: #FFFFFF;
+  background: #ffffff;
   border-radius: 1rem;
   padding: 1.25rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -32,7 +32,8 @@
 }
 .stat-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 .stat-card__header {
   margin-bottom: 1rem;
@@ -40,7 +41,7 @@
 .stat-card__label {
   font-size: 0.75rem;
   font-weight: 600;
-  color: #4B5563;
+  color: #4b5563;
   letter-spacing: 0.5px;
 }
 .stat-card__body {
@@ -51,7 +52,7 @@
 .stat-card__value {
   font-size: 1.875rem;
   font-weight: 700;
-  color: #1F2937;
+  color: #1f2937;
   margin: 0;
 }
 .stat-card__change {
@@ -62,16 +63,16 @@
   font-weight: 500;
 }
 .stat-card__change--up {
-  color: #10B981;
+  color: #10b981;
 }
 .stat-card__change--up .stat-card__arrow {
-  color: #10B981;
+  color: #10b981;
 }
 .stat-card__change--down {
-  color: #EF4444;
+  color: #ef4444;
 }
 .stat-card__change--down .stat-card__arrow {
-  color: #EF4444;
+  color: #ef4444;
 }
 .stat-card__arrow {
   width: 16px;
@@ -79,13 +80,13 @@
 }
 .stat-card__footer {
   font-size: 0.75rem;
-  color: #6B7280;
+  color: #6b7280;
   margin: 0;
   line-height: 1.4;
 }
 
 .chart-card {
-  background: #FFFFFF;
+  background: #ffffff;
   border-radius: 1rem;
   padding: 1.5rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -97,12 +98,12 @@
 .chart-card__title {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #1F2937;
+  color: #1f2937;
   margin: 0 0 0.25rem 0;
 }
 .chart-card__subtitle {
   font-size: 0.875rem;
-  color: #4B5563;
+  color: #4b5563;
   margin: 0;
 }
 .chart-card__body {
@@ -115,24 +116,24 @@
   align-items: center;
   justify-content: space-between;
   padding-bottom: 1rem;
-  border-bottom: 1px solid #E5E7EB;
+  border-bottom: 1px solid #e5e7eb;
 }
 .chart-card__download-btn {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 1rem;
-  background: #F3E8FF;
-  border: 1px solid #E9D5FF;
+  background: #f3e8ff;
+  border: 1px solid #e9d5ff;
   border-radius: 0.5rem;
-  color: #9333EA;
+  color: #9333ea;
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 150ms ease;
 }
 .chart-card__download-btn:hover {
-  background: #E9D5FF;
+  background: #e9d5ff;
 }
 .chart-card__download-btn svg {
   width: 16px;
@@ -154,29 +155,30 @@
   border-radius: 9999px;
 }
 .chart-legend__dot--week1 {
-  background: linear-gradient(135deg, #F472B6 0%, #EC4899 100%);
+  background: linear-gradient(135deg, #f472b6 0%, #ec4899 100%);
 }
 .chart-legend__dot--week2 {
-  background: linear-gradient(135deg, #A855F7 0%, #9333EA 100%);
+  background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);
 }
 .chart-legend__dot--week3 {
-  background: linear-gradient(135deg, #818CF8 0%, #6366F1 100%);
+  background: linear-gradient(135deg, #818cf8 0%, #6366f1 100%);
 }
 .chart-legend__dot--week4 {
-  background: #E5E7EB;
+  background: #e5e7eb;
 }
 .chart-legend__label {
   font-size: 0.875rem;
-  color: #4B5563;
+  color: #4b5563;
   font-weight: 500;
 }
 
 .chart-canvas {
-  background: linear-gradient(135deg, #7C3AED 0%, #A855F7 50%, #EC4899 100%);
+  background: #ffffff;
   border-radius: 0.75rem;
-  padding: 1.5rem;
-  min-height: 280px;
+  padding: 1rem 0.5rem 0.5rem 3rem;
+  min-height: 300px;
   position: relative;
+  border: 1px solid #e5e7eb;
 }
 
 .chart-bars {
@@ -217,7 +219,7 @@
 }
 
 .operations-card {
-  background: #FFFFFF;
+  background: #ffffff;
   border-radius: 1rem;
   padding: 1.5rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -232,7 +234,7 @@
 .operations-card__title {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #1F2937;
+  color: #1f2937;
   margin: 0;
 }
 .operations-card__body {
@@ -248,9 +250,9 @@
   font-weight: 600;
 }
 .operations-badge--best {
-  background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
-  color: #92400E;
-  border: 1px solid #FDE68A;
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  color: #92400e;
+  border: 1px solid #fde68a;
 }
 
 .operation-item {
@@ -268,31 +270,31 @@
   flex-shrink: 0;
 }
 .operation-badge--gudang {
-  background: #DBEAFE;
-  color: #1E40AF;
+  background: #dbeafe;
+  color: #1e40af;
 }
 .operation-badge--qc {
-  background: #D1FAE5;
-  color: #065F46;
+  background: #d1fae5;
+  color: #065f46;
 }
 .operation-badge--logistik {
-  background: #FEF3C7;
-  color: #92400E;
+  background: #fef3c7;
+  color: #92400e;
 }
 .operation-badge--alert {
-  background: #FEE2E2;
-  color: #991B1B;
+  background: #fee2e2;
+  color: #991b1b;
 }
 
 .operation-text {
   font-size: 0.875rem;
-  color: #4B5563;
+  color: #4b5563;
   line-height: 1.5;
   margin: 0;
 }
 
 .transactions-card {
-  background: #FFFFFF;
+  background: #ffffff;
   border-radius: 1rem;
   padding: 1.5rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -306,12 +308,12 @@
 .transactions-card__title {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #1F2937;
+  color: #1f2937;
   margin: 0 0 0.25rem 0;
 }
 .transactions-card__subtitle {
   font-size: 0.875rem;
-  color: #4B5563;
+  color: #4b5563;
   margin: 0;
 }
 .transactions-card__actions {
@@ -328,25 +330,25 @@
   border-collapse: collapse;
 }
 .table__head {
-  border-bottom: 1px solid #E5E7EB;
+  border-bottom: 1px solid #e5e7eb;
 }
 .table__header {
   text-align: left;
   padding: 0.75rem 1rem;
   font-size: 0.75rem;
   font-weight: 600;
-  color: #4B5563;
+  color: #4b5563;
   letter-spacing: 0.5px;
 }
 .table__row {
-  border-bottom: 1px solid #F3F4F6;
+  border-bottom: 1px solid #f3f4f6;
   transition: background-color 150ms ease;
 }
 .table__row:hover {
-  background-color: #F9FAFB;
+  background-color: #f9fafb;
 }
 .table__cell {
   padding: 1rem;
   font-size: 0.875rem;
-  color: #1F2937;
+  color: #1f2937;
 }

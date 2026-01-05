@@ -198,122 +198,104 @@
                   stroke-linejoin="round"
                 />
               </svg>
-              Rp 6.2M data-rata
+              {{ averageRevenueDisplay | default("Rp 0") }} rata-rata
             </button>
           </div>
 
-          {# Simplified chart visualization #}
-          <div class="chart-canvas">
-            <div class="chart-bars">
-              <div class="chart-bar-group">
-                <div
-                  class="chart-bar chart-bar--week1"
-                  style="height: 70%;"
-                ></div>
-                <div
-                  class="chart-bar chart-bar--week2"
-                  style="height: 85%;"
-                ></div>
-                <div
-                  class="chart-bar chart-bar--week3"
-                  style="height: 60%;"
-                ></div>
-                <div
-                  class="chart-bar chart-bar--week4"
-                  style="height: 75%;"
-                ></div>
-              </div>
-              <div class="chart-bar-group">
-                <div
-                  class="chart-bar chart-bar--week1"
-                  style="height: 65%;"
-                ></div>
-                <div
-                  class="chart-bar chart-bar--week2"
-                  style="height: 90%;"
-                ></div>
-                <div
-                  class="chart-bar chart-bar--week3"
-                  style="height: 55%;"
-                ></div>
-                <div
-                  class="chart-bar chart-bar--week4"
-                  style="height: 80%;"
-                ></div>
-              </div>
-              <div class="chart-bar-group">
-                <div
-                  class="chart-bar chart-bar--week1"
-                  style="height: 75%;"
-                ></div>
-                <div
-                  class="chart-bar chart-bar--week2"
-                  style="height: 80%;"
-                ></div>
-                <div
-                  class="chart-bar chart-bar--week3"
-                  style="height: 65%;"
-                ></div>
-                <div
-                  class="chart-bar chart-bar--week4"
-                  style="height: 85%;"
-                ></div>
-              </div>
-              <div class="chart-bar-group">
-                <div
-                  class="chart-bar chart-bar--week1"
-                  style="height: 80%;"
-                ></div>
-                <div
-                  class="chart-bar chart-bar--week2"
-                  style="height: 75%;"
-                ></div>
-                <div
-                  class="chart-bar chart-bar--week3"
-                  style="height: 70%;"
-                ></div>
-                <div
-                  class="chart-bar chart-bar--week4"
-                  style="height: 90%;"
-                ></div>
-              </div>
-              <div class="chart-bar-group">
-                <div
-                  class="chart-bar chart-bar--week1"
-                  style="height: 60%;"
-                ></div>
-                <div
-                  class="chart-bar chart-bar--week2"
-                  style="height: 70%;"
-                ></div>
-                <div
-                  class="chart-bar chart-bar--week3"
-                  style="height: 75%;"
-                ></div>
-                <div
-                  class="chart-bar chart-bar--week4"
-                  style="height: 65%;"
-                ></div>
-              </div>
-              <div class="chart-bar-group">
-                <div
-                  class="chart-bar chart-bar--week1"
-                  style="height: 85%;"
-                ></div>
-                <div
-                  class="chart-bar chart-bar--week2"
-                  style="height: 80%;"
-                ></div>
-                <div
-                  class="chart-bar chart-bar--week3"
-                  style="height: 60%;"
-                ></div>
-                <div
-                  class="chart-bar chart-bar--week4"
-                  style="height: 95%;"
-                ></div>
-              </div>
+          {# SVG Chart with Real Data - Matching provided design #}
+          <div class="chart-canvas" style="position: relative; padding: 1rem 0.5rem 0.5rem 3rem;">
+            {% if daysData is not empty %}
+            
+            {# Y-axis labels - All values from 0 to 10 Jt #}
+            <div style="position: absolute; left: 0; top: 1rem; bottom: 3rem; width: 2.5rem; display: flex; flex-direction: column; justify-content: space-between; font-size: 11px; color: #9CA3AF; text-align: right; padding-right: 0.5rem;">
+              <span>10 Jt</span>
+              <span>9 Jt</span>
+              <span>8 Jt</span>
+              <span>7 Jt</span>
+              <span>6 Jt</span>
+              <span>5 Jt</span>
+              <span>4 Jt</span>
+              <span>3 Jt</span>
+              <span>2 Jt</span>
+              <span>1 Jt</span>
+              <span>0 Jt</span>
             </div>
+            
+            <svg
+              class="weekly-chart"
+              width="100%"
+              height="280"
+              viewBox="0 0 560 260"
+              preserveAspectRatio="xMidYMid meet"
+              style="overflow: visible;"
+            >
+              {# Horizontal grid lines for each Jt value #}
+              <line x1="0" y1="10" x2="560" y2="10" stroke="#E5E7EB" stroke-width="1" opacity="0.2"/>
+              <line x1="0" y1="30" x2="560" y2="30" stroke="#E5E7EB" stroke-width="1" opacity="0.2"/>
+              <line x1="0" y1="50" x2="560" y2="50" stroke="#E5E7EB" stroke-width="1" opacity="0.2"/>
+              <line x1="0" y1="70" x2="560" y2="70" stroke="#E5E7EB" stroke-width="1" opacity="0.2"/>
+              <line x1="0" y1="90" x2="560" y2="90" stroke="#E5E7EB" stroke-width="1" opacity="0.2"/>
+              <line x1="0" y1="110" x2="560" y2="110" stroke="#E5E7EB" stroke-width="1" opacity="0.2"/>
+              <line x1="0" y1="130" x2="560" y2="130" stroke="#E5E7EB" stroke-width="1" opacity="0.2"/>
+              <line x1="0" y1="150" x2="560" y2="150" stroke="#E5E7EB" stroke-width="1" opacity="0.2"/>
+              <line x1="0" y1="170" x2="560" y2="170" stroke="#E5E7EB" stroke-width="1" opacity="0.2"/>
+              <line x1="0" y1="190" x2="560" y2="190" stroke="#E5E7EB" stroke-width="1" opacity="0.2"/>
+              <line x1="0" y1="210" x2="560" y2="210" stroke="#E5E7EB" stroke-width="1" opacity="0.4"/>
+              
+              {# Bar groups for each day #}
+              {% for day in daysData %}
+              <g class="day-group" data-day="{{ day.dayName }}">
+                {# 4 bars per day (4 weeks) #}
+                {% for week in day.weeks %}
+                  {% set barX = day.groupX + ((week.weekIndex - 1) * 18) %}
+                  {% set barY = 210 - week.barHeight %}
+                  {% set weekColors = ["#EC4899", "#A855F7", "#6366F1", "#D1D5DB"] %}
+                  {% set barColor = weekColors[week.weekIndex - 1] %}
+                  
+                  <rect
+                    class="chart-bar"
+                    x="{{ barX }}"
+                    y="{{ barY }}"
+                    width="16"
+                    height="{{ week.barHeight }}"
+                    rx="6"
+                    fill="{{ barColor }}"
+                    opacity="0.9"
+                    style="transition: all 0.3s ease; cursor: pointer;"
+                    onmouseover="showWeeklyTooltip(evt, '{{ week.revenueDisplay }}', '{{ day.dayName }}', 'Minggu {{ week.weekIndex }}')"
+                    onmouseout="hideWeeklyTooltip()"
+                  />
+                {% endfor %}
+                
+                {# Day label with background for better readability #}
+                <rect
+                  x="{{ day.labelX - 15 }}"
+                  y="225"
+                  width="30"
+                  height="18"
+                  rx="4"
+                  fill="#F9FAFB"
+                  opacity="0.8"
+                />
+                <text
+                  x="{{ day.labelX }}"
+                  y="237"
+                  text-anchor="middle"
+                  fill="#374151"
+                  font-size="12"
+                  font-weight="600"
+                >{{ day.dayName }}</text>
+              </g>
+              {% endfor %}
+            </svg>
+            
+            {# Tooltip #}
+            <div id="weeklyTooltip" style="position: absolute; background: rgba(0,0,0,0.9); color: white; padding: 8px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; pointer-events: none; opacity: 0; transition: opacity 0.2s; z-index: 1000; white-space: nowrap;"></div>
+            {% else %}
+            <div class="chart-empty" style="text-align: center; padding: 60px 0; color: #9CA3AF;">
+              <p>Tidak ada data pendapatan dalam 4 minggu terakhir</p>
+            </div>
+            {% endif %}
           </div>
         </div>
       </div>
@@ -407,4 +389,45 @@
     </div>
   </div>
 </div>
+
+<script>
+  // Tooltip functions for weekly chart
+  function showWeeklyTooltip(evt, revenue, day, week) {
+    const tooltip = document.getElementById('weeklyTooltip');
+    const rect = evt.target;
+    const svg = rect.closest('svg');
+    const container = svg.parentElement;
+    const containerRect = container.getBoundingClientRect();
+    const rectBBox = rect.getBBox();
+    
+    tooltip.innerHTML = revenue + '<br><small style="font-size: 11px; opacity: 0.8;">' + day + ' - ' + week + '</small>';
+    tooltip.style.opacity = '1';
+    
+    // Position tooltip above the bar
+    const svgPoint = svg.createSVGPoint();
+    svgPoint.x = rectBBox.x + rectBBox.width / 2;
+    svgPoint.y = rectBBox.y;
+    const screenPoint = svgPoint.matrixTransform(svg.getScreenCTM());
+    
+    tooltip.style.left = (screenPoint.x - containerRect.left - tooltip.offsetWidth / 2) + 'px';
+    tooltip.style.top = (screenPoint.y - containerRect.top - 45) + 'px';
+    
+    // Highlight bar on hover
+    rect.style.opacity = '0.8';
+    rect.style.transform = 'scaleY(1.05)';
+    rect.style.transformOrigin = 'bottom';
+  }
+  
+  function hideWeeklyTooltip() {
+    const tooltip = document.getElementById('weeklyTooltip');
+    tooltip.style.opacity = '0';
+    
+    // Reset all bars
+    document.querySelectorAll('.chart-bar').forEach(bar => {
+      bar.style.opacity = '1';
+      bar.style.transform = 'none';
+    });
+  }
+</script>
+
 {% endblock %}

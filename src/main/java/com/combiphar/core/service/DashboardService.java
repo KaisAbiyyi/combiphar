@@ -480,4 +480,133 @@ public class DashboardService {
 
         return result;
     }
+
+    /**
+     * Get weekly revenue trend for the last 4 weeks across 7 days.
+     * Returns revenue data grouped by day of week for the last 4 weeks.
+     * 
+     * @return Map with weekly revenue data and average
+     */
+    public Map<String, Object> getWeeklyRevenueTrend() {
+        Map<String, Object> result = new HashMap<>();
+        List<Map<String, Object>> daysData = new ArrayList<>();
+        BigDecimal totalRevenue = BigDecimal.ZERO;
+        BigDecimal maxRevenue = BigDecimal.ZERO;
+        int totalDays = 0;
+
+        // Query to get daily revenue for the last 28 days (4 weeks)
+        String sql = """
+                    SELECT
+                        DATE(created_at) as date,
+                        DAYOFWEEK(created_at) as day_of_week,
+                        FLOOR(DATEDIFF(CURDATE(), DATE(created_at)) / 7) as weeks_ago,
+                        SUM(total_price) as revenue
+                    FROM orders
+                    WHERE status_payment = 'PAID'
+                    AND created_at >= DATE_SUB(CURDATE(), INTERVAL 28 DAY)
+                    GROUP BY DATE(created_at), DAYOFWEEK(created_at), weeks_ago
+                    ORDER BY date ASC
+                """;
+
+        try (Connection conn = DatabaseConfig.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery()) {
+
+            // Organize by day of week (1=Sunday to 7=Saturday), then by weeks ago
+            Map<Integer, Map<Integer, Map<String, Object>>> dataByDay = new HashMap<>();
+
+            while (rs.next()) {
+                int dayOfWeek = rs.getInt("day_of_week");
+                int weeksAgo = rs.getInt("weeks_ago");
+                BigDecimal revenue = rs.getBigDecimal("revenue");
+                if (revenue == null)
+                    revenue = BigDecimal.ZERO;
+
+                Map<String, Object> dayData = new HashMap<>();
+                dayData.put("date", rs.getString("date"));
+                dayData.put("revenue", revenue);
+                dayData.put("revenueDisplay", formatCurrency(revenue));
+                dayData.put("weeksAgo", weeksAgo);
+
+                dataByDay.computeIfAbsent(dayOfWeek, k -> new HashMap<>()).put(weeksAgo, dayData);
+
+                totalRevenue = totalRevenue.add(revenue);
+                totalDays++;
+
+                if (revenue.compareTo(maxRevenue) > 0) {
+                    maxRevenue = revenue;
+                }
+            }
+
+            // Build structured data for 7 days, each with 4 weeks
+            String[] dayNames = { "Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu" };
+            int barSpacing = 18;
+            int groupWidth = 72;
+            int barWidth = 16;
+            int chartWidth = 560;
+            int chartHeight = 210;
+            int maxBarHeight = 200;
+
+            for (int dayOfWeek = 1; dayOfWeek <= 7; dayOfWeek++) {
+                Map<String, Object> dayGroup = new HashMap<>();
+                dayGroup.put("dayName", dayNames[dayOfWeek - 1]);
+
+                List<Map<String, Object>> weeks = new ArrayList<>();
+                Map<Integer, Map<String, Object>> dayWeeks = dataByDay.getOrDefault(dayOfWeek, new HashMap<>());
+
+                // Generate data for 4 weeks (3=oldest to 0=current week)
+                for (int weekIdx = 3; weekIdx >= 0; weekIdx--) {
+                    Map<String, Object> weekData = new HashMap<>();
+                    Map<String, Object> data = dayWeeks.get(weekIdx);
+
+                    if (data != null) {
+                        BigDecimal revenue = (BigDecimal) data.get("revenue");
+                        int barHeight = maxRevenue.compareTo(BigDecimal.ZERO) > 0
+                                ? revenue.multiply(new BigDecimal(maxBarHeight))
+                                        .divide(maxRevenue, 0, RoundingMode.HALF_UP).intValue()
+                                : 0;
+
+                        weekData.put("revenue", revenue);
+                        weekData.put("revenueDisplay", data.get("revenueDisplay"));
+                        weekData.put("barHeight", barHeight);
+                        weekData.put("hasData", true);
+                    } else {
+                        weekData.put("revenue", BigDecimal.ZERO);
+                        weekData.put("revenueDisplay", "Rp 0");
+                        weekData.put("barHeight", 0);
+                        weekData.put("hasData", false);
+                    }
+
+                    weekData.put("weekIndex", 3 - weekIdx + 1); // 1-4
+                    weeks.add(weekData);
+                }
+
+                // Calculate X positions for this day group
+                int groupX = (dayOfWeek - 1) * (chartWidth / 7) + 20;
+                int labelX = groupX + groupWidth / 2 - 10;
+
+                dayGroup.put("weeks", weeks);
+                dayGroup.put("groupX", groupX);
+                dayGroup.put("labelX", labelX);
+
+                daysData.add(dayGroup);
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error fetching weekly revenue trend: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        // Calculate average
+        BigDecimal average = BigDecimal.ZERO;
+        if (totalDays > 0) {
+            average = totalRevenue.divide(new BigDecimal(totalDays), 2, RoundingMode.HALF_UP);
+        }
+
+        result.put("daysData", daysData);
+        result.put("averageRevenue", average);
+        result.put("averageRevenueDisplay", formatCurrency(average));
+
+        return result;
+    }
 }

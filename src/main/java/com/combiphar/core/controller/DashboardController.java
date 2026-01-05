@@ -39,6 +39,10 @@ public class DashboardController extends BaseAdminController {
         List<Map<String, Object>> recentTransactions = dashboardService.getRecentTransactions();
         model.put("recentTransactions", recentTransactions);
 
+        // Get weekly revenue trend
+        Map<String, Object> weeklyTrend = dashboardService.getWeeklyRevenueTrend();
+        model.putAll(weeklyTrend);
+
         // Last update timestamp
         String lastUpdate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd MMMM yyyy"));
         model.put("lastUpdate", lastUpdate);
