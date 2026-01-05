@@ -75,7 +75,8 @@ public class Main {
 
         // Initialize Phase 5 controllers (Payment & Shipment)
         PaymentController paymentController = new PaymentController(paymentService, orderService);
-        PaymentUploadController paymentUploadController = new PaymentUploadController(fileUploadService, orderService, cartRepository);
+        PaymentUploadController paymentUploadController = new PaymentUploadController(fileUploadService, orderService,
+                cartRepository);
         ShipmentService shipmentService = new ShipmentService();
         AdminShipmentController adminShipmentController = new AdminShipmentController(shipmentService);
         AdminPaymentController adminPaymentController = new AdminPaymentController();
@@ -95,7 +96,8 @@ public class Main {
                 adminShipmentController, adminPaymentController, adminOrderController, adminUserController,
                 shipmentService, cartRepository, orderService, addressController, reportController);
 
-        // Run DB migrations (best-effort). This will create carts/cart_items if missing.
+        // Run DB migrations (best-effort). This will create carts/cart_items if
+        // missing.
         com.combiphar.core.migration.MigrationRunner.runMigrations();
 
         app.start(PORT);
@@ -309,8 +311,8 @@ public class Main {
 
             if (user != null) {
                 String userId = ((com.combiphar.core.model.User) user).getId();
-                java.util.List<com.combiphar.core.model.OrderHistory> orderHistory
-                        = orderService.getOrderHistory(userId, shipmentService);
+                java.util.List<com.combiphar.core.model.OrderHistory> orderHistory = orderService
+                        .getOrderHistory(userId, shipmentService);
                 model.put("orderHistory", orderHistory);
             }
 

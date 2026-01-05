@@ -25,22 +25,20 @@ public class ReportController extends BaseAdminController {
      */
     public void showReports(Context ctx) {
         Map<String, Object> model = buildBaseModel(ctx);
-        
+
         // Page metadata
         model.put("pageTitle", "Laporan Kinerja");
         model.put("activePage", "reports");
         model.put("activeMenu", "Laporan Kinerja");
-        
+
+        // Get dashboard statistics
+        Map<String, Object> dashboardStats = reportService.getDashboardStats();
+        model.putAll(dashboardStats);
+
         // Get top categories data
         List<Map<String, Object>> topCategories = reportService.getTopCategories(4);
         model.put("topCategories", topCategories);
-        
-        // Calculate total revenue from top categories
-        double totalRevenue = topCategories.stream()
-                .mapToDouble(cat -> ((Number) cat.get("totalRevenue")).doubleValue())
-                .sum();
-        model.put("totalRevenue", totalRevenue);
-        
+
         ctx.render("admin/laporan", model);
     }
 }

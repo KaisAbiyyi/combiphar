@@ -1,31 +1,30 @@
-{% extends "admin/layout" %}
-
-{% block content %}
+{% extends "admin/layout" %} {% block content %}
 <div class="admin-laporan">
   {# Header Section with Stats #}
   <div class="admin-laporan__header">
     <div class="stat-card stat-card--compact">
       <div class="stat-card__label">REVENUE</div>
-      <div class="stat-card__value">Rp 58,2M</div>
-      <div class="stat-card__description">+24% vs Q2 2025</div>
+      <div class="stat-card__value">{{ totalRevenueDisplay | default("Rp 0") }}</div>
+      <div class="stat-card__description">{{ revenueGrowthDisplay | default("+0%") }} vs Q2 2025</div>
     </div>
 
     <div class="stat-card stat-card--compact">
       <div class="stat-card__label">UNIT TERJUAL</div>
-      <div class="stat-card__value">612</div>
-      <div class="stat-card__description">Rata-rata 68 unit/bulan</div>
+      <div class="stat-card__value">{{ totalUnitsDisplay | default("0") }}</div>
+      <div class="stat-card__description">Rata-rata {{ avgUnitsPerMonth | default("0") }} unit/bulan</div>
     </div>
 
     <div class="stat-card stat-card--compact">
       <div class="stat-card__label">GMV PER ORDER</div>
-      <div class="stat-card__value">Rp 1,02M</div>
-      <div class="stat-card__description">Naik 11% q/q</div>
+      <div class="stat-card__value">{{ gmvPerOrderDisplay | default("Rp 0") }}</div>
+      <div class="stat-card__description">Dari {{ totalOrders | default("0") }} order</div>
     </div>
 
     <div class="stat-card stat-card--compact">
       <div class="stat-card__label">MARGIN BERSIH</div>
-      <div class="stat-card__value">36%</div>
-      <div class="stat-card__description stat-card__description--success">+4 ppt dari target</div>
+      <div class="stat-card__value">{{ netMarginDisplay | default("0%") }}</div>
+      <div class="stat-card__description stat-card__description--success">+4 ppt
+        dari target</div>
     </div>
   </div>
 
@@ -47,41 +46,239 @@
         <div class="laporan-chart__body">
           {# Chart Placeholder - Will be rendered with actual chart library #}
           <div class="chart-container">
-            <svg class="revenue-chart" width="100%" height="240" viewBox="0 0 590 240" preserveAspectRatio="none">
+            <svg
+              class="revenue-chart"
+              width="100%"
+              height="240"
+              viewBox="0 0 590 240"
+              preserveAspectRatio="none"
+            >
               <defs>
-                <linearGradient id="revenueGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" style="stop-color:#9333EA;stop-opacity:0.3" />
-                  <stop offset="100%" style="stop-color:#9333EA;stop-opacity:0.05" />
+                <linearGradient
+                  id="revenueGradient"
+                  x1="0%"
+                  y1="0%"
+                  x2="0%"
+                  y2="100%"
+                >
+                  <stop
+                    offset="0%"
+                    style="stop-color:#9333EA;stop-opacity:0.3"
+                  />
+                  <stop
+                    offset="100%"
+                    style="stop-color:#9333EA;stop-opacity:0.05"
+                  />
                 </linearGradient>
               </defs>
               {# Bar Chart Data #}
-              <rect x="20" y="140" width="35" height="100" rx="4" fill="url(#revenueGradient)" opacity="0.6"/>
-              <rect x="65" y="100" width="35" height="140" rx="4" fill="url(#revenueGradient)" opacity="0.7"/>
-              <rect x="110" y="80" width="35" height="160" rx="4" fill="url(#revenueGradient)" opacity="0.8"/>
-              <rect x="155" y="60" width="35" height="180" rx="4" fill="url(#revenueGradient)" opacity="0.9"/>
-              <rect x="200" y="40" width="35" height="200" rx="4" fill="#9333EA"/>
-              <text x="217" y="30" text-anchor="middle" fill="#9333EA" font-size="12" font-weight="600">Rp 7,8M</text>
-              <rect x="245" y="80" width="35" height="160" rx="4" fill="url(#revenueGradient)" opacity="0.8"/>
-              <rect x="290" y="100" width="35" height="140" rx="4" fill="url(#revenueGradient)" opacity="0.7"/>
-              <rect x="335" y="90" width="35" height="150" rx="4" fill="url(#revenueGradient)" opacity="0.75"/>
-              <rect x="380" y="30" width="35" height="210" rx="4" fill="#EC4899"/>
-              <text x="397" y="20" text-anchor="middle" fill="#EC4899" font-size="12" font-weight="600">Rp 8,2M</text>
-              <rect x="425" y="110" width="35" height="130" rx="4" fill="url(#revenueGradient)" opacity="0.65"/>
-              <rect x="470" y="130" width="35" height="110" rx="4" fill="url(#revenueGradient)" opacity="0.6"/>
-              <rect x="515" y="140" width="35" height="100" rx="4" fill="url(#revenueGradient)" opacity="0.55"/>
+              <rect
+                x="20"
+                y="140"
+                width="35"
+                height="100"
+                rx="4"
+                fill="url(#revenueGradient)"
+                opacity="0.6"
+              />
+              <rect
+                x="65"
+                y="100"
+                width="35"
+                height="140"
+                rx="4"
+                fill="url(#revenueGradient)"
+                opacity="0.7"
+              />
+              <rect
+                x="110"
+                y="80"
+                width="35"
+                height="160"
+                rx="4"
+                fill="url(#revenueGradient)"
+                opacity="0.8"
+              />
+              <rect
+                x="155"
+                y="60"
+                width="35"
+                height="180"
+                rx="4"
+                fill="url(#revenueGradient)"
+                opacity="0.9"
+              />
+              <rect
+                x="200"
+                y="40"
+                width="35"
+                height="200"
+                rx="4"
+                fill="#9333EA"
+              />
+              <text
+                x="217"
+                y="30"
+                text-anchor="middle"
+                fill="#9333EA"
+                font-size="12"
+                font-weight="600"
+              >Rp 7,8M</text>
+              <rect
+                x="245"
+                y="80"
+                width="35"
+                height="160"
+                rx="4"
+                fill="url(#revenueGradient)"
+                opacity="0.8"
+              />
+              <rect
+                x="290"
+                y="100"
+                width="35"
+                height="140"
+                rx="4"
+                fill="url(#revenueGradient)"
+                opacity="0.7"
+              />
+              <rect
+                x="335"
+                y="90"
+                width="35"
+                height="150"
+                rx="4"
+                fill="url(#revenueGradient)"
+                opacity="0.75"
+              />
+              <rect
+                x="380"
+                y="30"
+                width="35"
+                height="210"
+                rx="4"
+                fill="#EC4899"
+              />
+              <text
+                x="397"
+                y="20"
+                text-anchor="middle"
+                fill="#EC4899"
+                font-size="12"
+                font-weight="600"
+              >Rp 8,2M</text>
+              <rect
+                x="425"
+                y="110"
+                width="35"
+                height="130"
+                rx="4"
+                fill="url(#revenueGradient)"
+                opacity="0.65"
+              />
+              <rect
+                x="470"
+                y="130"
+                width="35"
+                height="110"
+                rx="4"
+                fill="url(#revenueGradient)"
+                opacity="0.6"
+              />
+              <rect
+                x="515"
+                y="140"
+                width="35"
+                height="100"
+                rx="4"
+                fill="url(#revenueGradient)"
+                opacity="0.55"
+              />
               {# Month Labels #}
-              <text x="37" y="230" text-anchor="middle" fill="#9CA3AF" font-size="11">JAN</text>
-              <text x="82" y="230" text-anchor="middle" fill="#9CA3AF" font-size="11">FEB</text>
-              <text x="127" y="230" text-anchor="middle" fill="#9CA3AF" font-size="11">MAR</text>
-              <text x="172" y="230" text-anchor="middle" fill="#9CA3AF" font-size="11">APR</text>
-              <text x="217" y="230" text-anchor="middle" fill="#9CA3AF" font-size="11">MEI</text>
-              <text x="262" y="230" text-anchor="middle" fill="#9CA3AF" font-size="11">JUN</text>
-              <text x="307" y="230" text-anchor="middle" fill="#9CA3AF" font-size="11">JUL</text>
-              <text x="352" y="230" text-anchor="middle" fill="#9CA3AF" font-size="11">AUG</text>
-              <text x="397" y="230" text-anchor="middle" fill="#9CA3AF" font-size="11">SEP</text>
-              <text x="442" y="230" text-anchor="middle" fill="#9CA3AF" font-size="11">OKT</text>
-              <text x="487" y="230" text-anchor="middle" fill="#9CA3AF" font-size="11">NOV</text>
-              <text x="532" y="230" text-anchor="middle" fill="#9CA3AF" font-size="11">DES</text>
+              <text
+                x="37"
+                y="230"
+                text-anchor="middle"
+                fill="#9CA3AF"
+                font-size="11"
+              >JAN</text>
+              <text
+                x="82"
+                y="230"
+                text-anchor="middle"
+                fill="#9CA3AF"
+                font-size="11"
+              >FEB</text>
+              <text
+                x="127"
+                y="230"
+                text-anchor="middle"
+                fill="#9CA3AF"
+                font-size="11"
+              >MAR</text>
+              <text
+                x="172"
+                y="230"
+                text-anchor="middle"
+                fill="#9CA3AF"
+                font-size="11"
+              >APR</text>
+              <text
+                x="217"
+                y="230"
+                text-anchor="middle"
+                fill="#9CA3AF"
+                font-size="11"
+              >MEI</text>
+              <text
+                x="262"
+                y="230"
+                text-anchor="middle"
+                fill="#9CA3AF"
+                font-size="11"
+              >JUN</text>
+              <text
+                x="307"
+                y="230"
+                text-anchor="middle"
+                fill="#9CA3AF"
+                font-size="11"
+              >JUL</text>
+              <text
+                x="352"
+                y="230"
+                text-anchor="middle"
+                fill="#9CA3AF"
+                font-size="11"
+              >AUG</text>
+              <text
+                x="397"
+                y="230"
+                text-anchor="middle"
+                fill="#9CA3AF"
+                font-size="11"
+              >SEP</text>
+              <text
+                x="442"
+                y="230"
+                text-anchor="middle"
+                fill="#9CA3AF"
+                font-size="11"
+              >OKT</text>
+              <text
+                x="487"
+                y="230"
+                text-anchor="middle"
+                fill="#9CA3AF"
+                font-size="11"
+              >NOV</text>
+              <text
+                x="532"
+                y="230"
+                text-anchor="middle"
+                fill="#9CA3AF"
+                font-size="11"
+              >DES</text>
             </svg>
           </div>
         </div>
@@ -100,17 +297,17 @@
               <p class="category-item__meta">Belum ada data kategori</p>
             </div>
           </div>
-          {% else %}
-          {% for category in topCategories %}
+          {% else %} {% for category in topCategories %}
           <div class="category-item">
             <div class="category-item__info">
-              <h4 class="category-item__name">{{ category.name }}</h4>
-              <p class="category-item__meta">{{ category.metaDisplay }}</p>
+              <h4 class="category-item__name">{{category.name}}</h4>
+              <p class="category-item__meta">{{category.metaDisplay}}</p>
             </div>
-            <div class="category-item__badge {{ category.badgeClass }}">{{ category.yoyGrowthDisplay }}</div>
+            <div
+              class="category-item__badge {{category.badgeClass}}"
+            >{{category.yoyGrowthDisplay}}</div>
           </div>
-          {% endfor %}
-          {% endif %}
+          {% endfor %} {% endif %}
         </div>
       </div>
     </div>
@@ -121,13 +318,31 @@
         <div class="laporan-table__header-top">
           <div>
             <h3 class="laporan-table__title">Ringkasan Operasional</h3>
-            <p class="laporan-table__subtitle">Performa & target di setiap kategori utama produksi</p>
+            <p class="laporan-table__subtitle">Performa & target di setiap
+              kategori utama produksi</p>
           </div>
           <div class="laporan-table__actions-top">
             <button class="btn btn--secondary">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M8 2V10M8 10L11 7M8 10L5 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M2 14H14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M8 2V10M8 10L11 7M8 10L5 7"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M2 14H14"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
               </svg>
               <span>Export</span>
             </button>
@@ -154,7 +369,8 @@
               <td class="metric-change metric-change--up">+3 pts</td>
               <td class="metric-target">92%</td>
               <td class="metric-pic">Logistik</td>
-              <td class="metric-note">Penambahan vendor trucking membantu akselerasi.</td>
+              <td class="metric-note">Penambahan vendor trucking membantu
+                akselerasi.</td>
             </tr>
             <tr>
               <td class="metric-name">Refur Barang</td>
@@ -162,7 +378,8 @@
               <td class="metric-change metric-change--down">-0.4 pts</td>
               <td class="metric-target">&lt; 3%</td>
               <td class="metric-pic">QA</td>
-              <td class="metric-note">Implementasi checklist QC baru bekerja baik.</td>
+              <td class="metric-note">Implementasi checklist QC baru bekerja
+                baik.</td>
             </tr>
             <tr>
               <td class="metric-name">Backlog Pesanan</td>
@@ -178,7 +395,8 @@
               <td class="metric-change metric-change--up">+0.8 pts</td>
               <td class="metric-target">5%</td>
               <td class="metric-pic">Growth</td>
-              <td class="metric-note">Campaign bundling memicu permintaan bundel kursi + meja.</td>
+              <td class="metric-note">Campaign bundling memicu permintaan bundel
+                kursi + meja.</td>
             </tr>
           </tbody>
         </table>
