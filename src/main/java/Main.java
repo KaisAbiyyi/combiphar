@@ -11,6 +11,7 @@ import com.combiphar.core.controller.CartController;
 import com.combiphar.core.controller.CatalogController;
 import com.combiphar.core.controller.CategoryController;
 import com.combiphar.core.controller.CheckoutController;
+import com.combiphar.core.controller.DashboardController;
 import com.combiphar.core.controller.ItemController;
 import com.combiphar.core.controller.PaymentController;
 import com.combiphar.core.controller.PaymentUploadController;
@@ -83,6 +84,7 @@ public class Main {
         AdminOrderController adminOrderController = new AdminOrderController();
         AdminUserController adminUserController = new AdminUserController(userRepository);
         ReportController reportController = new ReportController();
+        DashboardController dashboardController = new DashboardController();
 
         // Initialize Address controller
         AddressController addressController = new AddressController(addressRepository);
@@ -94,7 +96,8 @@ public class Main {
                 itemController, qcController, catalogController, cartController,
                 checkoutController, paymentController, paymentUploadController,
                 adminShipmentController, adminPaymentController, adminOrderController, adminUserController,
-                shipmentService, cartRepository, orderService, addressController, reportController);
+                shipmentService, cartRepository, orderService, addressController, reportController, 
+                dashboardController);
 
         // Run DB migrations (best-effort). This will create carts/cart_items if
         // missing.
@@ -186,7 +189,8 @@ public class Main {
             CartRepository cartRepository,
             OrderService orderService,
             AddressController addressController,
-            ReportController reportController) {
+            ReportController reportController,
+            DashboardController dashboardController) {
         // ====== PHASE 3: Customer Catalog Routes ======
         // Home / Catalog page - delegated to CatalogController
         app.get("/", catalogController::showCatalogPage);
@@ -375,23 +379,8 @@ public class Main {
         });
 
         // Admin dashboard page
-        app.get("/admin", ctx -> {
-            Map<String, Object> model = buildModel(
-                    "Dashboard Admin",
-                    "dashboard",
-                    ctx.sessionAttribute("currentUser"));
-            model.put("pageTitle", "Dashboard Admin");
-            ctx.render("admin/dashboard", model);
-        });
-
-        app.get("/admin/dashboard", ctx -> {
-            Map<String, Object> model = buildModel(
-                    "Dashboard Admin",
-                    "dashboard",
-                    ctx.sessionAttribute("currentUser"));
-            model.put("pageTitle", "Dashboard Admin");
-            ctx.render("admin/dashboard", model);
-        });
+        app.get("/admin", dashboardController::showDashboard);
+        app.get("/admin/dashboard", dashboardController::showDashboard);
 
         // Admin category page (English route)
         app.get("/admin/category", categoryController::showCategoryPage);

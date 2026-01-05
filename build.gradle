@@ -134,6 +134,14 @@ task seedQCItems(type: JavaExec) {
     mainClass = 'com.combiphar.core.seeder.QCItemSeeder'
 }
 
+// Task to seed 2026 data
+task seed2026(type: JavaExec) {
+    group = 'database'
+    description = 'Seed dummy data for year 2026'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'com.combiphar.core.seeder.Data2026Seeder'
+}
+
 // Demo task to validate cart persistence
 task demoCart(type: JavaExec) {
     group = 'database'

@@ -291,15 +291,32 @@ public class ReportService {
             return "Rp 0";
         }
 
-        // If amount >= 1 million, show in millions
-        if (amount.compareTo(BigDecimal.valueOf(1_000_000)) >= 0) {
-            double millions = amount.divide(BigDecimal.valueOf(1_000_000), 1, RoundingMode.HALF_UP).doubleValue();
-            return String.format("Rp %.1fM", millions);
-        }
+        double value = amount.doubleValue();
 
-        // Otherwise show in thousands
-        double thousands = amount.divide(BigDecimal.valueOf(1_000), 0, RoundingMode.HALF_UP).doubleValue();
-        return String.format("Rp %,.0fK", thousands);
+        // Triliun (Trillion) - 1,000,000,000,000+
+        if (value >= 1_000_000_000_000.0) {
+            double trillions = value / 1_000_000_000_000.0;
+            return String.format("Rp %.1f T", trillions);
+        } 
+        // Miliar (Billion) - 1,000,000,000+
+        else if (value >= 1_000_000_000.0) {
+            double billions = value / 1_000_000_000.0;
+            return String.format("Rp %.1f M", billions);
+        } 
+        // Juta (Million) - 1,000,000+
+        else if (value >= 1_000_000.0) {
+            double millions = value / 1_000_000.0;
+            return String.format("Rp %.1f Jt", millions);
+        } 
+        // Ribu (Thousand) - 1,000+
+        else if (value >= 1_000.0) {
+            double thousands = value / 1_000.0;
+            return String.format("Rp %.1f Rb", thousands);
+        } 
+        // Less than 1,000
+        else {
+            return String.format("Rp %.0f", value);
+        }
     }
 
     /**

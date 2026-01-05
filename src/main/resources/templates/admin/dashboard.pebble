@@ -8,8 +8,8 @@
         <span class="stat-card__label">PENJUALAN</span>
       </div>
       <div class="stat-card__body">
-        <h3 class="stat-card__value">Rp 80,2M</h3>
-        <div class="stat-card__change stat-card__change--up">
+        <h3 class="stat-card__value">{{ totalSalesDisplay | default("Rp 0") }}</h3>
+        <div class="stat-card__change stat-card__change--{{ salesGrowthDirection | default('up') }}">
           <svg
             class="stat-card__arrow"
             width="16"
@@ -18,6 +18,15 @@
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
+            {% if salesGrowthDirection == 'down' %}
+            <path
+              d="M8 4V12M8 12L12 8M8 12L4 8"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            {% else %}
             <path
               d="M8 12V4M8 4L4 8M8 4L12 8"
               stroke="currentColor"
@@ -25,10 +34,11 @@
               stroke-linecap="round"
               stroke-linejoin="round"
             />
+            {% endif %}
           </svg>
-          <span>12% dari</span>
+          <span>{{ salesGrowthDisplay | default("0% dari") }}</span>
         </div>
-        <p class="stat-card__footer">Penjualan semua gudang tahun 1 Sep 2025</p>
+        <p class="stat-card__footer">{{ salesFooter | default("Penjualan semua gudang") }}</p>
       </div>
     </div>
 
@@ -38,8 +48,8 @@
         <span class="stat-card__label">BARANG TERJUAL</span>
       </div>
       <div class="stat-card__body">
-        <h3 class="stat-card__value">200</h3>
-        <div class="stat-card__change stat-card__change--down">
+        <h3 class="stat-card__value">{{ totalUnitsDisplay | default("0") }}</h3>
+        <div class="stat-card__change stat-card__change--{{ unitsChangeDirection | default('up') }}">
           <svg
             class="stat-card__arrow"
             width="16"
@@ -48,6 +58,7 @@
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
+            {% if unitsChangeDirection == 'down' %}
             <path
               d="M8 4V12M8 12L12 8M8 12L4 8"
               stroke="currentColor"
@@ -55,10 +66,19 @@
               stroke-linecap="round"
               stroke-linejoin="round"
             />
+            {% else %}
+            <path
+              d="M8 12V4M8 4L4 8M8 4L12 8"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            {% endif %}
           </svg>
-          <span>8 unit mengapa ini</span>
+          <span>{{ unitsChange | default("0 unit") }}</span>
         </div>
-        <p class="stat-card__footer">Terdapat 1x rating yang sedang kami bulik</p>
+        <p class="stat-card__footer">{{ unitsFooter | default("Total unit terjual") }}</p>
       </div>
     </div>
 
@@ -68,8 +88,8 @@
         <span class="stat-card__label">USER AKTIF</span>
       </div>
       <div class="stat-card__body">
-        <h3 class="stat-card__value">46</h3>
-        <div class="stat-card__change stat-card__change--up">
+        <h3 class="stat-card__value">{{ activeUsersDisplay | default("0") }}</h3>
+        <div class="stat-card__change stat-card__change--{{ activeUsersChangeDirection | default('up') }}">
           <svg
             class="stat-card__arrow"
             width="16"
@@ -86,10 +106,9 @@
               stroke-linejoin="round"
             />
           </svg>
-          <span>7 dari enterprise</span>
+          <span>{{ activeUsersChange | default("0 dari total user") }}</span>
         </div>
-        <p class="stat-card__footer">Pengguna dengan status aktive 30 hari
-          terakhir</p>
+        <p class="stat-card__footer">{{ activeUsersFooter | default("Pengguna dengan status aktif 30 hari terakhir") }}</p>
       </div>
     </div>
 
@@ -99,8 +118,8 @@
         <span class="stat-card__label">PLS PENGIRIMAN</span>
       </div>
       <div class="stat-card__body">
-        <h3 class="stat-card__value">94%</h3>
-        <div class="stat-card__change stat-card__change--up">
+        <h3 class="stat-card__value">{{ deliveryRateDisplay | default("0%") }}</h3>
+        <div class="stat-card__change stat-card__change--{{ deliveryChangeDirection | default('up') }}">
           <svg
             class="stat-card__arrow"
             width="16"
@@ -109,6 +128,15 @@
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
+            {% if deliveryChangeDirection == 'down' %}
+            <path
+              d="M8 4V12M8 12L12 8M8 12L4 8"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            {% else %}
             <path
               d="M8 12V4M8 4L4 8M8 4L12 8"
               stroke="currentColor"
@@ -116,11 +144,11 @@
               stroke-linecap="round"
               stroke-linejoin="round"
             />
+            {% endif %}
           </svg>
-          <span>1% dari target</span>
+          <span>{{ deliveryChange | default("0% dari target") }}</span>
         </div>
-        <p class="stat-card__footer">Pengiriman tepat waktu untuk 14 gudang
-          utama</p>
+        <p class="stat-card__footer">{{ deliveryFooter | default("Pengiriman tepat waktu") }}</p>
       </div>
     </div>
   </div>
