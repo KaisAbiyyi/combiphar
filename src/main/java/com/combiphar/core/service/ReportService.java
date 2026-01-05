@@ -212,21 +212,21 @@ public class ReportService {
      */
     public Map<String, Object> getDashboardStats() {
         Map<String, Object> stats = new HashMap<>();
-        
+
         // Calculate total revenue
         BigDecimal totalRevenue = getTotalRevenue();
         stats.put("totalRevenue", totalRevenue);
         stats.put("totalRevenueDisplay", formatCurrency(totalRevenue));
-        
+
         // Calculate total units sold
         int totalUnits = getTotalUnitsSold();
         stats.put("totalUnits", totalUnits);
         stats.put("totalUnitsDisplay", String.format("%,d", totalUnits));
-        
+
         // Calculate total paid orders count
         int totalOrders = getTotalPaidOrders();
         stats.put("totalOrders", totalOrders);
-        
+
         // Calculate GMV per order (average order value)
         BigDecimal gmvPerOrder = BigDecimal.ZERO;
         if (totalOrders > 0) {
@@ -234,22 +234,22 @@ public class ReportService {
         }
         stats.put("gmvPerOrder", gmvPerOrder);
         stats.put("gmvPerOrderDisplay", formatCurrency(gmvPerOrder));
-        
+
         // Calculate average units per month (assuming last 12 months)
         double avgUnitsPerMonth = totalUnits / 12.0;
         stats.put("avgUnitsPerMonth", String.format("%.0f", avgUnitsPerMonth));
-        
+
         // Calculate net margin (simplified: assume 36% margin)
         // In production, calculate from actual cost data
         double netMargin = 36.0;
         stats.put("netMargin", netMargin);
         stats.put("netMarginDisplay", String.format("%.0f%%", netMargin));
-        
+
         // Calculate revenue growth (comparing to simulated previous period)
         double revenueGrowth = calculateRevenueGrowth(totalRevenue);
         stats.put("revenueGrowth", revenueGrowth);
         stats.put("revenueGrowthDisplay", String.format("%+.0f%%", revenueGrowth));
-        
+
         return stats;
     }
 
@@ -260,23 +260,23 @@ public class ReportService {
      */
     private int getTotalPaidOrders() {
         String sql = """
-                SELECT COUNT(*) as total
-                FROM orders
-                WHERE status_payment = 'PAID'
-            """;
+                    SELECT COUNT(*) as total
+                    FROM orders
+                    WHERE status_payment = 'PAID'
+                """;
 
         try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-            
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery()) {
+
             if (rs.next()) {
                 return rs.getInt("total");
             }
-            
+
         } catch (SQLException e) {
             System.err.println("Error fetching total orders: " + e.getMessage());
         }
-        
+
         return 0;
     }
 
@@ -290,13 +290,13 @@ public class ReportService {
         if (amount == null || amount.compareTo(BigDecimal.ZERO) == 0) {
             return "Rp 0";
         }
-        
+
         // If amount >= 1 million, show in millions
         if (amount.compareTo(BigDecimal.valueOf(1_000_000)) >= 0) {
             double millions = amount.divide(BigDecimal.valueOf(1_000_000), 1, RoundingMode.HALF_UP).doubleValue();
             return String.format("Rp %.1fM", millions);
         }
-        
+
         // Otherwise show in thousands
         double thousands = amount.divide(BigDecimal.valueOf(1_000), 0, RoundingMode.HALF_UP).doubleValue();
         return String.format("Rp %,.0fK", thousands);
@@ -313,11 +313,11 @@ public class ReportService {
         // Simulated: assume previous period had 80% of current revenue
         // This represents +25% growth (100/80 - 1 = 0.25)
         // In production, query actual previous period revenue
-        
+
         // For demo: if revenue > 50M, show +24% growth
         // Otherwise calculate based on revenue scale
         double revenue = currentRevenue.doubleValue();
-        
+
         if (revenue >= 50_000_000) {
             return 24.0; // +24% vs Q2 2025
         } else if (revenue >= 30_000_000) {
@@ -327,11 +327,126 @@ public class ReportService {
         } else {
             return 8.0;
         }
-        
+
         // TODO: Replace with actual query:
         // SELECT SUM(total_price) FROM orders
         // WHERE status_payment = 'PAID'
         // AND created_at BETWEEN ? AND ?
         // (previous quarter or year)
+    }
+
+    /**
+     * Get monthly revenue data for chart visualization.
+     * Returns revenue for each month from January to December of specified year.
+     * 
+     * @param year Year to get revenue data for (e.g., 2024, 2025)
+     * @return List of monthly revenue data with month name and revenue
+     */
+    public List<Map<String, Object>> getMonthlyRevenue(int year) {
+        List<Map<String, Object>> monthlyData = new ArrayList<>();
+
+        String sql = """
+                    SELECT
+                        MONTH(o.created_at) as month_num,
+                        SUM(o.total_price) as revenue
+                    FROM orders o
+                    WHERE o.status_payment = 'PAID'
+                        AND YEAR(o.created_at) = ?
+                    GROUP BY MONTH(o.created_at)
+                    ORDER BY month_num
+                """;
+
+        // Map to store actual data
+        Map<Integer, BigDecimal> revenueMap = new HashMap<>();
+        BigDecimal totalRevenue = BigDecimal.ZERO;
+        BigDecimal maxRevenue = BigDecimal.ZERO;
+
+        try (Connection conn = DatabaseConfig.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, year);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    int monthNum = rs.getInt("month_num");
+                    BigDecimal revenue = rs.getBigDecimal("revenue");
+                    if (revenue == null)
+                        revenue = BigDecimal.ZERO;
+
+                    revenueMap.put(monthNum, revenue);
+                    totalRevenue = totalRevenue.add(revenue);
+
+                    if (revenue.compareTo(maxRevenue) > 0) {
+                        maxRevenue = revenue;
+                    }
+                }
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error fetching monthly revenue: " + e.getMessage());
+        }
+
+        // Month names
+        String[] monthNames = { "JAN", "FEB", "MAR", "APR", "MEI", "JUN",
+                "JUL", "AGU", "SEP", "OKT", "NOV", "DES" };
+
+        // Calculate average monthly revenue
+        BigDecimal avgRevenue = BigDecimal.ZERO;
+        if (revenueMap.size() > 0) {
+            avgRevenue = totalRevenue.divide(BigDecimal.valueOf(12), 2, RoundingMode.HALF_UP);
+        }
+
+        // Build data for all 12 months
+        for (int i = 1; i <= 12; i++) {
+            Map<String, Object> monthData = new HashMap<>();
+            BigDecimal revenue = revenueMap.getOrDefault(i, BigDecimal.ZERO);
+
+            monthData.put("monthNum", i);
+            monthData.put("monthName", monthNames[i - 1]);
+            monthData.put("revenue", revenue.doubleValue());
+
+            // Calculate bar height (0-160 pixels, with 200 total height minus 40 for
+            // labels)
+            double heightRatio = maxRevenue.compareTo(BigDecimal.ZERO) > 0
+                    ? revenue.divide(maxRevenue, 4, RoundingMode.HALF_UP).doubleValue()
+                    : 0.0;
+            int barHeight = (int) (heightRatio * 160); // Max 160px for better fit
+            int barY = 200 - 40 - barHeight; // 200 total - 40 label space - bar height
+
+            monthData.put("barHeight", barHeight);
+            monthData.put("barY", barY);
+
+            // Format revenue display
+            if (revenue.compareTo(BigDecimal.ZERO) > 0) {
+                double millions = revenue.divide(BigDecimal.valueOf(1_000_000), 1, RoundingMode.HALF_UP).doubleValue();
+                monthData.put("revenueDisplay", String.format("Rp %.1fM", millions));
+            } else {
+                monthData.put("revenueDisplay", "");
+            }
+
+            // Determine if this is max/peak month
+            monthData.put("isPeak", revenue.compareTo(maxRevenue) == 0 && revenue.compareTo(BigDecimal.ZERO) > 0);
+
+            // Calculate X position for bar (45px spacing between bars)
+            int barX = 20 + (i - 1) * 45;
+            monthData.put("barX", barX);
+            monthData.put("labelX", barX + 17); // Center of 35px bar
+
+            monthlyData.add(monthData);
+        }
+
+        // Add summary statistics
+        Map<String, Object> summary = new HashMap<>();
+        summary.put("totalRevenue", totalRevenue);
+        summary.put("avgRevenue", avgRevenue);
+        summary.put("avgRevenueDisplay", formatCurrency(avgRevenue));
+        summary.put("maxRevenue", maxRevenue);
+
+        // Store summary in first element for easy access in template
+        if (!monthlyData.isEmpty()) {
+            monthlyData.get(0).put("summary", summary);
+        }
+
+        return monthlyData;
     }
 }

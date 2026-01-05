@@ -31,6 +31,22 @@ public class ReportController extends BaseAdminController {
         model.put("activePage", "reports");
         model.put("activeMenu", "Laporan Kinerja");
 
+        // Get year parameter from query string, default to 2025
+        String yearParam = ctx.queryParam("year");
+        int year = 2025; // default
+        if (yearParam != null) {
+            try {
+                year = Integer.parseInt(yearParam);
+                // Validate year is reasonable (between 2020 and 2030)
+                if (year < 2020 || year > 2030) {
+                    year = 2025;
+                }
+            } catch (NumberFormatException e) {
+                year = 2025;
+            }
+        }
+        model.put("selectedYear", year);
+
         // Get dashboard statistics
         Map<String, Object> dashboardStats = reportService.getDashboardStats();
         model.putAll(dashboardStats);
@@ -38,6 +54,10 @@ public class ReportController extends BaseAdminController {
         // Get top categories data
         List<Map<String, Object>> topCategories = reportService.getTopCategories(4);
         model.put("topCategories", topCategories);
+
+        // Get monthly revenue data for chart with selected year
+        List<Map<String, Object>> monthlyRevenue = reportService.getMonthlyRevenue(year);
+        model.put("monthlyRevenue", monthlyRevenue);
 
         ctx.render("admin/laporan", model);
     }
