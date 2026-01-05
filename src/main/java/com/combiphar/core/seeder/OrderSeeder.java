@@ -50,37 +50,140 @@ public class OrderSeeder {
             int count = 0;
 
             // Create various test orders
+            // Order 1: Completed delivery
             count += createOrder(customer1Id, addressIds[0], "ORD-2025-001",
                     new BigDecimal("3500000"), "TRANSFER", "DELIVERY",
                     "PAID", "COMPLETED",
-                    new String[]{ itemIds[0], itemIds[1] },
-                    new int[]{ 1, 2 },
+                    new String[] { itemIds[0], itemIds[1] },
+                    new int[] { 1, 2 },
                     "BCA", "/images/payments/proof1.jpg",
                     "JNE", "JP1234567890");
 
+            // Order 2: Ready for pickup
             count += createOrder(customer2Id, addressIds[2], "ORD-2025-002",
                     new BigDecimal("2200000"), "TRANSFER", "PICKUP",
                     "PAID", "READY",
-                    new String[]{ itemIds[2] },
-                    new int[]{ 1 },
+                    new String[] { itemIds[2] },
+                    new int[] { 1 },
                     "MANDIRI", "/images/payments/proof2.jpg",
                     null, null);
 
+            // Order 3: Processing, pending payment
             count += createOrder(customer3Id, addressIds[4], "ORD-2025-003",
                     new BigDecimal("5500000"), "TRANSFER", "DELIVERY",
                     "PENDING", "PROCESSING",
-                    new String[]{ itemIds[3], itemIds[4] },
-                    new int[]{ 1, 1 },
+                    new String[] { itemIds[3], itemIds[4] },
+                    new int[] { 1, 1 },
                     null, null,
                     null, null);
 
+            // Order 4: Ready for delivery
             count += createOrder(customer1Id, addressIds[1], "ORD-2025-004",
                     new BigDecimal("1800000"), "TRANSFER", "DELIVERY",
-                    "PAID", "SHIPPED",
-                    new String[]{ itemIds[5] },
-                    new int[]{ 3 },
+                    "PAID", "READY",
+                    new String[] { itemIds[5] },
+                    new int[] { 3 },
                     "BRI", "/images/payments/proof3.jpg",
                     "SiCepat", "SC9876543210");
+
+            // Order 5: New order, pending payment
+            count += createOrder(customer2Id, addressIds[3], "ORD-2025-005",
+                    new BigDecimal("1250000"), "TRANSFER", "PICKUP",
+                    "PENDING", "NEW",
+                    new String[] { itemIds[0] },
+                    new int[] { 1 },
+                    null, null,
+                    null, null);
+
+            // Order 6: Completed pickup
+            count += createOrder(customer3Id, addressIds[5], "ORD-2025-006",
+                    new BigDecimal("4200000"), "TRANSFER", "PICKUP",
+                    "PAID", "COMPLETED",
+                    new String[] { itemIds[1], itemIds[2], itemIds[3] },
+                    new int[] { 1, 1, 1 },
+                    "BCA", "/images/payments/proof4.jpg",
+                    null, null);
+
+            // Order 7: Completed delivery
+            count += createOrder(customer1Id, addressIds[0], "ORD-2025-007",
+                    new BigDecimal("2750000"), "TRANSFER", "DELIVERY",
+                    "PAID", "COMPLETED",
+                    new String[] { itemIds[4], itemIds[5] },
+                    new int[] { 2, 1 },
+                    "MANDIRI", "/images/payments/proof5.jpg",
+                    "JNE", "JP9988776655");
+
+            // Order 8: Processing delivery
+            count += createOrder(customer2Id, addressIds[2], "ORD-2025-008",
+                    new BigDecimal("3100000"), "TRANSFER", "DELIVERY",
+                    "PAID", "PROCESSING",
+                    new String[] { itemIds[0], itemIds[3] },
+                    new int[] { 1, 2 },
+                    "BRI", "/images/payments/proof6.jpg",
+                    "SiCepat", "SC1122334455");
+
+            // Order 9: Ready for pickup
+            count += createOrder(customer3Id, addressIds[4], "ORD-2025-009",
+                    new BigDecimal("1650000"), "TRANSFER", "PICKUP",
+                    "PAID", "READY",
+                    new String[] { itemIds[1] },
+                    new int[] { 2 },
+                    "BCA", "/images/payments/proof7.jpg",
+                    null, null);
+
+            // Order 10: Cancelled order
+            count += createOrder(customer1Id, addressIds[1], "ORD-2025-010",
+                    new BigDecimal("950000"), "TRANSFER", "DELIVERY",
+                    "FAILED", "CANCELLED",
+                    new String[] { itemIds[2] },
+                    new int[] { 1 },
+                    null, null,
+                    null, null);
+
+            // Order 11: New order, pending payment
+            count += createOrder(customer2Id, addressIds[3], "ORD-2025-011",
+                    new BigDecimal("5800000"), "TRANSFER", "DELIVERY",
+                    "PENDING", "NEW",
+                    new String[] { itemIds[4], itemIds[5], itemIds[0] },
+                    new int[] { 2, 1, 1 },
+                    null, null,
+                    null, null);
+
+            // Order 12: Ready for delivery
+            count += createOrder(customer3Id, addressIds[5], "ORD-2025-012",
+                    new BigDecimal("2900000"), "TRANSFER", "DELIVERY",
+                    "PAID", "READY",
+                    new String[] { itemIds[1], itemIds[3] },
+                    new int[] { 1, 1 },
+                    "MANDIRI", "/images/payments/proof8.jpg",
+                    "JNE", "JP5544332211");
+
+            // Order 13: Processing pickup
+            count += createOrder(customer1Id, addressIds[0], "ORD-2025-013",
+                    new BigDecimal("3350000"), "TRANSFER", "PICKUP",
+                    "PAID", "PROCESSING",
+                    new String[] { itemIds[2], itemIds[4] },
+                    new int[] { 2, 1 },
+                    "BRI", "/images/payments/proof9.jpg",
+                    null, null);
+
+            // Order 14: Completed delivery
+            count += createOrder(customer2Id, addressIds[2], "ORD-2025-014",
+                    new BigDecimal("4500000"), "TRANSFER", "DELIVERY",
+                    "PAID", "COMPLETED",
+                    new String[] { itemIds[0], itemIds[1], itemIds[5] },
+                    new int[] { 1, 2, 1 },
+                    "BCA", "/images/payments/proof10.jpg",
+                    "SiCepat", "SC6677889900");
+
+            // Order 15: Ready for pickup
+            count += createOrder(customer3Id, addressIds[4], "ORD-2025-015",
+                    new BigDecimal("1450000"), "TRANSFER", "PICKUP",
+                    "PAID", "READY",
+                    new String[] { itemIds[3] },
+                    new int[] { 1 },
+                    "MANDIRI", "/images/payments/proof11.jpg",
+                    null, null);
 
             System.out.println("\n✓ Total orders seeded: " + count);
             System.exit(0);
@@ -140,7 +243,8 @@ public class OrderSeeder {
                     BigDecimal itemSubtotal = unitPrice.multiply(BigDecimal.valueOf(quantity));
                     subtotal = subtotal.add(itemSubtotal);
 
-                    String orderItemSql = "INSERT INTO order_items (id, order_id, item_id, quantity, unit_price, subtotal) " +
+                    String orderItemSql = "INSERT INTO order_items (id, order_id, item_id, quantity, unit_price, subtotal) "
+                            +
                             "VALUES (?, ?, ?, ?, ?, ?)";
 
                     try (PreparedStatement stmt = conn.prepareStatement(orderItemSql)) {
@@ -187,8 +291,8 @@ public class OrderSeeder {
                         stmt.setString(3, addressId);
                         stmt.setString(4, courierName);
                         stmt.setString(5, trackingNumber);
-                        stmt.setString(6, orderStatus.equals("COMPLETED") ? "RECEIVED" :
-                                orderStatus.equals("SHIPPED") ? "SHIPPED" : "PROCESSING");
+                        stmt.setString(6, orderStatus.equals("COMPLETED") ? "RECEIVED"
+                                : orderStatus.equals("READY") ? "SHIPPED" : "PROCESSING");
                         stmt.executeUpdate();
                     }
                 }
@@ -210,7 +314,7 @@ public class OrderSeeder {
         String sql = "SELECT COUNT(*) FROM orders WHERE order_number = ?";
 
         try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, orderNumber);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -241,8 +345,8 @@ public class OrderSeeder {
         java.util.List<String> ids = new java.util.ArrayList<>();
 
         try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 ids.add(rs.getString("id"));
@@ -256,8 +360,8 @@ public class OrderSeeder {
         java.util.List<String> ids = new java.util.ArrayList<>();
 
         try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 ids.add(rs.getString("id"));
@@ -270,7 +374,7 @@ public class OrderSeeder {
         String sql = "SELECT id FROM users WHERE email = ?";
 
         try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, email);
             try (ResultSet rs = stmt.executeQuery()) {
