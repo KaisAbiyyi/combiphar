@@ -40,7 +40,7 @@ public class AdminShipmentController extends BaseAdminController {
                 .map(this::buildShipmentDetail)
                 .collect(Collectors.toList());
 
-        Pagination<Map<String, Object>> pagination = new Pagination<>(shipmentDetails, page, 6);
+        Pagination<Map<String, Object>> pagination = new Pagination<>(shipmentDetails, page, 25);
         Map<String, Object> model = buildBaseModel(ctx);
         model.put("title", "Monitoring Pengiriman");
         model.put("pageTitle", "Monitoring Pengiriman");

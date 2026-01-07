@@ -13,11 +13,6 @@
       <h1 class="page-header__title">Katalog Kategori</h1>
     </div>
     <div class="page-header__actions">
-      <button type="button" class="btn btn--outline" onclick="document.getElementById('csvImportFile').click()">
-        Impor CSV
-      </button>
-      <input type="file" id="csvImportFile" accept=".csv" style="display:none" onchange="handleCSVImport(event)">
-      <a class="btn btn--outline" href="/api/admin/categories/export-csv">Ekspor CSV</a>
       <button type="button" class="btn btn--primary" id="addCategoryBtn" onclick="openAddCategoryModal()">
         Tambah Kategori
       </button>
@@ -96,7 +91,7 @@
                   <span class="category-name">{{ category.name }}</span>
                 </td>
                 <td>{{ category.description | default('N/A') }}</td>
-                <td>{{ category.id | slice(0, 8) }}...</td>
+                <td>{% if category.id | length > 8 %}{{ category.id | slice(0, 8) }}...{% else %}{{ category.id }}{% endif %}</td>
                 <td>{{ category.updatedAt }}</td>
                 <td>
                   {% if category.status == 'AKTIF' %}
@@ -120,6 +115,18 @@
               {% endif %}
             </tbody>
           </table>
+          
+          {% if totalPages > 1 %}
+          <div class="pagination">
+            {% if hasPrevious %}
+            <a href="?page={{ currentPage - 1 }}" class="pagination__btn">‹</a>
+            {% endif %}
+            <span class="pagination__btn pagination__btn--active">{{ currentPage }}</span>
+            {% if hasNext %}
+            <a href="?page={{ currentPage + 1 }}" class="pagination__btn">›</a>
+            {% endif %}
+          </div>
+          {% endif %}
         </div>
       </div>
     </div>
@@ -322,41 +329,6 @@ function resetForm() {
   isEditMode = false;
   currentCategoryId = null;
   document.getElementById('submitBtn').textContent = 'Simpan Kategori';
-}
-
-// Handle CSV Import
-function handleCSVImport(event) {
-  const file = event.target.files[0];
-  if (file) {
-    if (!file.name.endsWith('.csv')) {
-      alert('File harus berformat CSV');
-      event.target.value = '';
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append('file', file);
-
-    fetch('/api/admin/categories/import-csv', {
-      method: 'POST',
-      body: formData
-    })
-    .then(response => response.json())
-    .then(result => {
-      if (result.success) {
-        alert(`Import selesai.\nBaru: ${result.imported || 0}\nUpdate: ${result.updated || 0}\nLewati: ${result.skipped || 0}`);
-        window.location.reload();
-      } else {
-        alert('Error: ' + result.message);
-      }
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      alert('Terjadi kesalahan saat mengimpor CSV');
-    });
-  }
-
-  event.target.value = '';
 }
 </script>
 

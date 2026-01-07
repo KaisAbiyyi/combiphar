@@ -122,7 +122,7 @@ public class OrderRepository {
      */
     public java.util.List<Order> findAll() {
         java.util.List<Order> orders = new java.util.ArrayList<>();
-        String sql = "SELECT * FROM orders ORDER BY created_at DESC LIMIT 50";
+        String sql = "SELECT * FROM orders ORDER BY created_at DESC";
 
         try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             try (ResultSet rs = stmt.executeQuery()) {

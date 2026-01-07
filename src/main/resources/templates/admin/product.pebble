@@ -13,11 +13,6 @@
       <h1 class="page-header__title">Katalog Produk</h1>
     </div>
     <div class="page-header__actions">
-      <button class="btn btn--outline" onclick="document.getElementById('csvImportFile').click()">
-        Impor CSV
-      </button>
-      <input type="file" id="csvImportFile" accept=".csv" style="display:none" onchange="handleCSVImport(event)">
-      <a class="btn btn--outline" href="/api/admin/items/export-csv">Ekspor CSV</a>
       <button class="btn btn--primary" onclick="openAddProductModal()">
         Tambah Barang
       </button>
@@ -157,6 +152,18 @@
               {% endif %}
             </tbody>
           </table>
+          
+          {% if totalPages > 1 %}
+          <div class="pagination">
+            {% if hasPrevious %}
+            <a href="?page={{ currentPage - 1 }}" class="pagination__btn">‹</a>
+            {% endif %}
+            <span class="pagination__btn pagination__btn--active">{{ currentPage }}</span>
+            {% if hasNext %}
+            <a href="?page={{ currentPage + 1 }}" class="pagination__btn">›</a>
+            {% endif %}
+          </div>
+          {% endif %}
         </div>
       </div>
     </div>
@@ -536,42 +543,6 @@ async function prioritizeProduct(productId) {
 // View product details
 function viewProduct(productId) {
   alert('Detail Produk\nFitur detail produk untuk SKU-' + productId.substring(0, 4) + ' akan segera tersedia.');
-}
-
-// Handle CSV import
-function handleCSVImport(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  
-  if (!file.name.endsWith('.csv')) {
-    alert('File harus berformat CSV');
-    return;
-  }
-  
-  alert('Mengimpor data dari CSV...\nProses ini mungkin memakan waktu beberapa saat.');
-  
-  const formData = new FormData();
-  formData.append('file', file);
-  
-  fetch('/api/admin/items/import-csv', {
-    method: 'POST',
-    body: formData
-  })
-  .then(response => response.json())
-  .then(result => {
-    if (result.success) {
-      alert(`Import selesai.\nBaru: ${result.imported || 0}\nUpdate: ${result.updated || 0}\nLewati: ${result.skipped || 0}`);
-      window.location.reload();
-    } else {
-      alert('Error: ' + result.message);
-    }
-  })
-  .catch(error => {
-    console.error('Error:', error);
-    alert('Terjadi kesalahan saat mengimpor CSV');
-  });
-  
-  event.target.value = '';
 }
 
 

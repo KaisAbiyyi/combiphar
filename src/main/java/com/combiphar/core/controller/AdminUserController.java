@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.combiphar.core.model.User;
 import com.combiphar.core.repository.UserRepository;
+import com.combiphar.core.util.Pagination;
 
 import io.javalin.http.Context;
 
@@ -33,8 +34,13 @@ public class AdminUserController extends BaseAdminController {
         String searchQuery = ctx.queryParam("search");
         if (searchQuery == null) searchQuery = "";
 
+        int page = ctx.queryParamAsClass("page", Integer.class).getOrDefault(1);
+
         // Get filtered users
         List<User> users = userRepository.findAll(roleFilter, statusFilter, searchQuery);
+
+        // Apply pagination
+        Pagination<User> pagination = new Pagination<>(users, page, 25);
 
         // Get statistics
         int totalUsers = userRepository.countTotal();
@@ -46,7 +52,7 @@ public class AdminUserController extends BaseAdminController {
         Map<String, Object> model = buildBaseModel(ctx);
         model.put("pageTitle", "Manajemen Pengguna");
         model.put("activePage", "users");
-        model.put("users", users);
+        model.put("users", pagination.getItems());
         model.put("totalUsers", totalUsers);
         model.put("customerCount", customerCount);
         model.put("adminCount", adminCount);
@@ -54,6 +60,10 @@ public class AdminUserController extends BaseAdminController {
         model.put("roleFilter", roleFilter);
         model.put("statusFilter", statusFilter);
         model.put("searchQuery", searchQuery);
+        model.put("currentPage", pagination.getCurrentPage());
+        model.put("totalPages", pagination.getTotalPages());
+        model.put("hasNext", pagination.hasNext());
+        model.put("hasPrevious", pagination.hasPrevious());
 
         ctx.render("admin/user", model);
     }

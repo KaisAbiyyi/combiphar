@@ -23,7 +23,7 @@ import io.javalin.http.Context;
 public class AdminOrderController extends BaseAdminController {
 
     private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm");
-    private static final int PAGE_SIZE = 5;
+    private static final int PAGE_SIZE = 25;
 
     private final OrderRepository orderRepo = new OrderRepository();
     private final PaymentRepository paymentRepo = new PaymentRepository();

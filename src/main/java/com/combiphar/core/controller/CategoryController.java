@@ -12,6 +12,7 @@ import com.combiphar.core.model.User;
 import com.combiphar.core.service.CategoryService;
 import com.combiphar.core.service.ItemService;
 import com.combiphar.core.util.CsvUtils;
+import com.combiphar.core.util.Pagination;
 
 import io.javalin.http.Context;
 import io.javalin.http.UploadedFile;
@@ -42,6 +43,7 @@ public class CategoryController {
 
         try {
             String statusFilter = ctx.queryParam("status");
+            int page = ctx.queryParamAsClass("page", Integer.class).getOrDefault(1);
 
             // Always fetch all categories for stats
             List<Category> allCategories = categoryService.getAllCategories();
@@ -83,14 +85,21 @@ public class CategoryController {
                 categoryMaps.add(categoryMap);
             }
 
+            // Apply pagination
+            Pagination<Map<String, Object>> pagination = new Pagination<>(categoryMaps, page, 25);
+
             Map<String, Object> model = new HashMap<>();
             model.put("title", "Manajemen Kategori");
             model.put("currentUser", currentUser);
             model.put("activePage", "category");
-            model.put("categories", categoryMaps);
+            model.put("categories", pagination.getItems());
             model.put("totalCategories", totalCategories);
             model.put("activeCategories", activeCategories);
             model.put("currentFilter", statusFilter != null ? statusFilter : "all");
+            model.put("currentPage", pagination.getCurrentPage());
+            model.put("totalPages", pagination.getTotalPages());
+            model.put("hasNext", pagination.hasNext());
+            model.put("hasPrevious", pagination.hasPrevious());
 
             ctx.render("admin/category", model);
         } catch (Exception e) {

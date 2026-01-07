@@ -20,6 +20,7 @@ import com.combiphar.core.service.CategoryService;
 import com.combiphar.core.service.ItemService;
 import com.combiphar.core.service.QualityCheckService;
 import com.combiphar.core.util.CsvUtils;
+import com.combiphar.core.util.Pagination;
 
 import io.javalin.http.Context;
 import io.javalin.http.UploadedFile;
@@ -55,6 +56,7 @@ public class ItemController {
             String statusFilter = ctx.queryParam("status");
             String stockFilter = ctx.queryParam("stock");
             String categoryFilter = ctx.queryParam("categoryId");
+            int page = ctx.queryParamAsClass("page", Integer.class).getOrDefault(1);
 
             List<Item> items = itemService.getAllItems();
             List<Category> categories = categoryService.getAllCategories();
@@ -185,11 +187,14 @@ public class ItemController {
                 qcPipelineFormatted.add(qcMap);
             }
 
+            // Apply pagination to formatted items
+            Pagination<Map<String, Object>> pagination = new Pagination<>(formattedItems, page, 25);
+
             Map<String, Object> model = new HashMap<>();
             model.put("title", "Manajemen Produk");
             model.put("currentUser", currentUser);
             model.put("activePage", "product");
-            model.put("items", formattedItems);
+            model.put("items", pagination.getItems());
             model.put("categories", categories);
 
             // New stats for updated UI
@@ -209,6 +214,10 @@ public class ItemController {
             model.put("currentStockFilter", stockFilter != null ? stockFilter : "all");
             model.put("qcPipeline", qcPipelineFormatted);
             model.put("qcCount", qcPipelineFormatted.size());
+            model.put("currentPage", pagination.getCurrentPage());
+            model.put("totalPages", pagination.getTotalPages());
+            model.put("hasNext", pagination.hasNext());
+            model.put("hasPrevious", pagination.hasPrevious());
 
             ctx.render("admin/product", model);
         } catch (Exception e) {

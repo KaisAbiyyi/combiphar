@@ -100,7 +100,7 @@ public class ShipmentRepository {
      */
     public List<Shipment> findAll() {
         List<Shipment> shipments = new ArrayList<>();
-        String sql = "SELECT * FROM shipments ORDER BY created_at DESC LIMIT 100";
+        String sql = "SELECT * FROM shipments ORDER BY created_at DESC";
 
         try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
 

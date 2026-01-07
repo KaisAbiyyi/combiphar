@@ -39,7 +39,7 @@ public class AdminPaymentController extends BaseAdminController {
                 .map(payment -> buildPaymentDetail(order, payment)).orElse(null))
                 .filter(Objects::nonNull).collect(Collectors.toList());
 
-        Pagination<Map<String, Object>> pagination = new Pagination<>(paymentDetails, page, 6);
+        Pagination<Map<String, Object>> pagination = new Pagination<>(paymentDetails, page, 25);
         Map<String, Object> model = buildBaseModel(ctx);
         model.put("title", "Verifikasi Pembayaran");
         model.put("pageTitle", "Verifikasi Pembayaran");

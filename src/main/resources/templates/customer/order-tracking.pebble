@@ -65,12 +65,6 @@
         <div class="order-items-card">
           <div class="order-items-card__header">
             <h2 class="order-items-card__title">Barang yang dibeli</h2>
-            <button class="order-items-card__action">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M8 2V10M8 10L11 7M8 10L5 7M3 12V13C3 13.5523 3.44772 14 4 14H12C12.5523 14 13 13.5523 13 13V12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              Unduh Invoice
-            </button>
           </div>
 
           <div class="order-items-list">

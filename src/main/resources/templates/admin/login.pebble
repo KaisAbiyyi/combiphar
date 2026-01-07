@@ -29,10 +29,10 @@
             Dapatkan email @combiphar.id
           </li>
           <li class="admin-login__benefit">
-            OTP dikirim via aplikasi Auth+Priv
+            Akses dashboard operasional lengkap
           </li>
           <li class="admin-login__benefit">
-            Bisa dominasi bagus selama 30 menit saja
+            Sesi aktif selama 30 menit
           </li>
         </ul>
         
@@ -78,17 +78,6 @@
               name="password" 
               placeholder="••••••••"
               required
-            >
-          </div>
-
-          <div class="admin-login__field">
-            <label for="otp">Kode OTP (Opsional)</label>
-            <input 
-              type="text" 
-              id="otp" 
-              name="otp" 
-              placeholder="6 digit dari Auth+Priv"
-              maxlength="6"
             >
           </div>
 

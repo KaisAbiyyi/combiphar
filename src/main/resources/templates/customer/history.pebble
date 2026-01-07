@@ -29,27 +29,7 @@ extends "customer/layout" %} {% block content %}
           </select>
         </div>
 
-        <div class="history-page__actions">
-          <button class="history-btn history-btn--secondary">
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M8 2V10M8 10L11 7M8 10L5 7M3 12V13C3 13.5523 3.44772 14 4 14H12C12.5523 14 13 13.5523 13 13V12"
-                stroke="currentColor"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-            Unduh Rekap Laporan
-          </button>
-          <button class="history-btn history-btn--primary">Filter Status</button>
-        </div>
+
       </div>
     </div>
 
@@ -105,53 +85,7 @@ extends "customer/layout" %} {% block content %}
       </table>
     </div>
 
-    {# Pagination #}
-    <div class="history-pagination">
-      <button class="pagination-btn pagination-btn--prev" disabled>
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 16 16"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M10 12L6 8L10 4"
-            stroke="currentColor"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-        Sebelumnya
-      </button>
 
-      <div class="pagination-info">
-        Halaman
-        <strong>1</strong>
-        dari
-        <strong>5</strong>
-      </div>
-
-      <button class="pagination-btn pagination-btn--next">
-        Selanjutnya
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 16 16"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M6 4L10 8L6 12"
-            stroke="currentColor"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-      </button>
-    </div>
 
   </div>
 </section>

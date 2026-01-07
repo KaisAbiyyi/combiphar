@@ -149,6 +149,18 @@
         </tbody>
       </table>
       {% endif %}
+      
+      {% if totalPages > 1 %}
+      <div class="pagination">
+        {% if hasPrevious %}
+        <a href="?page={{ currentPage - 1 }}" class="pagination__btn">‹</a>
+        {% endif %}
+        <span class="pagination__btn pagination__btn--active">{{ currentPage }}</span>
+        {% if hasNext %}
+        <a href="?page={{ currentPage + 1 }}" class="pagination__btn">›</a>
+        {% endif %}
+      </div>
+      {% endif %}
     </div>
   </div>
 
