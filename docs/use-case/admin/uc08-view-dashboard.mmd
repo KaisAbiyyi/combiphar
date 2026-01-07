@@ -1,0 +1,27 @@
+---
+title: UC08 - View Dashboard
+---
+graph TD
+    Admin([Admin])
+
+    subgraph Dashboard ["Dashboard System"]
+        UC8_1([View Statistics])
+        UC8_2([View Revenue Trends])
+        UC8_3([View Recent Transactions])
+        UC8_4([View Weekly Trends])
+    end
+
+    Admin --> UC8_1
+    Admin --> UC8_2
+    Admin --> UC8_3
+    Admin --> UC8_4
+
+    note1[Stats:<br/>- Total Orders<br/>- Total Revenue<br/>- Active Users<br/>- Products Sold]
+
+    UC8_1 -.-> note1
+
+    style Admin fill:#ffe6e6
+    style UC8_1 fill:#fff4e6
+    style UC8_2 fill:#fff4e6
+    style UC8_3 fill:#fff4e6
+    style UC8_4 fill:#fff4e6

@@ -1,0 +1,30 @@
+---
+title: UC05 - Checkout
+---
+graph TD
+    Customer([Customer])
+
+    subgraph Checkout ["Checkout System"]
+        UC5_1([Select Delivery Address])
+        UC5_2([Select Courier])
+        UC5_3([Calculate Order Summary])
+        UC5_4([Proceed to Payment])
+    end
+
+    Customer --> UC5_1
+    Customer --> UC5_2
+    UC5_1 --> UC5_3
+    UC5_2 --> UC5_3
+    UC5_3 --> UC5_4
+
+    note1[Courier options:<br/>- Premium Logistics 2-3 hari<br/>- Standard Express 3-5 hari<br/>- Economy 5-7 hari]
+    note2[Calculate: subtotal + shipping = total]
+
+    UC5_2 -.-> note1
+    UC5_3 -.-> note2
+
+    style Customer fill:#e1f5ff
+    style UC5_1 fill:#fff4e6
+    style UC5_2 fill:#fff4e6
+    style UC5_3 fill:#fff4e6
+    style UC5_4 fill:#fff4e6

@@ -1,0 +1,80 @@
+---
+title: Use Case Overview - Combiphar Used Goods
+---
+graph LR
+    Customer([Customer])
+    Admin([Admin])
+
+    subgraph Customer_Module ["Customer Module"]
+        UC1([UC01<br/>Manage Account])
+        UC2([UC02<br/>Browse Products])
+        UC3([UC03<br/>Manage Cart])
+        UC4([UC04<br/>Manage Addresses])
+        UC5([UC05<br/>Checkout])
+        UC6([UC06<br/>Make Payment])
+    end
+
+    subgraph Admin_Module ["Admin Module"]
+        UC7([UC07<br/>Login Admin])
+        UC8([UC08<br/>View Dashboard])
+        UC9([UC09<br/>Manage Categories])
+        UC10([UC10<br/>Manage Products])
+        UC11([UC11<br/>Quality Control])
+        UC12([UC12<br/>Manage Orders])
+        UC13([UC13<br/>Verify Payments])
+        UC14([UC14<br/>Manage Shipments])
+        UC15([UC15<br/>Manage Users])
+        UC16([UC16<br/>View Reports])
+    end
+
+    Customer --> UC1
+    Customer --> UC2
+    Customer --> UC3
+    Customer --> UC4
+    Customer --> UC5
+    Customer --> UC6
+
+    Admin --> UC7
+    Admin --> UC8
+    Admin --> UC9
+    Admin --> UC10
+    Admin --> UC11
+    Admin --> UC12
+    Admin --> UC13
+    Admin --> UC14
+    Admin --> UC15
+    Admin --> UC16
+
+    UC3 -.->|cart items| UC5
+    UC5 -.->|after checkout| UC6
+    UC6 -.->|pending verification| UC13
+    UC13 -.->|update status| UC12
+    UC12 -.->|paid orders| UC14
+
+    UC10 -.->|needs QC| UC11
+    UC2 -.->|published items| UC10
+
+    note1[Payment Method: TRANSFER ONLY<br/>BCA, MANDIRI, BRI]
+    note2[QC Pipeline:<br/>ELIGIBLE → NEEDS_QC<br/>→ ELIGIBLE / NEEDS_REPAIR]
+
+    UC6 -.-> note1
+    UC11 -.-> note2
+
+    style Customer fill:#e1f5ff
+    style Admin fill:#ffe6e6
+    style UC1 fill:#e8f5e9
+    style UC2 fill:#e8f5e9
+    style UC3 fill:#e8f5e9
+    style UC4 fill:#e8f5e9
+    style UC5 fill:#e8f5e9
+    style UC6 fill:#e8f5e9
+    style UC7 fill:#fff3e0
+    style UC8 fill:#fff3e0
+    style UC9 fill:#fff3e0
+    style UC10 fill:#fff3e0
+    style UC11 fill:#fff3e0
+    style UC12 fill:#fff3e0
+    style UC13 fill:#fff3e0
+    style UC14 fill:#fff3e0
+    style UC15 fill:#fff3e0
+    style UC16 fill:#fff3e0

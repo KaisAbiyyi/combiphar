@@ -1,0 +1,34 @@
+---
+title: UC15 - Manage Users
+---
+graph TD
+    Admin([Admin])
+
+    subgraph User ["User Management"]
+        UC15_1([View User List])
+        UC15_2([Update User Status])
+        UC15_3([Filter by Role])
+        UC15_4([Filter by Status])
+        UC15_5([Search Users])
+    end
+
+    Admin --> UC15_1
+    Admin --> UC15_2
+    UC15_1 -.->|extend| UC15_3
+    UC15_1 -.->|extend| UC15_4
+    UC15_1 -.->|extend| UC15_5
+
+    note1[Status: ACTIVE, INACTIVE]
+    note2[Role: CUSTOMER, ADMIN]
+    note3[Search by name or email]
+
+    UC15_2 -.-> note1
+    UC15_3 -.-> note2
+    UC15_5 -.-> note3
+
+    style Admin fill:#ffe6e6
+    style UC15_1 fill:#fff4e6
+    style UC15_2 fill:#fff4e6
+    style UC15_3 fill:#fff4e6
+    style UC15_4 fill:#fff4e6
+    style UC15_5 fill:#fff4e6

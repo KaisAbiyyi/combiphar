@@ -1,0 +1,35 @@
+@startuml UC02-Browse-Products
+!define ICONURL https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/v2.4.0
+!include ICONURL/common.puml
+!include ICONURL/font-awesome/user.puml
+!include ICONURL/font-awesome/search.puml
+
+title UC02 - Browse Products
+
+actor "Customer" as Customer
+
+package "Catalog System" {
+  usecase "Search Products" as UC2_1
+  usecase "Filter by Category" as UC2_2
+  usecase "View Product Detail" as UC2_3
+  usecase "Browse Catalog" as UC2_4
+}
+
+Customer --> UC2_4
+UC2_4 ..> UC2_1 : <<extend>>
+UC2_4 ..> UC2_2 : <<extend>>
+UC2_4 --> UC2_3
+
+note right of UC2_1
+  Search by name
+end note
+
+note right of UC2_2
+  Filter by category
+end note
+
+note right of UC2_3
+  View detail, price, stock, condition
+end note
+
+@enduml

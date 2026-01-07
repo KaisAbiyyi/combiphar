@@ -1,0 +1,29 @@
+---
+title: UC12 - Manage Orders
+---
+graph TD
+    Admin([Admin])
+
+    subgraph Order ["Order Management"]
+        UC12_1([View All Orders])
+        UC12_2([View Order Details])
+        UC12_3([Filter Orders])
+        UC12_4([View Order Items])
+    end
+
+    Admin --> UC12_1
+    UC12_1 --> UC12_2
+    UC12_1 -.->|extend| UC12_3
+    UC12_2 --> UC12_4
+
+    note1[Pagination: 25 per page]
+    note2[Filter by status:<br/>- NEW<br/>- PROCESSING<br/>- COMPLETED<br/>- CANCELLED]
+
+    UC12_1 -.-> note1
+    UC12_3 -.-> note2
+
+    style Admin fill:#ffe6e6
+    style UC12_1 fill:#fff4e6
+    style UC12_2 fill:#fff4e6
+    style UC12_3 fill:#fff4e6
+    style UC12_4 fill:#fff4e6

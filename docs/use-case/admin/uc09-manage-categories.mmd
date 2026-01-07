@@ -1,0 +1,35 @@
+---
+title: UC09 - Manage Categories
+---
+graph TD
+    Admin([Admin])
+
+    subgraph Category ["Category Management"]
+        UC9_1([Create Category])
+        UC9_2([Update Category])
+        UC9_3([Delete Category])
+        UC9_4([View Category List])
+        UC9_5([Export Categories CSV])
+        UC9_6([Import Categories CSV])
+    end
+
+    Admin --> UC9_1
+    Admin --> UC9_2
+    Admin --> UC9_3
+    Admin --> UC9_4
+    Admin --> UC9_5
+    Admin --> UC9_6
+
+    note1[Input: name, description, status<br/>Status: AKTIF, REVIEW, DRAFT]
+    note2[Cascade delete items]
+
+    UC9_1 -.-> note1
+    UC9_3 -.-> note2
+
+    style Admin fill:#ffe6e6
+    style UC9_1 fill:#fff4e6
+    style UC9_2 fill:#fff4e6
+    style UC9_3 fill:#fff4e6
+    style UC9_4 fill:#fff4e6
+    style UC9_5 fill:#fff4e6
+    style UC9_6 fill:#fff4e6

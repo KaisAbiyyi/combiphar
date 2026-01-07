@@ -1,0 +1,29 @@
+---
+title: UC06 - Make Payment
+---
+graph TD
+    Customer([Customer])
+
+    subgraph Payment ["Payment System"]
+        UC6_1([View Payment Info])
+        UC6_2([Upload Transfer Proof])
+        UC6_3([Select Bank])
+        UC6_4([Complete Order])
+    end
+
+    Customer --> UC6_1
+    UC6_1 --> UC6_3
+    UC6_3 --> UC6_2
+    UC6_2 --> UC6_4
+
+    note1[Display bank account info:<br/>- BCA<br/>- MANDIRI<br/>- BRI]
+    note2[Upload transfer receipt image/pdf]
+
+    UC6_1 -.-> note1
+    UC6_2 -.-> note2
+
+    style Customer fill:#e1f5ff
+    style UC6_1 fill:#fff4e6
+    style UC6_2 fill:#fff4e6
+    style UC6_3 fill:#fff4e6
+    style UC6_4 fill:#fff4e6

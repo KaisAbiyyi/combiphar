@@ -1,0 +1,32 @@
+---
+title: UC03 - Manage Cart
+---
+graph TD
+    Customer([Customer])
+
+    subgraph Cart ["Shopping Cart System"]
+        UC3_1([Add Item to Cart])
+        UC3_2([Update Quantity])
+        UC3_3([Remove Item])
+        UC3_4([Clear Cart])
+        UC3_5([View Cart])
+    end
+
+    Customer --> UC3_1
+    Customer --> UC3_2
+    Customer --> UC3_3
+    Customer --> UC3_4
+    Customer --> UC3_5
+
+    note1[Add product with quantity]
+    note2[Update item quantity]
+
+    UC3_1 -.-> note1
+    UC3_2 -.-> note2
+
+    style Customer fill:#e1f5ff
+    style UC3_1 fill:#fff4e6
+    style UC3_2 fill:#fff4e6
+    style UC3_3 fill:#fff4e6
+    style UC3_4 fill:#fff4e6
+    style UC3_5 fill:#fff4e6

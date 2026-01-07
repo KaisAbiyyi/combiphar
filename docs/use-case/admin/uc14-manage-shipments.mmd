@@ -1,0 +1,32 @@
+---
+title: UC14 - Manage Shipments
+---
+graph TD
+    Admin([Admin])
+
+    subgraph Shipment ["Shipment Management"]
+        UC14_1([View Shipment List])
+        UC14_2([Create Shipment])
+        UC14_3([Update Tracking Number])
+        UC14_4([Update Shipment Status])
+        UC14_5([Filter by Status])
+    end
+
+    Admin --> UC14_1
+    Admin --> UC14_2
+    Admin --> UC14_3
+    Admin --> UC14_4
+    UC14_1 -.->|extend| UC14_5
+
+    note1[Input: order_id, address_id, courier_name]
+    note2[Status flow:<br/>PENDING → PROCESSING → SHIPPED<br/>→ DELIVERED → RECEIVED]
+
+    UC14_2 -.-> note1
+    UC14_4 -.-> note2
+
+    style Admin fill:#ffe6e6
+    style UC14_1 fill:#fff4e6
+    style UC14_2 fill:#fff4e6
+    style UC14_3 fill:#fff4e6
+    style UC14_4 fill:#fff4e6
+    style UC14_5 fill:#fff4e6

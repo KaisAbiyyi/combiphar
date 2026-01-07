@@ -1,0 +1,31 @@
+---
+title: UC02 - Browse Products
+---
+graph TD
+    Customer([Customer])
+
+    subgraph Catalog ["Catalog System"]
+        UC2_1([Search Products])
+        UC2_2([Filter by Category])
+        UC2_3([View Product Detail])
+        UC2_4([Browse Catalog])
+    end
+
+    Customer --> UC2_4
+    UC2_4 -.->|extend| UC2_1
+    UC2_4 -.->|extend| UC2_2
+    UC2_4 --> UC2_3
+
+    note1[Search by name]
+    note2[Filter by category]
+    note3[View detail, price, stock, condition]
+
+    UC2_1 -.-> note1
+    UC2_2 -.-> note2
+    UC2_3 -.-> note3
+
+    style Customer fill:#e1f5ff
+    style UC2_1 fill:#fff4e6
+    style UC2_2 fill:#fff4e6
+    style UC2_3 fill:#fff4e6
+    style UC2_4 fill:#fff4e6

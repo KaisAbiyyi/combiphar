@@ -1,0 +1,29 @@
+---
+title: UC01 - Manage Account
+---
+graph TD
+    Customer([Customer])
+
+    subgraph Auth ["Authentication System"]
+        UC1_1([Login])
+        UC1_2([Register])
+        UC1_3([Logout])
+        UC1_4([View Profile])
+    end
+
+    Customer --> UC1_1
+    Customer --> UC1_2
+    Customer --> UC1_3
+    Customer --> UC1_4
+
+    note1[Input: email, password<br/>Output: session]
+    note2[Input: name, email, password<br/>Output: new account]
+
+    UC1_1 -.-> note1
+    UC1_2 -.-> note2
+
+    style Customer fill:#e1f5ff
+    style UC1_1 fill:#fff4e6
+    style UC1_2 fill:#fff4e6
+    style UC1_3 fill:#fff4e6
+    style UC1_4 fill:#fff4e6

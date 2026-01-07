@@ -1,0 +1,38 @@
+@startuml UC16-View-Reports
+!define ICONURL https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/v2.4.0
+!include ICONURL/common.puml
+!include ICONURL/font-awesome/chart_bar.puml
+
+title UC16 - View Reports
+
+actor "Admin" as Admin
+
+package "Reporting System" {
+  usecase "View Revenue Report" as UC16_1
+  usecase "View Monthly Trends" as UC16_2
+  usecase "View Top Categories" as UC16_3
+  usecase "Filter by Year" as UC16_4
+  usecase "View Dashboard Stats" as UC16_5
+}
+
+Admin --> UC16_1
+Admin --> UC16_2
+Admin --> UC16_3
+Admin --> UC16_4
+Admin --> UC16_5
+
+note right of UC16_1
+  Total revenue, transactions
+end note
+
+note right of UC16_2
+  Monthly revenue chart
+  Filter by year
+end note
+
+note right of UC16_3
+  Top performing categories
+  by revenue
+end note
+
+@enduml

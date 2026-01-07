@@ -1,0 +1,33 @@
+@startuml UC03-Manage-Cart
+!define ICONURL https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/v2.4.0
+!include ICONURL/common.puml
+!include ICONURL/font-awesome/user.puml
+!include ICONURL/font-awesome/shopping_cart.puml
+
+title UC03 - Manage Cart
+
+actor "Customer" as Customer
+
+package "Shopping Cart System" {
+  usecase "Add Item to Cart" as UC3_1
+  usecase "Update Quantity" as UC3_2
+  usecase "Remove Item" as UC3_3
+  usecase "Clear Cart" as UC3_4
+  usecase "View Cart" as UC3_5
+}
+
+Customer --> UC3_1
+Customer --> UC3_2
+Customer --> UC3_3
+Customer --> UC3_4
+Customer --> UC3_5
+
+note right of UC3_1
+  Add product with quantity
+end note
+
+note right of UC3_2
+  Update item quantity
+end note
+
+@enduml

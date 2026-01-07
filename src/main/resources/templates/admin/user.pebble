@@ -93,7 +93,6 @@
       <table class="data-table">
         <thead>
           <tr>
-            <th>USER ID</th>
             <th>NAMA</th>
             <th>EMAIL</th>
             <th>ROLE</th>
@@ -104,7 +103,6 @@
         <tbody>
           {% for user in users %}
           <tr>
-            <td><span class="user-id-badge">{{ user.id.substring(0, 8) }}</span></td>
             <td>{{ user.name }}</td>
             <td>{{ user.email }}</td>
             <td>

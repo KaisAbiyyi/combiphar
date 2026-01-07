@@ -1,0 +1,37 @@
+---
+title: UC11 - Quality Control
+---
+graph TD
+    Admin([Admin])
+
+    subgraph QC ["Quality Control System"]
+        UC11_1([View QC Pipeline])
+        UC11_2([Perform Quality Check])
+        UC11_3([Batch Approve])
+        UC11_4([Batch Reject])
+        UC11_5([View Items Needing Repair])
+        UC11_6([View QC Statistics])
+    end
+
+    Admin --> UC11_1
+    Admin --> UC11_2
+    Admin --> UC11_3
+    Admin --> UC11_4
+    Admin --> UC11_5
+    Admin --> UC11_6
+
+    note1[Input: item_id, status, notes<br/>Status: ELIGIBLE, NEEDS_REPAIR, NOT_ELIGIBLE]
+    note2[Approve multiple items at once]
+    note3[Reject and mark for repair]
+
+    UC11_2 -.-> note1
+    UC11_3 -.-> note2
+    UC11_4 -.-> note3
+
+    style Admin fill:#ffe6e6
+    style UC11_1 fill:#fff4e6
+    style UC11_2 fill:#fff4e6
+    style UC11_3 fill:#fff4e6
+    style UC11_4 fill:#fff4e6
+    style UC11_5 fill:#fff4e6
+    style UC11_6 fill:#fff4e6

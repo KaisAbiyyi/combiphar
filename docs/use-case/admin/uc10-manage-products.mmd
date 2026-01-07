@@ -1,0 +1,43 @@
+---
+title: UC10 - Manage Products
+---
+graph TD
+    Admin([Admin])
+
+    subgraph Product ["Product Management"]
+        UC10_1([Create Product])
+        UC10_2([Update Product])
+        UC10_3([Delete Product])
+        UC10_4([Update Stock])
+        UC10_5([Update Status])
+        UC10_6([Export Products CSV])
+        UC10_7([Import Products CSV])
+        UC10_8([Upload Product Image])
+    end
+
+    Admin --> UC10_1
+    Admin --> UC10_2
+    Admin --> UC10_3
+    Admin --> UC10_4
+    Admin --> UC10_5
+    Admin --> UC10_6
+    Admin --> UC10_7
+    Admin --> UC10_8
+
+    note1[Actions: add, reduce, set]
+    note2[Eligibility Status:<br/>- ELIGIBLE<br/>- NEEDS_QC<br/>- NEEDS_REPAIR<br/>- NOT_ELIGIBLE]
+    note3[Upload product image]
+
+    UC10_4 -.-> note1
+    UC10_5 -.-> note2
+    UC10_8 -.-> note3
+
+    style Admin fill:#ffe6e6
+    style UC10_1 fill:#fff4e6
+    style UC10_2 fill:#fff4e6
+    style UC10_3 fill:#fff4e6
+    style UC10_4 fill:#fff4e6
+    style UC10_5 fill:#fff4e6
+    style UC10_6 fill:#fff4e6
+    style UC10_7 fill:#fff4e6
+    style UC10_8 fill:#fff4e6

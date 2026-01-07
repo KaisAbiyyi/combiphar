@@ -1,0 +1,18 @@
+---
+title: UC07 - Login Admin
+---
+graph TD
+    Admin([Admin])
+
+    subgraph Auth ["Authentication System"]
+        UC7([Login to Dashboard])
+    end
+
+    Admin --> UC7
+
+    note1[Input: email, password<br/>Requirement: Role = ADMIN<br/>Output: Admin session]
+
+    UC7 -.-> note1
+
+    style Admin fill:#ffe6e6
+    style UC7 fill:#fff4e6

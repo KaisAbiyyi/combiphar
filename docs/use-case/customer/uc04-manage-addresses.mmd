@@ -1,0 +1,29 @@
+---
+title: UC04 - Manage Addresses
+---
+graph TD
+    Customer([Customer])
+
+    subgraph Address ["Address Management System"]
+        UC4_1([Add New Address])
+        UC4_2([Set Primary Address])
+        UC4_3([Delete Address])
+        UC4_4([View Address List])
+    end
+
+    Customer --> UC4_1
+    Customer --> UC4_2
+    Customer --> UC4_3
+    Customer --> UC4_4
+
+    note1[Input: recipient, phone, address,<br/>city, province, postal code]
+    note2[Mark as primary for checkout]
+
+    UC4_1 -.-> note1
+    UC4_2 -.-> note2
+
+    style Customer fill:#e1f5ff
+    style UC4_1 fill:#fff4e6
+    style UC4_2 fill:#fff4e6
+    style UC4_3 fill:#fff4e6
+    style UC4_4 fill:#fff4e6

@@ -1,0 +1,22 @@
+@startuml UC07-Login-Admin
+!define ICONURL https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/v2.4.0
+!include ICONURL/common.puml
+!include ICONURL/font-awesome/user_shield.puml
+
+title UC07 - Login Admin
+
+actor "Admin" as Admin
+
+package "Authentication System" {
+  usecase "Login to Dashboard" as UC7
+}
+
+Admin --> UC7
+
+note right of UC7
+  Input: email, password
+  Requirement: Role = ADMIN
+  Output: Admin session
+end note
+
+@enduml

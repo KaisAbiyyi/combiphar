@@ -55,3 +55,6 @@ Desktop.ini
 .github/instructions/snyk_rules.instructions.md
 
 /uploads
+/docs
+docs/
+uploads/

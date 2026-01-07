@@ -1,0 +1,46 @@
+@startuml UC10-Manage-Products
+!define ICONURL https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/v2.4.0
+!include ICONURL/common.puml
+!include ICONURL/font-awesome/box.puml
+
+title UC10 - Manage Products
+
+actor "Admin" as Admin
+
+package "Product Management" {
+  usecase "Create Product" as UC10_1
+  usecase "Update Product" as UC10_2
+  usecase "Delete Product" as UC10_3
+  usecase "Update Stock" as UC10_4
+  usecase "Update Status" as UC10_5
+  usecase "Export Products CSV" as UC10_6
+  usecase "Import Products CSV" as UC10_7
+  usecase "Upload Product Image" as UC10_8
+}
+
+Admin --> UC10_1
+Admin --> UC10_2
+Admin --> UC10_3
+Admin --> UC10_4
+Admin --> UC10_5
+Admin --> UC10_6
+Admin --> UC10_7
+Admin --> UC10_8
+
+note right of UC10_4
+  Actions: add, reduce, set
+end note
+
+note right of UC10_5
+  Eligibility Status:
+  - ELIGIBLE
+  - NEEDS_QC
+  - NEEDS_REPAIR
+  - NOT_ELIGIBLE
+end note
+
+note right of UC10_8
+  Upload product image
+end note
+
+@enduml

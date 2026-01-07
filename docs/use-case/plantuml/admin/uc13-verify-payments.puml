@@ -1,0 +1,37 @@
+@startuml UC13-Verify-Payments
+!define ICONURL https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/v2.4.0
+!include ICONURL/common.puml
+!include ICONURL/font-awesome/check_double.puml
+
+title UC13 - Verify Payments
+
+actor "Admin" as Admin
+
+package "Payment Verification" {
+  usecase "View Payment List" as UC13_1
+  usecase "View Transfer Proof" as UC13_2
+  usecase "Approve Payment" as UC13_3
+  usecase "Reject Payment" as UC13_4
+  usecase "Filter by Status" as UC13_5
+}
+
+Admin --> UC13_1
+UC13_1 --> UC13_2
+UC13_2 --> UC13_3
+UC13_2 --> UC13_4
+UC13_1 ..> UC13_5 : <<extend>>
+
+note right of UC13_3
+  Update order status to PAID
+  Update order status to PROCESSING
+end note
+
+note right of UC13_4
+  Update payment status to FAILED
+end note
+
+note right of UC13_5
+  Status: PENDING, SUCCESS, FAILED
+end note
+
+@enduml

@@ -1,0 +1,32 @@
+@startuml UC01-Manage-Account
+!define ICONURL https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/v2.4.0
+!include ICONURL/common.puml
+!include ICONURL/font-awesome/user.puml
+
+title UC01 - Manage Account
+
+actor "Customer" as Customer
+
+package "Authentication System" {
+  usecase "Login" as UC1_1
+  usecase "Register" as UC1_2
+  usecase "Logout" as UC1_3
+  usecase "View Profile" as UC1_4
+}
+
+Customer --> UC1_1
+Customer --> UC1_2
+Customer --> UC1_3
+Customer --> UC1_4
+
+note right of UC1_1
+  Input: email, password
+  Output: session
+end note
+
+note right of UC1_2
+  Input: name, email, password
+  Output: new account
+end note
+
+@enduml

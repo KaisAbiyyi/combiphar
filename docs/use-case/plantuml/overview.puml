@@ -1,0 +1,80 @@
+@startuml Use-Case-Overview
+!define ICONURL https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/v2.4.0
+!include ICONURL/common.puml
+!include ICONURL/font-awesome/user.puml
+!include ICONURL/font-awesome/user_shield.puml
+
+left to right direction
+
+skinparam packageStyle rectangle
+
+actor "Customer" as Customer
+actor "Admin" as Admin
+
+rectangle "Combiphar Used Goods System" {
+  rectangle "Customer Module" {
+    usecase (UC01)\nManage Account as UC1
+    usecase (UC02)\nBrowse Products as UC2
+    usecase (UC03)\nManage Cart as UC3
+    usecase (UC04)\nManage Addresses as UC4
+    usecase (UC05)\nCheckout as UC5
+    usecase (UC06)\nMake Payment as UC6
+  }
+
+  rectangle "Admin Module" {
+    usecase (UC07)\nLogin Admin as UC7
+    usecase (UC08)\nView Dashboard as UC8
+    usecase (UC09)\nManage Categories as UC9
+    usecase (UC10)\nManage Products as UC10
+    usecase (UC11)\nQuality Control as UC11
+    usecase (UC12)\nManage Orders as UC12
+    usecase (UC13)\nVerify Payments as UC13
+    usecase (UC14)\nManage Shipments as UC14
+    usecase (UC15)\nManage Users as UC15
+    usecase (UC16)\nView Reports as UC16
+  }
+}
+
+' Customer relationships
+Customer --> UC1
+Customer --> UC2
+Customer --> UC3
+Customer --> UC4
+Customer --> UC5
+Customer --> UC6
+
+' Admin relationships
+Admin --> UC7
+Admin --> UC8
+Admin --> UC9
+Admin --> UC10
+Admin --> UC11
+Admin --> UC12
+Admin --> UC13
+Admin --> UC14
+Admin --> UC15
+Admin --> UC16
+
+' Internal dependencies
+UC3 --> UC5 : cart items
+UC5 --> UC6 : after checkout
+UC6 --> UC13 : pending verification
+UC13 --> UC12 : update status
+UC12 --> UC14 : paid orders
+
+UC10 --> UC11 : needs QC
+UC2 --> UC10 : published items
+
+note right of UC6
+  Payment Method:
+  TRANSFER ONLY
+  (BCA, MANDIRI, BRI)
+end note
+
+note left of UC11
+  QC Pipeline:
+  ELIGIBLE → NEEDS_QC
+  → ELIGIBLE / NEEDS_REPAIR
+end note
+
+@enduml

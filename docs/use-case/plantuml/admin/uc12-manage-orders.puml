@@ -1,0 +1,34 @@
+@startuml UC12-Manage-Orders
+!define ICONURL https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/v2.4.0
+!include ICONURL/common.puml
+!include ICONURL/font-awesome/list_alt.puml
+
+title UC12 - Manage Orders
+
+actor "Admin" as Admin
+
+package "Order Management" {
+  usecase "View All Orders" as UC12_1
+  usecase "View Order Details" as UC12_2
+  usecase "Filter Orders" as UC12_3
+  usecase "View Order Items" as UC12_4
+}
+
+Admin --> UC12_1
+UC12_1 --> UC12_2
+UC12_1 ..> UC12_3 : <<extend>>
+UC12_2 --> UC12_4
+
+note right of UC12_1
+  Pagination: 25 per page
+end note
+
+note right of UC12_3
+  Filter by status:
+  - NEW
+  - PROCESSING
+  - COMPLETED
+  - CANCELLED
+end note
+
+@enduml

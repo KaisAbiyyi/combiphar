@@ -1,0 +1,39 @@
+@startuml UC11-Quality-Control
+!define ICONURL https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/v2.4.0
+!include ICONURL/common.puml
+!include ICONURL/font-awesome/check_circle.puml
+
+title UC11 - Quality Control
+
+actor "Admin" as Admin
+
+package "Quality Control System" {
+  usecase "View QC Pipeline" as UC11_1
+  usecase "Perform Quality Check" as UC11_2
+  usecase "Batch Approve" as UC11_3
+  usecase "Batch Reject" as UC11_4
+  usecase "View Items Needing Repair" as UC11_5
+  usecase "View QC Statistics" as UC11_6
+}
+
+Admin --> UC11_1
+Admin --> UC11_2
+Admin --> UC11_3
+Admin --> UC11_4
+Admin --> UC11_5
+Admin --> UC11_6
+
+note right of UC11_2
+  Input: item_id, status, notes
+  Status: ELIGIBLE, NEEDS_REPAIR, NOT_ELIGIBLE
+end note
+
+note right of UC11_3
+  Approve multiple items at once
+end note
+
+note right of UC11_4
+  Reject and mark for repair
+end note
+
+@enduml

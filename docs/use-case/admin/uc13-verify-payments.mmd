@@ -1,0 +1,34 @@
+---
+title: UC13 - Verify Payments
+---
+graph TD
+    Admin([Admin])
+
+    subgraph Payment ["Payment Verification"]
+        UC13_1([View Payment List])
+        UC13_2([View Transfer Proof])
+        UC13_3([Approve Payment])
+        UC13_4([Reject Payment])
+        UC13_5([Filter by Status])
+    end
+
+    Admin --> UC13_1
+    UC13_1 --> UC13_2
+    UC13_2 --> UC13_3
+    UC13_2 --> UC13_4
+    UC13_1 -.->|extend| UC13_5
+
+    note1[Update order status to PAID<br/>Update order status to PROCESSING]
+    note2[Update payment status to FAILED]
+    note3[Status: PENDING, SUCCESS, FAILED]
+
+    UC13_3 -.-> note1
+    UC13_4 -.-> note2
+    UC13_5 -.-> note3
+
+    style Admin fill:#ffe6e6
+    style UC13_1 fill:#fff4e6
+    style UC13_2 fill:#fff4e6
+    style UC13_3 fill:#fff4e6
+    style UC13_4 fill:#fff4e6
+    style UC13_5 fill:#fff4e6

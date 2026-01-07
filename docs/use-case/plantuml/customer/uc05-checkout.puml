@@ -1,0 +1,35 @@
+@startuml UC05-Checkout
+!define ICONURL https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/v2.4.0
+!include ICONURL/common.puml
+!include ICONURL/font-awesome/user.puml
+!include ICONURL/font-awesome/credit_card.puml
+
+title UC05 - Checkout
+
+actor "Customer" as Customer
+
+package "Checkout System" {
+  usecase "Select Delivery Address" as UC5_1
+  usecase "Select Courier" as UC5_2
+  usecase "Calculate Order Summary" as UC5_3
+  usecase "Proceed to Payment" as UC5_4
+}
+
+Customer --> UC5_1
+Customer --> UC5_2
+UC5_1 --> UC5_3
+UC5_2 --> UC5_3
+UC5_3 --> UC5_4
+
+note right of UC5_2
+  Courier options:
+  - Premium Logistics (2-3 hari)
+  - Standard Express (3-5 hari)
+  - Economy (5-7 hari)
+end note
+
+note right of UC5_3
+  Calculate: subtotal + shipping = total
+end note
+
+@enduml

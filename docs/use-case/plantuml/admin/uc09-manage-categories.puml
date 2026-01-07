@@ -1,0 +1,35 @@
+@startuml UC09-Manage-Categories
+!define ICONURL https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/v2.4.0
+!include ICONURL/common.puml
+!include ICONURL/font-awesome/folder.puml
+
+title UC09 - Manage Categories
+
+actor "Admin" as Admin
+
+package "Category Management" {
+  usecase "Create Category" as UC9_1
+  usecase "Update Category" as UC9_2
+  usecase "Delete Category" as UC9_3
+  usecase "View Category List" as UC9_4
+  usecase "Export Categories CSV" as UC9_5
+  usecase "Import Categories CSV" as UC9_6
+}
+
+Admin --> UC9_1
+Admin --> UC9_2
+Admin --> UC9_3
+Admin --> UC9_4
+Admin --> UC9_5
+Admin --> UC9_6
+
+note right of UC9_1
+  Input: name, description, status
+  Status: AKTIF, REVIEW, DRAFT
+end note
+
+note right of UC9_3
+  Cascade delete items
+end note
+
+@enduml

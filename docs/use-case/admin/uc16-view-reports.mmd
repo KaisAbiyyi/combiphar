@@ -1,0 +1,34 @@
+---
+title: UC16 - View Reports
+---
+graph TD
+    Admin([Admin])
+
+    subgraph Reports ["Reporting System"]
+        UC16_1([View Revenue Report])
+        UC16_2([View Monthly Trends])
+        UC16_3([View Top Categories])
+        UC16_4([Filter by Year])
+        UC16_5([View Dashboard Stats])
+    end
+
+    Admin --> UC16_1
+    Admin --> UC16_2
+    Admin --> UC16_3
+    Admin --> UC16_4
+    Admin --> UC16_5
+
+    note1[Total revenue, transactions]
+    note2[Monthly revenue chart<br/>Filter by year]
+    note3[Top performing categories by revenue]
+
+    UC16_1 -.-> note1
+    UC16_2 -.-> note2
+    UC16_3 -.-> note3
+
+    style Admin fill:#ffe6e6
+    style UC16_1 fill:#fff4e6
+    style UC16_2 fill:#fff4e6
+    style UC16_3 fill:#fff4e6
+    style UC16_4 fill:#fff4e6
+    style UC16_5 fill:#fff4e6
